@@ -39,9 +39,85 @@ Setup
 
     example% puppet module install puppetlabs/openstacklib
 
-### Beginning with openstacklib
+Usage
+-----
 
-Instructions for beginning with openstacklib will be added later.
+### Classes and Defined Types
+
+#### Defined type: openstacklib::db::mysql
+
+The db::mysql resource is a library resource that can be used by nova, cinder,
+ceilometer, etc., to create a mysql database with configurable privileges for
+a user connecting from defined hosts.
+
+Typically this resource will be declared with a notify parameter to configure
+the sync command to execute when the database resource is changed.
+
+For example, in heat::db::mysql you might declare:
+
+```
+::openstacklib::db::mysql { 'heat':
+    password_hash => mysql_password($password),
+    dbname        => $dbname,
+    user          => $user,
+    host          => $host,
+    charset       => $charset,
+    collate       => $collate,
+    allowed_hosts => $allowed_hosts,
+    notify        => Exec['heat-dbsync'],
+  }
+```
+
+Some modules should ensure that the database is created before the service is
+set up. For example, in keystone::db::mysql you would have:
+
+```
+::openstacklib::db::mysql { 'keystone':
+    password_hash => mysql_password($password),
+    dbname        => $dbname,
+    user          => $user,
+    host          => $host,
+    charset       => $charset,
+    collate       => $collate,
+    allowed_hosts => $allowed_hosts,
+    notify        => Exec['keystone-manage db_sync'],
+    before        => Service['keystone'],
+  }
+```
+
+** Parameters for openstacklib::db::mysql: **
+
+#####`password_hash`
+Password hash to use for the database user for this service;
+string; required
+
+#####`dbname`
+The name of the database
+string; optional; default to the $title of the resource, i.e. 'nova'
+
+#####`user`
+The database user to create;
+string; optional; default to the $title of the resource, i.e. 'nova'
+
+#####`host`
+The IP address or hostname of the user in mysql_grant;
+string; optional; default to '127.0.0.1'
+
+#####`charset`
+The charset to use for the database;
+string; optional; default to 'utf8'
+
+#####`collate`
+The collate to use for the database;
+string; optional; default to 'utf8_unicode_ci'
+
+#####`allowed_hosts`
+Additional hosts that are allowed to access this database;
+array or string; optional; default to undef
+
+#####`privileges`
+Privileges given to the database user;
+string or array of strings; optional; default to 'ALL'
 
 Implementation
 --------------
