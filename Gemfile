@@ -4,9 +4,11 @@ group :development, :test do
   gem 'puppetlabs_spec_helper', :require => false
   gem 'puppet-lint', '~> 0.3.2'
   gem 'rake', '10.1.1'
-  gem 'rspec', '< 2.99'
+  gem 'rspec'
+  gem 'mocha'
   gem 'json'
-  gem 'webmock'
+  gem 'faraday', '0.8.8',       :require => false
+  gem 'vcr',                    :require => false
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']
