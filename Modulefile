@@ -8,4 +8,4 @@ description 'Puppet module library to expose common functionality between OpenSt
 project_page 'https://launchpad.net/puppet-openstacklib'
 
 dependency 'puppetlabs/mysql',  '>=2.2.0 <3.0.0'
-dependency 'puppetlabs/stdlib', '>=3.2.0'
+dependency 'puppetlabs/stdlib', '>=4.0.0 <5.0.0'
