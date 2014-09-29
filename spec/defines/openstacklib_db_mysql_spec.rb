@@ -23,17 +23,46 @@ describe 'openstacklib::db::mysql' do
         :charset => 'utf8',
         :collate => 'utf8_unicode_ci'
       )}
-      it { should contain_mysql_user("#{title}@127.0.0.1").with(
-        :password_hash => params[:password_hash]
-      )}
-      it { should contain_mysql_grant("#{title}@127.0.0.1/#{title}.*").with(
-        :user       => "#{title}@127.0.0.1",
-        :privileges => 'ALL',
-        :table      => "#{title}.*"
+      it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+        :user       => title,
+        :database   => title,
+        :privileges => 'ALL'
       )}
     end
 
-    context 'when overriding charset' do
+    context 'with overriding dbname parameter' do
+      let :params do
+        { :dbname => 'foobar' }.merge(required_params)
+      end
+
+      it { should contain_mysql_database(params[:dbname]).with(
+        :charset => 'utf8',
+        :collate => 'utf8_unicode_ci'
+      )}
+      it { should contain_openstacklib__db__mysql__host_access("#{params[:dbname]}_127.0.0.1").with(
+        :user       => title,
+        :database   => params[:dbname],
+        :privileges => 'ALL'
+      )}
+    end
+
+    context 'with overriding user parameter' do
+      let :params do
+        { :user => 'foobar' }.merge(required_params)
+      end
+
+      it { should contain_mysql_database(title).with(
+        :charset => 'utf8',
+        :collate => 'utf8_unicode_ci'
+      )}
+      it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+        :user       => params[:user],
+        :database   => title,
+        :privileges => 'ALL'
+      )}
+    end
+
+    context 'when overriding charset parameter' do
       let :params do
         { :charset => 'latin1' }.merge(required_params)
       end
@@ -73,7 +102,7 @@ describe 'openstacklib::db::mysql' do
       it { should contain_service('keystone').that_requires("Openstacklib::Db::Mysql[keystone]") }
     end
 
-    context "overriding allowed_hosts param to array" do
+    context "overriding allowed_hosts parameter with array value" do
       let :params do
         { :allowed_hosts  => ['127.0.0.1','%'] }.merge(required_params)
       end
@@ -90,7 +119,7 @@ describe 'openstacklib::db::mysql' do
       )}
     end
 
-    context "overriding allowed_hosts param to string" do
+    context "overriding allowed_hosts parameter with string value" do
       let :params do
         { :allowed_hosts => '192.168.1.1' }.merge(required_params)
       end
@@ -102,7 +131,7 @@ describe 'openstacklib::db::mysql' do
       )}
     end
 
-    context "overriding allowed_hosts param equals to host param " do
+    context "overriding allowed_hosts parameter equals to host param " do
       let :params do
         { :allowed_hosts => '127.0.0.1' }.merge(required_params)
       end
