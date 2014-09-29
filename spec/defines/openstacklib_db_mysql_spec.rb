@@ -82,7 +82,7 @@ describe 'openstacklib::db::mysql' do
         { :allowed_hosts  => ['127.0.0.1','%'] }.merge(required_params)
       end
 
-      it {should_not contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+      it {should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :password_hash => password_hash,
         :database      => title
@@ -117,7 +117,7 @@ describe 'openstacklib::db::mysql' do
         }
       end
 
-      it {should_not contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+      it {should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :password_hash => password_hash,
         :database      => title
@@ -184,7 +184,7 @@ describe 'openstacklib::db::mysql' do
         { :allowed_hosts  => ['127.0.0.1','%'] }.merge(required_params)
       end
 
-      it {should_not contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+      it {should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :password_hash => password_hash,
         :database      => title
@@ -219,7 +219,7 @@ describe 'openstacklib::db::mysql' do
         }
       end
 
-      it {should_not contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+      it {should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :password_hash => password_hash,
         :database      => title

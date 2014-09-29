@@ -43,7 +43,7 @@ define openstacklib::db::mysql (
   $host           = '127.0.0.1',
   $charset        = 'utf8',
   $collate        = 'utf8_unicode_ci',
-  $allowed_hosts  = undef,
+  $allowed_hosts  = [],
   $privileges     = 'ALL',
 ) {
 
@@ -56,35 +56,13 @@ define openstacklib::db::mysql (
     require => [ Class['mysql::server'], Class['mysql::client'] ],
   }
 
-  mysql_user { "${user}@${host}":
-    ensure        => present,
+  $allowed_hosts_list = unique(concat(any2array($allowed_hosts), $host))
+  $real_allowed_hosts = prefix($allowed_hosts_list, "${dbname}_")
+
+  openstacklib::db::mysql::host_access { $real_allowed_hosts:
+    user          => $user,
     password_hash => $password_hash,
-    require       => Class['mysql::server'],
+    database      => $dbname,
+    privileges    => $privileges,
   }
-
-  mysql_grant { "${user}@${host}/${dbname}.*":
-    privileges => $privileges,
-    user       => "${user}@${host}",
-    table      => "${dbname}.*",
-    require    => [Mysql_database[$dbname], Mysql_user["${user}@${host}"], Class['mysql::server'] ],
-  }
-
-  # Check allowed_hosts to avoid duplicate resource declarations
-  if is_array($allowed_hosts) and delete($allowed_hosts,$host) != [] {
-    $real_allowed_hosts = delete($allowed_hosts,$host)
-    $unique_real_allowed_hosts = prefix($real_allowed_hosts, "${dbname}_")
-  } elsif is_string($allowed_hosts) and ($allowed_hosts != $host) {
-    $real_allowed_hosts = $allowed_hosts
-    $unique_real_allowed_hosts = "${dbname}_${real_allowed_hosts}"
-  }
-
-  if $real_allowed_hosts {
-    openstacklib::db::mysql::host_access { $unique_real_allowed_hosts:
-      user          => $user,
-      password_hash => $password_hash,
-      database      => $dbname,
-      privileges    => $privileges,
-    }
-  }
-
 }
