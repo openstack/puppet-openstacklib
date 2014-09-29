@@ -56,7 +56,7 @@ define openstacklib::db::mysql (
     require => [ Class['mysql::server'], Class['mysql::client'] ],
   }
 
-  $allowed_hosts_list = unique(concat(any2array($allowed_hosts), $host))
+  $allowed_hosts_list = unique(concat(any2array($allowed_hosts), [$host]))
   $real_allowed_hosts = prefix($allowed_hosts_list, "${dbname}_")
 
   openstacklib::db::mysql::host_access { $real_allowed_hosts:
