@@ -119,6 +119,61 @@ array or string; optional; default to undef
 Privileges given to the database user;
 string or array of strings; optional; default to 'ALL'
 
+### Types and Providers
+
+#### Aviator
+
+#####`Puppet::add_aviator_params`
+
+The aviator type is not a real type, but it serves to simulate a mixin model,
+whereby other types can call out to the Puppet::add\_aviator\_params method in
+order to add aviator-specific parameters to themselves. Currently this adds the
+auth parameter to the given type. The method must be called after the type is
+declared, e.g.:
+
+```puppet
+require 'puppet/type/aviator'
+Puppet::Type.newtype(:my_type) do
+# ...
+end
+Puppet::add_aviator_params(:my_type)
+```
+
+#####`Puppet::Provider::Aviator`
+
+The aviator provider is a parent provider intended to serve as a base for other
+providers that need to authenticate against keystone in order to accomplish a
+task.
+
+**`Puppet::Provider::Aviator#authenticate`**
+
+Either creates an authenticated session or sets up an unauthenticated session
+with instance variables initialized with a token to inject into the next request.
+It takes as arguments a set of authentication parameters as a hash and a path
+to a log file. Puppet::Provider::Aviator#authencate looks for five different
+possible methods of authenticating, in the following order:
+
+1) Username and password credentials in the auth parameters
+2) The path to an openrc file containing credentials to read in the auth
+   parameters
+3) A service token in the auth parameters
+4) Environment variables set for the environment in which Puppet is running
+5) A service token in /etc/keystone/keystone.conf. This option provides
+   backwards compatibility with earlier keystone providers.
+
+If the provider has password credentials, it can create an authenticated
+session. If it only has a service token, it initializes an unauthenciated
+session and a hash of session data that can be injected into a future request.
+
+**`Puppet::Provider::Aviator#make_request`**
+
+After creating a session, the make\_request method provides an interface that
+providers can use to make requests without worrying about whether they have an
+authenticated or unauthenticated session. It takes as arguments the
+Aviator::Service it is making a request at (for example, keystone), a symbol for
+the request (for example, :list\_tenants), and optionally a block to execute
+that will set parameters for an update request.
+
 Implementation
 --------------
 
