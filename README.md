@@ -119,6 +119,48 @@ array or string; optional; default to undef
 Privileges given to the database user;
 string or array of strings; optional; default to 'ALL'
 
+
+#### Defined type: openstacklib::service_validation
+
+The service_validation resource is a library resource that can be used by nova, cinder,
+ceilometer, etc., to validate that a resource is actually up and running.
+
+For example, in nova::api you might declare:
+
+```
+::openstacklib::service_validation { 'nova-api':
+    command => 'nova list',
+  }
+```
+This defined resource creates an exec-anchor pair where the anchor depends upon
+the successful exec run.
+
+** Parameters for openstacklib::service_validation: **
+
+#####`command`
+Command to run for validating the service;
+string; required
+
+#####`service_name`
+The name of the service to validate;
+string; optional; default to the $title of the resource, i.e. 'nova-api'
+
+#####`path`
+The path of the command to validate the service;
+string; optional; default to '/usr/bin:/bin:/usr/sbin:/sbin'
+
+#####`provider`
+The provider to use for the exec command;
+string; optional; default to 'shell'
+
+#####`tries`
+Number of times to retry validation;
+string; optional; default to '10'
+
+#####`try_sleep`
+Number of seconds between validation attempts;
+string; optional; default to '2'
+
 ### Types and Providers
 
 #### Aviator
