@@ -1,6 +1,7 @@
 openstacklib
 ============
 
+5.0.0 - 2014.2.0 - Juno
 #### Table of Contents
 
 1. [Overview - What is the openstacklib module?](#overview)
@@ -258,6 +259,6 @@ Puppet Module :: OpenStack Version :: OpenStack Codename
 Release Notes
 -------------
 
-**5.0.0-devel**
+**5.0.0**
 
 * This is the initial release of this module.
