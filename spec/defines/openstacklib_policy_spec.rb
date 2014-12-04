@@ -16,8 +16,22 @@ describe 'openstacklib::policy::base' do
     should contain_augeas('/etc/nova/policy.json-context_is_admin-foo:bar').with(
       'lens'    => 'Json.lns',
       'incl'    => '/etc/nova/policy.json',
-      'changes' => 'set dict/entry[*][.="context_is_admin"]/string foo:bar'
+      'changes' => 'set dict/entry[*][.="context_is_admin"]/string foo:bar',
+      'require' => 'Augeas[/etc/nova/policy.json-context_is_admin-foo:bar-add]'
+    )
+  end
+
+  it 'configures the proper policy' do
+    should contain_augeas('/etc/nova/policy.json-context_is_admin-foo:bar-add').with(
+      'lens'    => 'Json.lns',
+      'incl'    => '/etc/nova/policy.json',
+      'changes' => [
+          'set dict/entry[last()+1] "context_is_admin"',
+          'set dict/entry[last()]/string "foo:bar"'
+      ],
+      'onlyif' => 'match dict/entry[*][.="context_is_admin"] size == 0'
     )
   end
 
 end
+
