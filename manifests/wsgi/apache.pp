@@ -95,35 +95,50 @@
 #   (optional) The number of workers for the vhost.
 #   Defaults to '1'
 #
-# [*wsgi_script_path*]
-#   (optional) The path of the WSGI script.
+# [*wsgi_daemon_process*]
+#   (optional) Name of the WSGI daemon process.
+#   Defaults to $name
+#
+# [*wsgi_daemon_group*]
+#   (optional) Name of the WSGI process group.
+#   Defaults to $name
+#
+# [*wsgi_script_dir*]
+#   (optional) The directory path of the WSGI script.
 #   Defaults to undef
 #
-# [*wsgi_script_script*]
+# [*wsgi_script_file*]
+#   (optional) The file path of the WSGI script.
+#   Defaults to undef
+#
+# [*wsgi_script_source*]
 #   (optional) The source of the WSGI script.
 #   Defaults to undef
 #
 define openstacklib::wsgi::apache (
-  $service_name       = $name,
-  $bind_host          = undef,
-  $bind_port          = undef,
-  $group              = undef,
-  $path               = '/',
-  $priority           = '10',
-  $servername         = $::fqdn,
-  $ssl                = false,
-  $ssl_ca             = undef,
-  $ssl_cert           = undef,
-  $ssl_certs_dir      = undef,
-  $ssl_chain          = undef,
-  $ssl_crl            = undef,
-  $ssl_crl_path       = undef,
-  $ssl_key            = undef,
-  $threads            = $::processorcount,
-  $user               = undef,
-  $workers            = 1,
-  $wsgi_script_path   = undef,
-  $wsgi_script_source = undef,
+  $service_name        = $name,
+  $bind_host           = undef,
+  $bind_port           = undef,
+  $group               = undef,
+  $path                = '/',
+  $priority            = '10',
+  $servername          = $::fqdn,
+  $ssl                 = false,
+  $ssl_ca              = undef,
+  $ssl_cert            = undef,
+  $ssl_certs_dir       = undef,
+  $ssl_chain           = undef,
+  $ssl_crl             = undef,
+  $ssl_crl_path        = undef,
+  $ssl_key             = undef,
+  $threads             = $::processorcount,
+  $user                = undef,
+  $workers             = 1,
+  $wsgi_daemon_process = $name,
+  $wsgi_process_group  = $name,
+  $wsgi_script_dir     = undef,
+  $wsgi_script_file    = undef,
+  $wsgi_script_source  = undef,
 ) {
 
   include ::apache
@@ -135,8 +150,8 @@ define openstacklib::wsgi::apache (
   # Ensure there's no trailing '/' except if this is also the only character
   $path_real = regsubst($path, '(^/.*)/$', '\1')
 
-  if !defined(File[$wsgi_script_path]) {
-    file { $wsgi_script_path:
+  if !defined(File[$wsgi_script_dir]) {
+    file { $wsgi_script_dir:
       ensure  => directory,
       owner   => $user,
       group   => $group,
@@ -146,12 +161,12 @@ define openstacklib::wsgi::apache (
 
   file { $service_name:
     ensure  => file,
-    path    => "${wsgi_script_path}/${service_name}",
+    path    => "${wsgi_script_dir}/${wsgi_script_file}",
     source  => $wsgi_script_source,
     owner   => $user,
     group   => $group,
     mode    => '0644',
-    require => File[$wsgi_script_path],
+    require => File[$wsgi_script_dir],
   }
 
   $wsgi_daemon_process_options = {
@@ -160,14 +175,14 @@ define openstacklib::wsgi::apache (
     processes => $workers,
     threads   => $threads,
   }
-  $wsgi_script_aliases = hash([$path_real,$wsgi_script_path])
+  $wsgi_script_aliases = hash([$path_real,"${wsgi_script_dir}/${wsgi_script_file}"])
 
   ::apache::vhost { $service_name:
     ensure                      => 'present',
     servername                  => $servername,
     ip                          => $bind_host,
     port                        => $bind_port,
-    docroot                     => $wsgi_script_path,
+    docroot                     => $wsgi_script_dir,
     docroot_owner               => $user,
     docroot_group               => $group,
     priority                    => $priority,
@@ -179,9 +194,9 @@ define openstacklib::wsgi::apache (
     ssl_crl_path                => $ssl_crl_path,
     ssl_crl                     => $ssl_crl,
     ssl_certs_dir               => $ssl_certs_dir,
-    wsgi_daemon_process         => $service_name,
+    wsgi_daemon_process         => $wsgi_daemon_process,
     wsgi_daemon_process_options => $wsgi_daemon_process_options,
-    wsgi_process_group          => $service_name,
+    wsgi_process_group          => $wsgi_process_group,
     wsgi_script_aliases         => $wsgi_script_aliases,
     require                     => File[$service_name],
   }

@@ -35,7 +35,8 @@ describe 'openstacklib::wsgi::apache' do
       :group              => 'keystone',
       :ssl                => true,
       :user               => 'keystone',
-      :wsgi_script_path   => '/var/www/cgi-bin/keystone',
+      :wsgi_script_dir    => '/var/www/cgi-bin/keystone',
+      :wsgi_script_file   => 'main',
       :wsgi_script_source => '/usr/share/keystone/keystone.wsgi'
     }
   end
@@ -56,7 +57,7 @@ describe 'openstacklib::wsgi::apache' do
 
       it { should contain_file('keystone_wsgi').with(
         'ensure'  => 'file',
-        'path'    => '/var/www/cgi-bin/keystone/keystone_wsgi',
+        'path'    => '/var/www/cgi-bin/keystone/main',
         'source'  => '/usr/share/keystone/keystone.wsgi',
         'owner'   => 'keystone',
         'group'   => 'keystone',
@@ -73,7 +74,7 @@ describe 'openstacklib::wsgi::apache' do
         'ssl'                 => 'true',
         'wsgi_daemon_process' => 'keystone_wsgi',
         'wsgi_process_group'  => 'keystone_wsgi',
-        'wsgi_script_aliases' => { '/' => "/var/www/cgi-bin/keystone" },
+        'wsgi_script_aliases' => { '/' => "/var/www/cgi-bin/keystone/main" },
         'require'             => 'File[keystone_wsgi]'
       )}
       it { should contain_file("#{platform_parameters[:httpd_ports_file]}") }
