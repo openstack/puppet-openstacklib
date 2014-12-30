@@ -144,9 +144,9 @@ define openstacklib::wsgi::apache (
     }
   }
 
-  file { "${service_name}_wsgi":
+  file { $service_name:
     ensure  => file,
-    path    => "${wsgi_script_path}/${service_name}_wsgi",
+    path    => "${wsgi_script_path}/${service_name}",
     source  => $wsgi_script_source,
     owner   => $user,
     group   => $group,
@@ -162,7 +162,7 @@ define openstacklib::wsgi::apache (
   }
   $wsgi_script_aliases = hash([$path_real,$wsgi_script_path])
 
-  ::apache::vhost { "${service_name}_wsgi":
+  ::apache::vhost { $service_name:
     ensure                      => 'present',
     servername                  => $servername,
     ip                          => $bind_host,
@@ -183,7 +183,7 @@ define openstacklib::wsgi::apache (
     wsgi_daemon_process_options => $wsgi_daemon_process_options,
     wsgi_process_group          => $service_name,
     wsgi_script_aliases         => $wsgi_script_aliases,
-    require                     => File["${service_name}_wsgi"],
+    require                     => File[$service_name],
   }
 
 }

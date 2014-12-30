@@ -19,7 +19,7 @@ require 'spec_helper'
 
 describe 'openstacklib::wsgi::apache' do
 
-  let (:title) { 'keystone' }
+  let (:title) { 'keystone_wsgi' }
 
   let :global_facts do
     {
@@ -71,8 +71,8 @@ describe 'openstacklib::wsgi::apache' do
         'docroot_owner'       => 'keystone',
         'docroot_group'       => 'keystone',
         'ssl'                 => 'true',
-        'wsgi_daemon_process' => 'keystone',
-        'wsgi_process_group'  => 'keystone',
+        'wsgi_daemon_process' => 'keystone_wsgi',
+        'wsgi_process_group'  => 'keystone_wsgi',
         'wsgi_script_aliases' => { '/' => "/var/www/cgi-bin/keystone" },
         'require'             => 'File[keystone_wsgi]'
       )}
