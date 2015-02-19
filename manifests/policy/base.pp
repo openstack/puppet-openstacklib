@@ -37,7 +37,7 @@ define openstacklib::policy::base (
   augeas { "${file_path}-${key}-${value}" :
     lens    => 'Json.lns',
     incl    => $file_path,
-    changes => "set dict/entry[*][.=\"${key}\"]/string ${value}",
+    changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
     require => Augeas["${file_path}-${key}-${value}-add"]
   }
 

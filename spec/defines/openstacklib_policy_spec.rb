@@ -8,28 +8,28 @@ describe 'openstacklib::policy::base' do
 
   let :params do
     {:file_path => '/etc/nova/policy.json',
-    :key       => 'context_is_admin',
+    :key       => 'context_is_admin or owner',
     :value     => 'foo:bar'}
   end
 
-  it 'configures the proper policy' do
-    should contain_augeas('/etc/nova/policy.json-context_is_admin-foo:bar').with(
+  it 'configures (modifies) the proper policy' do
+    should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar').with(
       'lens'    => 'Json.lns',
       'incl'    => '/etc/nova/policy.json',
-      'changes' => 'set dict/entry[*][.="context_is_admin"]/string foo:bar',
-      'require' => 'Augeas[/etc/nova/policy.json-context_is_admin-foo:bar-add]'
+      'changes' => 'set dict/entry[*][.="context_is_admin or owner"]/string "foo:bar"',
+      'require' => 'Augeas[/etc/nova/policy.json-context_is_admin or owner-foo:bar-add]'
     )
   end
 
-  it 'configures the proper policy' do
-    should contain_augeas('/etc/nova/policy.json-context_is_admin-foo:bar-add').with(
+  it 'configures (adds) the proper policy' do
+    should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar-add').with(
       'lens'    => 'Json.lns',
       'incl'    => '/etc/nova/policy.json',
       'changes' => [
-          'set dict/entry[last()+1] "context_is_admin"',
+          'set dict/entry[last()+1] "context_is_admin or owner"',
           'set dict/entry[last()]/string "foo:bar"'
       ],
-      'onlyif' => 'match dict/entry[*][.="context_is_admin"] size == 0'
+      'onlyif' => 'match dict/entry[*][.="context_is_admin or owner"] size == 0'
     )
   end
 
