@@ -8,8 +8,6 @@ group :development, :test do
   gem 'rspec'
   gem 'mocha'
   gem 'json'
-  gem 'faraday', '0.8.8',       :require => false
-  gem 'vcr',                    :require => false
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']

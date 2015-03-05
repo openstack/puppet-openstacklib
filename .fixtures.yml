@@ -1,7 +1,6 @@
 fixtures:
   repositories:
     apache: git://github.com/puppetlabs/puppetlabs-apache.git
-    aviator: git://github.com/aimonb/puppet_aviator.git
     concat: git://github.com/puppetlabs/puppetlabs-concat.git
     mysql: git://github.com/puppetlabs/puppetlabs-mysql.git
     postgresql: git://github.com/puppetlabs/puppetlabs-postgresql.git
