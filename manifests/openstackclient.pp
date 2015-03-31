@@ -4,7 +4,7 @@
 #
 # == Parameters
 #
-#  [package_ensure]
+#  [*package_ensure*]
 #    Ensure state of the openstackclient package.
 #    Optional. Defaults to 'present'.
 #

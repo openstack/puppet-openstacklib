@@ -5,6 +5,7 @@ group :development, :test do
 
   gem 'puppet-lint', '~> 1.1.0'
   gem 'metadata-json-lint'
+  gem 'puppet-lint-param-docs'
   gem 'puppet-lint-absolute_classname-check'
   gem 'puppet-lint-absolute_template_path'
   gem 'puppet-lint-trailing_newline-check'
