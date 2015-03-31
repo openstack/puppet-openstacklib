@@ -28,9 +28,9 @@ define openstacklib::policy::base (
     incl    => $file_path,
     changes => [
       "set dict/entry[last()+1] \"${key}\"",
-      "set dict/entry[last()]/string \"${value}\""
+      "set dict/entry[last()]/string \"${value}\"",
     ],
-    onlyif  => "match dict/entry[*][.=\"${key}\"] size == 0"
+    onlyif  => "match dict/entry[*][.=\"${key}\"] size == 0",
   }
 
   # Requires that the entry is added before this call or it will fail.
@@ -38,7 +38,7 @@ define openstacklib::policy::base (
     lens    => 'Json.lns',
     incl    => $file_path,
     changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
-    require => Augeas["${file_path}-${key}-${value}-add"]
+    require => Augeas["${file_path}-${key}-${value}-add"],
   }
 
 }
