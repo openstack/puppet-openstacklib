@@ -3,7 +3,7 @@
   "version": "5.0.0",
   "author": "Puppet Labs and StackForge Contributors",
   "summary": "Puppet OpenStack Libraries",
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "source": "git://github.com/stackforge/puppet-openstacklib.git",
   "project_page": "https://launchpad.net/puppet-openstacklib",
   "issues_url": "https://bugs.launchpad.net/puppet-openstacklib",
