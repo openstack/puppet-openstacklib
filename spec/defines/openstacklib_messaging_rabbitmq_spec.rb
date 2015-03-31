@@ -28,18 +28,18 @@ describe 'openstacklib::messaging::rabbitmq' do
     end
 
     context 'with default parameters' do
-      it { should contain_rabbitmq_user('guest').with(
+      it { is_expected.to contain_rabbitmq_user('guest').with(
         :admin    => false,
         :password => 'guest',
         :provider => 'rabbitmqctl',
       )}
-      it { should contain_rabbitmq_user_permissions('guest@/').with(
+      it { is_expected.to contain_rabbitmq_user_permissions('guest@/').with(
         :configure_permission => '.*',
         :write_permission     => '.*',
         :read_permission      => '.*',
         :provider             => 'rabbitmqctl',
       )}
-      it { should contain_rabbitmq_vhost('/').with(
+      it { is_expected.to contain_rabbitmq_vhost('/').with(
         :provider => 'rabbitmqctl',
       )}
     end
@@ -57,18 +57,18 @@ describe 'openstacklib::messaging::rabbitmq' do
         )
       end
 
-      it { should contain_rabbitmq_user('nova').with(
+      it { is_expected.to contain_rabbitmq_user('nova').with(
         :admin    => true,
         :password => 'secrete',
         :provider => 'rabbitmqctl',
       )}
-      it { should contain_rabbitmq_user_permissions('nova@/nova').with(
+      it { is_expected.to contain_rabbitmq_user_permissions('nova@/nova').with(
         :configure_permission => '.nova',
         :write_permission     => '.nova',
         :read_permission      => '.nova',
         :provider             => 'rabbitmqctl',
       )}
-      it { should contain_rabbitmq_vhost('/nova').with(
+      it { is_expected.to contain_rabbitmq_vhost('/nova').with(
         :provider => 'rabbitmqctl',
       )}
     end
@@ -78,7 +78,7 @@ describe 'openstacklib::messaging::rabbitmq' do
         params.merge!( :manage_vhost => false )
       end
 
-      it { should_not contain_rabbitmq_vhost }
+      it { is_expected.not_to contain_rabbitmq_vhost }
     end
 
   end

@@ -42,20 +42,20 @@ describe 'openstacklib::wsgi::apache' do
   end
 
   shared_examples_for 'apache serving a service with mod_wsgi' do
-    it { should contain_service('httpd').with_name(platform_parameters[:httpd_service_name]) }
-    it { should contain_class('apache') }
-    it { should contain_class('apache::mod::wsgi') }
+    it { is_expected.to contain_service('httpd').with_name(platform_parameters[:httpd_service_name]) }
+    it { is_expected.to contain_class('apache') }
+    it { is_expected.to contain_class('apache::mod::wsgi') }
 
     describe 'with default parameters' do
 
-      it { should contain_file('/var/www/cgi-bin/keystone').with(
+      it { is_expected.to contain_file('/var/www/cgi-bin/keystone').with(
         'ensure'  => 'directory',
         'owner'   => 'keystone',
         'group'   => 'keystone',
         'require' => 'Package[httpd]'
       )}
 
-      it { should contain_file('keystone_wsgi').with(
+      it { is_expected.to contain_file('keystone_wsgi').with(
         'ensure'  => 'file',
         'path'    => '/var/www/cgi-bin/keystone/main',
         'source'  => '/usr/share/keystone/keystone.wsgi',
@@ -64,7 +64,7 @@ describe 'openstacklib::wsgi::apache' do
         'mode'    => '0644',
       )}
 
-      it { should contain_apache__vhost('keystone_wsgi').with(
+      it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
         'servername'          => 'some.host.tld',
         'ip'                  => nil,
         'port'                => '5000',
@@ -77,7 +77,7 @@ describe 'openstacklib::wsgi::apache' do
         'wsgi_script_aliases' => { '/' => "/var/www/cgi-bin/keystone/main" },
         'require'             => 'File[keystone_wsgi]'
       )}
-      it { should contain_file("#{platform_parameters[:httpd_ports_file]}") }
+      it { is_expected.to contain_file("#{platform_parameters[:httpd_ports_file]}") }
     end
 
   end
