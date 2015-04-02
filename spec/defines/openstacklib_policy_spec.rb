@@ -13,7 +13,7 @@ describe 'openstacklib::policy::base' do
   end
 
   it 'configures (modifies) the proper policy' do
-    should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar').with(
+    is_expected.to contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar').with(
       'lens'    => 'Json.lns',
       'incl'    => '/etc/nova/policy.json',
       'changes' => 'set dict/entry[*][.="context_is_admin or owner"]/string "foo:bar"',
@@ -22,7 +22,7 @@ describe 'openstacklib::policy::base' do
   end
 
   it 'configures (adds) the proper policy' do
-    should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar-add').with(
+    is_expected.to contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar-add').with(
       'lens'    => 'Json.lns',
       'incl'    => '/etc/nova/policy.json',
       'changes' => [

@@ -32,7 +32,7 @@ describe 'openstacklib::service_validation' do
         required_params
       end
 
-      it { should contain_exec("execute #{title} validation").with(
+      it { is_expected.to contain_exec("execute #{title} validation").with(
         :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
         :provider  => 'shell',
         :command   => 'nova list',
@@ -40,7 +40,7 @@ describe 'openstacklib::service_validation' do
         :try_sleep => '2',
       )}
 
-      it { should contain_anchor("create #{title} anchor").with(
+      it { is_expected.to contain_anchor("create #{title} anchor").with(
         :require => "Exec[execute #{title} validation]",
       )}
 
@@ -50,7 +50,7 @@ describe 'openstacklib::service_validation' do
       let :params do
         required_params.delete(:command)
       end
-      it { expect { should raise_error(Puppet::Error) } }
+      it { expect { is_expected.to raise_error(Puppet::Error) } }
     end
 
   end

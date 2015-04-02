@@ -15,7 +15,7 @@ describe 'openstacklib::policy' do
   end
 
   it 'configures the proper policy' do
-    should contain_openstacklib__policy__base('foo').with(
+    is_expected.to contain_openstacklib__policy__base('foo').with(
       :file_path => '/etc/nova/policy.json',
       :key       => 'context_is_admin',
       :value     => 'foo:bar'

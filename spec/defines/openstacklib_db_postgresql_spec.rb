@@ -22,7 +22,7 @@ describe 'openstacklib::db::postgresql' do
         required_params
       end
 
-      it { should contain_postgresql__server__db(title).with(
+      it { is_expected.to contain_postgresql__server__db(title).with(
         :user     => title,
         :password => password_hash
       )}
@@ -32,7 +32,7 @@ describe 'openstacklib::db::postgresql' do
       let :params do
         { :encoding => 'latin1' }.merge(required_params)
       end
-      it { should contain_postgresql__server__db(title).with_encoding(params[:encoding]) }
+      it { is_expected.to contain_postgresql__server__db(title).with_encoding(params[:encoding]) }
     end
 
     context 'when omitting the required parameter password_hash' do
@@ -40,7 +40,7 @@ describe 'openstacklib::db::postgresql' do
         required_params.delete(:password_hash)
       end
 
-      it { expect { should raise_error(Puppet::Error) } }
+      it { expect { is_expected.to raise_error(Puppet::Error) } }
     end
 
     context 'when notifying other resources' do
@@ -51,7 +51,7 @@ describe 'openstacklib::db::postgresql' do
         { :notify => 'Exec[nova-db-sync]'}.merge(required_params)
       end
 
-      it {should contain_exec('nova-db-sync').that_subscribes_to("Openstacklib::Db::Postgresql[#{title}]") }
+      it {is_expected.to contain_exec('nova-db-sync').that_subscribes_to("Openstacklib::Db::Postgresql[#{title}]") }
     end
 
     context 'when required for other openstack services' do
@@ -65,7 +65,7 @@ describe 'openstacklib::db::postgresql' do
         { :before => 'Service[keystone]'}.merge(required_params)
       end
 
-      it { should contain_service('keystone').that_requires("Openstacklib::Db::Postgresql[keystone]") }
+      it { is_expected.to contain_service('keystone').that_requires("Openstacklib::Db::Postgresql[keystone]") }
     end
 
   end
@@ -82,7 +82,7 @@ describe 'openstacklib::db::postgresql' do
         required_params
       end
 
-      it { should contain_postgresql__server__db(title).with(
+      it { is_expected.to contain_postgresql__server__db(title).with(
         :user     => title,
         :password => password_hash
       )}
@@ -92,7 +92,7 @@ describe 'openstacklib::db::postgresql' do
       let :params do
         { :encoding => 'latin1' }.merge(required_params)
       end
-      it { should contain_postgresql__server__db(title).with_encoding(params[:encoding]) }
+      it { is_expected.to contain_postgresql__server__db(title).with_encoding(params[:encoding]) }
     end
 
     context 'when omitting the required parameter password_hash' do
@@ -100,7 +100,7 @@ describe 'openstacklib::db::postgresql' do
         required_params.delete(:password_hash)
       end
 
-      it { expect { should raise_error(Puppet::Error) } }
+      it { expect { is_expected.to raise_error(Puppet::Error) } }
     end
 
     context 'when notifying other resources' do
@@ -111,7 +111,7 @@ describe 'openstacklib::db::postgresql' do
         { :notify => 'Exec[nova-db-sync]'}.merge(required_params)
       end
 
-      it {should contain_exec('nova-db-sync').that_subscribes_to("Openstacklib::Db::Postgresql[#{title}]") }
+      it {is_expected.to contain_exec('nova-db-sync').that_subscribes_to("Openstacklib::Db::Postgresql[#{title}]") }
     end
 
     context 'when required for other openstack services' do
@@ -125,7 +125,7 @@ describe 'openstacklib::db::postgresql' do
         { :before => 'Service[keystone]'}.merge(required_params)
       end
 
-      it { should contain_service('keystone').that_requires("Openstacklib::Db::Postgresql[keystone]") }
+      it { is_expected.to contain_service('keystone').that_requires("Openstacklib::Db::Postgresql[keystone]") }
     end
 
   end

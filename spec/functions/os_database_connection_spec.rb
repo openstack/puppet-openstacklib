@@ -3,27 +3,27 @@ require 'spec_helper'
 describe 'os_database_connection' do
 
   it 'refuses String' do
-    should run.with_params('foo').\
+    is_expected.to run.with_params('foo').\
       and_raise_error(Puppet::ParseError, /Requires an hash/)
   end
 
   it 'refuses Array' do
-    should run.with_params(['foo']).\
+    is_expected.to run.with_params(['foo']).\
       and_raise_error(Puppet::ParseError, /Requires an hash/)
   end
 
   it 'refuses without at least one argument' do
-    should run.with_params().\
+    is_expected.to run.with_params().\
       and_raise_error(Puppet::ParseError, /Wrong number of arguments/)
   end
 
   it 'refuses too many arguments' do
-    should run.with_params('foo', 'bar').\
+    is_expected.to run.with_params('foo', 'bar').\
       and_raise_error(Puppet::ParseError, /Wrong number of arguments/)
   end
 
   it 'fails if port is provided with missing host' do
-    should run.with_params({
+    is_expected.to run.with_params({
         'dialect'  => 'sqlite',
         'database' => '/var/lib/keystone/keystone.db',
         'port'     => '3306',
@@ -34,7 +34,7 @@ describe 'os_database_connection' do
   context 'creates the correct connection URI' do
 
     it 'with all parameters' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'mysql',
           'host'     => '127.0.0.1',
           'port'     => '3306',
@@ -46,7 +46,7 @@ describe 'os_database_connection' do
     end
 
     it 'without port' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'mysql',
           'host'     => '127.0.0.1',
           'database' => 'test',
@@ -57,7 +57,7 @@ describe 'os_database_connection' do
     end
 
     it 'without host and port' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'sqlite',
           'database' => '/var/lib/keystone/keystone.db',
           'charset'  => 'utf-8'
@@ -65,7 +65,7 @@ describe 'os_database_connection' do
     end
 
     it 'without username and password' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'mysql',
           'host'     => '127.0.0.1',
           'port'     => '3306',
@@ -75,7 +75,7 @@ describe 'os_database_connection' do
     end
 
     it 'with username set to undef' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'mysql',
           'host'     => '127.0.0.1',
           'port'     => '3306',
@@ -86,7 +86,7 @@ describe 'os_database_connection' do
     end
 
     it 'with username set to an empty string' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'mysql',
           'host'     => '127.0.0.1',
           'port'     => '3306',
@@ -97,7 +97,7 @@ describe 'os_database_connection' do
     end
 
     it 'without password' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'mysql',
           'host'     => '127.0.0.1',
           'port'     => '3306',
@@ -108,7 +108,7 @@ describe 'os_database_connection' do
     end
 
     it 'with password set to undef' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'mysql',
           'host'     => '127.0.0.1',
           'port'     => '3306',
@@ -120,7 +120,7 @@ describe 'os_database_connection' do
     end
 
     it 'with password set to an empty string' do
-      should run.with_params({
+      is_expected.to run.with_params({
           'dialect'  => 'mysql',
           'host'     => '127.0.0.1',
           'port'     => '3306',

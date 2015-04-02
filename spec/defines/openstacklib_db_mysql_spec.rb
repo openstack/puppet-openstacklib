@@ -19,11 +19,11 @@ describe 'openstacklib::db::mysql' do
         required_params
       end
 
-      it { should contain_mysql_database(title).with(
+      it { is_expected.to contain_mysql_database(title).with(
         :charset => 'utf8',
         :collate => 'utf8_unicode_ci'
       )}
-      it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+      it { is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user       => title,
         :database   => title,
         :privileges => 'ALL'
@@ -35,11 +35,11 @@ describe 'openstacklib::db::mysql' do
         { :dbname => 'foobar' }.merge(required_params)
       end
 
-      it { should contain_mysql_database(params[:dbname]).with(
+      it { is_expected.to contain_mysql_database(params[:dbname]).with(
         :charset => 'utf8',
         :collate => 'utf8_unicode_ci'
       )}
-      it { should contain_openstacklib__db__mysql__host_access("#{params[:dbname]}_127.0.0.1").with(
+      it { is_expected.to contain_openstacklib__db__mysql__host_access("#{params[:dbname]}_127.0.0.1").with(
         :user       => title,
         :database   => params[:dbname],
         :privileges => 'ALL'
@@ -51,11 +51,11 @@ describe 'openstacklib::db::mysql' do
         { :user => 'foobar' }.merge(required_params)
       end
 
-      it { should contain_mysql_database(title).with(
+      it { is_expected.to contain_mysql_database(title).with(
         :charset => 'utf8',
         :collate => 'utf8_unicode_ci'
       )}
-      it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+      it { is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user       => params[:user],
         :database   => title,
         :privileges => 'ALL'
@@ -67,14 +67,14 @@ describe 'openstacklib::db::mysql' do
         { :charset => 'latin1' }.merge(required_params)
       end
 
-      it { should contain_mysql_database(title).with_charset(params[:charset]) }
+      it { is_expected.to contain_mysql_database(title).with_charset(params[:charset]) }
     end
 
     context 'when omitting the required parameter password_hash' do
       let :params do
         required_params.delete(:password_hash)
       end
-      it { expect { should raise_error(Puppet::Error) } }
+      it { expect { is_expected.to raise_error(Puppet::Error) } }
     end
 
     context 'when notifying other resources' do
@@ -85,7 +85,7 @@ describe 'openstacklib::db::mysql' do
         { :notify => 'Exec[nova-db-sync]'}.merge(required_params)
       end
 
-      it { should contain_exec('nova-db-sync').that_subscribes_to("Openstacklib::Db::Mysql[#{title}]") }
+      it { is_expected.to contain_exec('nova-db-sync').that_subscribes_to("Openstacklib::Db::Mysql[#{title}]") }
     end
 
     context 'when required for other openstack services' do
@@ -99,7 +99,7 @@ describe 'openstacklib::db::mysql' do
         { :before => 'Service[keystone]'}.merge(required_params)
       end
 
-      it { should contain_service('keystone').that_requires("Openstacklib::Db::Mysql[keystone]") }
+      it { is_expected.to contain_service('keystone').that_requires("Openstacklib::Db::Mysql[keystone]") }
     end
 
     context "overriding allowed_hosts parameter with array value" do
@@ -107,12 +107,12 @@ describe 'openstacklib::db::mysql' do
         { :allowed_hosts  => ['127.0.0.1','%'] }.merge(required_params)
       end
 
-      it {should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+      it {is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :password_hash => params[:password_hash],
         :database      => title
       )}
-      it {should contain_openstacklib__db__mysql__host_access("#{title}_%").with(
+      it {is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_%").with(
         :user          => title,
         :password_hash => params[:password_hash],
         :database      => title
@@ -124,7 +124,7 @@ describe 'openstacklib::db::mysql' do
         { :allowed_hosts => '192.168.1.1' }.merge(required_params)
       end
 
-      it {should contain_openstacklib__db__mysql__host_access("#{title}_192.168.1.1").with(
+      it {is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_192.168.1.1").with(
         :user          => title,
         :password_hash => params[:password_hash],
         :database      => title
@@ -136,7 +136,7 @@ describe 'openstacklib::db::mysql' do
         { :allowed_hosts => '127.0.0.1' }.merge(required_params)
       end
 
-      it {should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+      it {is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :password_hash => params[:password_hash],
         :database      => title

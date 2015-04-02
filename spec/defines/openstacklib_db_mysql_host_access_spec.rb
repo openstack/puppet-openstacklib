@@ -19,11 +19,11 @@ describe 'openstacklib::db::mysql::host_access' do
           :privileges    => 'ALL' }
       end
 
-      it { should contain_mysql_user("#{params[:user]}@10.0.0.1").with(
+      it { is_expected.to contain_mysql_user("#{params[:user]}@10.0.0.1").with(
         :password_hash => params[:password_hash]
       )}
 
-      it { should contain_mysql_grant("#{params[:user]}@10.0.0.1/#{params[:database]}.*").with(
+      it { is_expected.to contain_mysql_grant("#{params[:user]}@10.0.0.1/#{params[:database]}.*").with(
         :user       => "#{params[:user]}@10.0.0.1",
         :privileges => 'ALL',
         :table      => "#{params[:database]}.*"
