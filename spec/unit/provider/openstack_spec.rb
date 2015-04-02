@@ -8,10 +8,10 @@ require 'puppet/provider/openstack'
 describe Puppet::Provider::Openstack do
 
   before(:each) do
-    ENV['OS_USERNAME']    = nil
-    ENV['OS_PASSWORD']    = nil
-    ENV['OS_TENANT_NAME'] = nil
-    ENV['OS_AUTH_URL']    = nil
+    ENV['OS_USERNAME']     = nil
+    ENV['OS_PASSWORD']     = nil
+    ENV['OS_PROJECT_NAME'] = nil
+    ENV['OS_AUTH_URL']     = nil
   end
 
   let(:type) do
@@ -22,12 +22,36 @@ describe Puppet::Provider::Openstack do
     end
   end
 
-  shared_examples 'authenticating with environment variables' do
+  shared_examples 'authenticating with environment variables using API v2' do
     it 'makes a successful request' do
-      ENV['OS_USERNAME']    = 'test'
-      ENV['OS_PASSWORD']    = 'abc123'
-      ENV['OS_TENANT_NAME'] = 'test'
-      ENV['OS_AUTH_URL']    = 'http://127.0.0.1:35357/v2.0'
+      ENV['OS_USERNAME']     = 'test'
+      ENV['OS_PASSWORD']     = 'abc123'
+      ENV['OS_PROJECT_NAME'] = 'test'
+      ENV['OS_AUTH_URL']     = 'http://127.0.0.1:35357/v2.0'
+      if provider.class == Class
+        provider.stubs(:openstack)
+                .with('project', 'list', '--quiet', '--format', 'csv', [[ '--long' ]])
+                .returns('"ID","Name","Description","Enabled"
+"1cb05cfed7c24279be884ba4f6520262","test","Test tenant",True
+')
+      else
+        provider.class.stubs(:openstack)
+                    .with('project', 'list', '--quiet', '--format', 'csv', [[ '--long' ]])
+                    .returns('"ID","Name","Description","Enabled"
+"1cb05cfed7c24279be884ba4f6520262","test","Test tenant",True
+')
+      end
+      response = provider.request('project', 'list', nil, nil, '--long' )
+      expect(response.first[:description]).to match /Test tenant/
+    end
+  end
+
+  shared_examples 'authenticating with environment variables using API v3' do
+    it 'makes a successful request' do
+      ENV['OS_USERNAME']     = 'test'
+      ENV['OS_PASSWORD']     = 'abc123'
+      ENV['OS_PROJECT_NAME'] = 'test'
+      ENV['OS_AUTH_URL']     = 'http://127.0.0.1:35357/v3'
       if provider.class == Class
         provider.stubs(:openstack)
                 .with('project', 'list', '--quiet', '--format', 'csv', [[ '--long' ]])
@@ -59,10 +83,10 @@ describe Puppet::Provider::Openstack do
         {
           :name         => 'stubresource',
           :auth         => {
-            'username'    => 'test',
-            'password'    => 'abc123',
-            'tenant_name' => 'test',
-            'auth_url'    => 'http://127.0.0.1:5000/v2.0',
+            'username'     => 'test',
+            'password'     => 'abc123',
+            'project_name' => 'test',
+            'auth_url'     => 'http://127.0.0.1:5000/v2.0',
           }
         }
       end
@@ -72,7 +96,7 @@ describe Puppet::Provider::Openstack do
 
       it 'makes a successful request' do
         provider.class.stubs(:openstack)
-                      .with('project', 'list', '--quiet', '--format', 'csv', [['--long', '--os-username', 'test', '--os-password', 'abc123', '--os-tenant-name', 'test', '--os-auth-url', 'http://127.0.0.1:5000/v2.0']])
+                      .with('project', 'list', '--quiet', '--format', 'csv', [['--long', '--os-username', 'test', '--os-password', 'abc123', '--os-project-name', 'test', '--os-auth-url', 'http://127.0.0.1:5000/v2.0']])
                       .returns('"ID","Name","Description","Enabled"
 "1cb05cfed7c24279be884ba4f6520262","test","Test tenant",True
 ')
@@ -82,7 +106,7 @@ describe Puppet::Provider::Openstack do
     end
 
     context 'with valid openrc file in parameters' do
-      mock = "export OS_USERNAME='test'\nexport OS_PASSWORD='abc123'\nexport OS_TENANT_NAME='test'\nexport OS_AUTH_URL='http://127.0.0.1:5000/v2.0'"
+      mock = "export OS_USERNAME='test'\nexport OS_PASSWORD='abc123'\nexport OS_PROJECT_NAME='test'\nexport OS_AUTH_URL='http://127.0.0.1:5000/v2.0'"
       let(:resource_attrs) do
         {
           :name         => 'stubresource',
@@ -98,7 +122,7 @@ describe Puppet::Provider::Openstack do
       it 'makes a successful request' do
         File.expects(:open).with('/root/openrc').returns(StringIO.new(mock))
         provider.class.stubs(:openstack)
-                      .with('project', 'list', '--quiet', '--format', 'csv', [['--long', '--os-username', 'test', '--os-password', 'abc123', '--os-tenant-name', 'test', '--os-auth-url', 'http://127.0.0.1:5000/v2.0']])
+                      .with('project', 'list', '--quiet', '--format', 'csv', [['--long', '--os-username', 'test', '--os-password', 'abc123', '--os-project-name', 'test', '--os-auth-url', 'http://127.0.0.1:5000/v2.0']])
                       .returns('"ID","Name","Description","Enabled"
 "1cb05cfed7c24279be884ba4f6520262","test","Test tenant",True
 ')
@@ -113,7 +137,7 @@ describe Puppet::Provider::Openstack do
           :name         => 'stubresource',
           :auth         => {
             'token' => 'secrettoken',
-            'auth_url'      => 'http://127.0.0.1:5000/v2.0'
+            'url'   => 'http://127.0.0.1:5000/v2.0'
           }
         }
       end
@@ -149,7 +173,7 @@ Enabled="True"
     end
 
     context 'with valid password credentials in environment variables' do
-      it_behaves_like 'authenticating with environment variables' do
+      it_behaves_like 'authenticating with environment variables using API v2' do
         let(:resource_attrs) do
           {
             :name => 'stubresource',
@@ -179,10 +203,10 @@ Enabled="True"
         {
           :name         => 'stubresource',
           :auth         => {
-            'username'    => 'test',
-            'password'    => 'abc123',
-            'tenant_name' => 'test',
-            'auth_url'    => 'http://127.0.0.1:5000/v2.0',
+            'username'     => 'test',
+            'password'     => 'abc123',
+            'project_name' => 'test',
+            'auth_url'     => 'http://127.0.0.1:5000/v2.0',
           }
         }
       end
@@ -191,7 +215,7 @@ Enabled="True"
       end
       it 'retries' do
         provider.class.stubs(:openstack)
-                      .with('project', 'list', '--quiet', '--format', 'csv', [['--long', '--os-username', 'test', '--os-password', 'abc123', '--os-tenant-name', 'test', '--os-auth-url', 'http://127.0.0.1:5000/v2.0']])
+                      .with('project', 'list', '--quiet', '--format', 'csv', [['--long', '--os-username', 'test', '--os-password', 'abc123', '--os-project-name', 'test', '--os-auth-url', 'http://127.0.0.1:5000/v2.0']])
                       .raises(Puppet::ExecutionFailure, 'Unable to establish connection')
                       .then
                       .returns('')
@@ -205,7 +229,7 @@ Enabled="True"
   describe '::request' do
 
     context 'with valid password credentials in environment variables' do
-      it_behaves_like 'authenticating with environment variables' do
+      it_behaves_like 'authenticating with environment variables using API v2' do
         let(:resource_attrs) do
           {
             :name => 'stubresource',

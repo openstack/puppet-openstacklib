@@ -106,46 +106,51 @@ class Puppet::Provider::Openstack < Puppet::Provider
   private
 
   def password_credentials_set?(auth_params)
-    auth_params && auth_params['username'] && auth_params['password'] && auth_params['tenant_name'] && auth_params['auth_url']
+    auth_params && auth_params['username'] && auth_params['password'] && auth_params['project_name'] && auth_params['auth_url']
   end
-
 
   def openrc_set?(auth_params)
     auth_params && auth_params['openrc']
   end
 
-
   def service_credentials_set?(auth_params)
-    auth_params && auth_params['token'] && auth_params['auth_url']
+    auth_params && auth_params['token'] && auth_params['url']
   end
-
 
   def self.env_vars_set?
-    ENV['OS_USERNAME'] && ENV['OS_PASSWORD'] && ENV['OS_TENANT_NAME'] && ENV['OS_AUTH_URL']
+    ENV['OS_USERNAME'] && ENV['OS_PASSWORD'] && ENV['OS_PROJECT_NAME'] && ENV['OS_AUTH_URL']
   end
-
 
   def env_vars_set?
     self.class.env_vars_set?
   end
 
-
-
   def self.password_auth_args(credentials)
-    ['--os-username',    credentials['username'],
-     '--os-password',    credentials['password'],
-     '--os-tenant-name', credentials['tenant_name'],
-     '--os-auth-url',    credentials['auth_url']]
+    creds = [ '--os-username',     credentials['username'],
+              '--os-password',     credentials['password'],
+              '--os-project-name', credentials['project_name'],
+              '--os-auth-url',     credentials['auth_url'] ]
+
+    if credentials.include?('project_domain_name')
+      creds << '--os-project-domain-name'
+      creds << credentials['project_domain_name']
+    end
+
+    if credentials.include?('user_domain_name')
+      creds << '--os-user-domain-name'
+      creds << credentials['user_domain_name']
+    end
+
+    creds
   end
 
   def password_auth_args(credentials)
     self.class.password_auth_args(credentials)
   end
 
-
   def self.token_auth_args(credentials)
-    ['--os-token',    credentials['token'],
-     '--os-url', credentials['auth_url']]
+    [ '--os-token', credentials['token'],
+      '--os-url',   credentials['url'] ]
   end
 
   def token_auth_args(credentials)
@@ -162,7 +167,6 @@ class Puppet::Provider::Openstack < Puppet::Provider
     end
     return creds
   end
-
 
   def self.get_credentials_from_env
     env = ENV.to_hash.dup.delete_if { |key, _| ! (key =~ /^OS_/) }
