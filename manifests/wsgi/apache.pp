@@ -99,7 +99,7 @@
 #   (optional) Name of the WSGI daemon process.
 #   Defaults to $name
 #
-# [*wsgi_daemon_group*]
+# [*wsgi_process_group*]
 #   (optional) Name of the WSGI process group.
 #   Defaults to $name
 #
