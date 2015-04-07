@@ -5,27 +5,46 @@ module Puppet::Util::Openstack
     type.newparam(:auth) do
 
       desc <<EOT
-Hash of authentication credentials. Credentials can be specified as
-password credentials, e.g.:
+Hash of authentication credentials. Credentials can be specified as either :
 
+1. Using a project/user with a password
+
+For Keystone API V2:
 auth => {
-  'username'    => 'test',
-  'password'    => 'passw0rd',
-  'tenant_name' => 'test',
-  'auth_url'    => 'http://localhost:35357/v2.0',
+  'username'     => 'test',
+  'password'     => 'changeme',
+  'project_name' => 'test',
+  'auth_url'     => 'http://localhost:35357/v2.0'
 }
 
-or a path to an openrc file containing these credentials, e.g.:
-
+or altenatively for Keystone API V3:
 auth => {
-  'openrc' => '/root/openrc',
+  'username'            => 'test',
+  'password'            => 'changeme',
+  'project_name'        => 'test',
+  'project_domain_name' => 'domain1',
+  'user_domain_name'    => 'domain1',
+  'auth_url'            => 'http://localhost:35357/v3'
 }
 
-or a service token and host, e.g.:
+2. Using a path to an openrc file containing these credentials
 
 auth => {
-  'service_token' => 'ADMIN',
-  'auth_url'    => 'http://localhost:35357/v2.0',
+  'openrc' => '/root/openrc'
+}
+
+3. Using a service token
+
+For Keystone API V2:
+auth => {
+  'token' => 'example',
+  'url'   => 'http://localhost:35357/v2.0'
+}
+
+Alternatively for Keystone API V3:
+auth => {
+  'token' => 'example',
+  'url'   => 'http://localhost:35357/v3.0'
 }
 
 If not present, the provider will look for environment variables for
