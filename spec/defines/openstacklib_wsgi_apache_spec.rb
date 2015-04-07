@@ -65,17 +65,23 @@ describe 'openstacklib::wsgi::apache' do
       )}
 
       it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
-        'servername'          => 'some.host.tld',
-        'ip'                  => nil,
-        'port'                => '5000',
-        'docroot'             => '/var/www/cgi-bin/keystone',
-        'docroot_owner'       => 'keystone',
-        'docroot_group'       => 'keystone',
-        'ssl'                 => 'true',
-        'wsgi_daemon_process' => 'keystone_wsgi',
-        'wsgi_process_group'  => 'keystone_wsgi',
-        'wsgi_script_aliases' => { '/' => "/var/www/cgi-bin/keystone/main" },
-        'require'             => 'File[keystone_wsgi]'
+        'servername'                  => 'some.host.tld',
+        'ip'                          => nil,
+        'port'                        => '5000',
+        'docroot'                     => '/var/www/cgi-bin/keystone',
+        'docroot_owner'               => 'keystone',
+        'docroot_group'               => 'keystone',
+        'ssl'                         => 'true',
+        'wsgi_daemon_process'         => 'keystone_wsgi',
+        'wsgi_process_group'          => 'keystone_wsgi',
+        'wsgi_script_aliases'         => { '/' => "/var/www/cgi-bin/keystone/main" },
+        'wsgi_daemon_process_options' => {
+          'user'      => 'keystone',
+          'group'     => 'keystone',
+          'processes' => 1,
+          'threads'   => global_facts[:processorcount],
+        },
+        'require'                     => 'File[keystone_wsgi]'
       )}
       it { is_expected.to contain_file("#{platform_parameters[:httpd_ports_file]}") }
     end

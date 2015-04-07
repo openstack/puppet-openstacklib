@@ -170,7 +170,7 @@ define openstacklib::wsgi::apache (
   }
 
   $wsgi_daemon_process_options = {
-    owner     => $user,
+    user      => $user,
     group     => $group,
     processes => $workers,
     threads   => $threads,
