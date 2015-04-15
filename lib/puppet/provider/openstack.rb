@@ -149,8 +149,13 @@ class Puppet::Provider::Openstack < Puppet::Provider
   end
 
   def self.token_auth_args(credentials)
-    [ '--os-token', credentials['token'],
-      '--os-url',   credentials['url'] ]
+    args = [ '--os-token', credentials['token'],
+             '--os-url',   credentials['url'] ]
+    # Add the api version only if requested by the caller
+    if credentials['version']
+      args << [ '--os-identity-api-version', credentials['version'] ]
+    end
+    args
   end
 
   def token_auth_args(credentials)
