@@ -110,7 +110,7 @@ string; optional; default to 'utf8'
 
 #####`collate`
 The collate to use for the database;
-string; optional; default to 'utf8_unicode_ci'
+string; optional; default to 'utf8_general_ci'
 
 #####`allowed_hosts`
 Additional hosts that are allowed to access this database;

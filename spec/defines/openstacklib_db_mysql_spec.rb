@@ -21,7 +21,7 @@ describe 'openstacklib::db::mysql' do
 
       it { is_expected.to contain_mysql_database(title).with(
         :charset => 'utf8',
-        :collate => 'utf8_unicode_ci'
+        :collate => 'utf8_general_ci'
       )}
       it { is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user       => title,
@@ -37,7 +37,7 @@ describe 'openstacklib::db::mysql' do
 
       it { is_expected.to contain_mysql_database(params[:dbname]).with(
         :charset => 'utf8',
-        :collate => 'utf8_unicode_ci'
+        :collate => 'utf8_general_ci'
       )}
       it { is_expected.to contain_openstacklib__db__mysql__host_access("#{params[:dbname]}_127.0.0.1").with(
         :user       => title,
@@ -53,12 +53,12 @@ describe 'openstacklib::db::mysql' do
 
       it { is_expected.to contain_mysql_database(title).with(
         :charset => 'utf8',
-        :collate => 'utf8_unicode_ci'
+        :collate => 'utf8_general_ci'
       )}
       it { is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user       => params[:user],
         :database   => title,
-        :privileges => 'ALL'
+        :privileges => 'ALL',
       )}
     end
 
