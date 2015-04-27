@@ -288,6 +288,18 @@ handle database migrations, it is common to set up refresh relationships
 between openstacklib::db::postgresql resource and the database sync exec
 resource. Relying on this behavior may cause errors.
 
+Beaker-Rspec
+------------
+
+This module has beaker-rspec tests
+
+To run:
+
+```shell
+bundle install
+bundle exec rspec spec/acceptance
+```
+
 Development
 -----------
 
