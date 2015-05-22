@@ -8,9 +8,29 @@ describe 'openstacklib class' do
       pp= <<-EOS
       Exec { logoutput => 'on_failure' }
 
+      if $::osfamily == 'RedHat' {
+        # RabbitMQ is not available in default repo
+        class { '::openstack_extras::repo::redhat::redhat':
+          # Kilo is not GA yet, so let's use the testing repo
+          manage_rdo => false,
+          repo_hash  => {
+            'rdo-kilo-testing' => {
+              'baseurl'  => 'https://repos.fedorapeople.org/repos/openstack/openstack-kilo/testing/el7/',
+              # packages are not GA so not signed
+              'gpgcheck' => '0',
+              'priority' => 97,
+            },
+          },
+        }
+        $package_provider = 'yum'
+      } else {
+        $package_provider = 'apt'
+      }
+
       class { '::rabbitmq':
         delete_guest_user => true,
         erlang_cookie     => 'secrete',
+        package_provider  => $package_provider
       }
 
       # openstacklib resources

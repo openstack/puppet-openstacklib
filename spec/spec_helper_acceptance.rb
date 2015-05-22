@@ -32,6 +32,7 @@ RSpec.configure do |c|
       on host, puppet('module','install','stahnma-epel'), { :acceptable_exit_codes => 0 }
       # until https://github.com/tamaskozak/puppetlabs-rabbitmq/commit/8bbfe320035fae2ae900211501008d63dc3c171c is part of a release
       shell('git clone https://github.com/puppetlabs/puppetlabs-rabbitmq /etc/puppet/modules/rabbitmq')
+      shell('git clone https://git.openstack.org/stackforge/puppet-openstack_extras /etc/puppet/modules/openstack_extras')
       # Install the module being tested
       puppet_module_install(:source => proj_root, :module_name => 'openstacklib')
       # List modules installed to help with debugging

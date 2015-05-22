@@ -25,7 +25,7 @@ describe 'openstacklib mysql' do
       it { is_expected.to be_listening.with('tcp') }
     end
 
-    describe command("mysql --defaults-file=/root/.my.cnf -e 'show databases;' | grep -q beaker") do
+    describe command("mysql -e 'show databases;' | grep -q beaker") do
       it { should return_exit_status 0 }
     end
 
