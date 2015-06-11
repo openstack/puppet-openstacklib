@@ -47,13 +47,19 @@ describe 'openstacklib class' do
       apply_manifest(pp, :catch_changes => true)
     end
 
-    describe command("rabbitmqctl list_users") do
-      it { should return_stdout /^beaker/ }
-      it { should_not return_stdout /^guest/ }
-    end
+    describe 'test rabbitmq resources' do
+      it 'should list rabbitmq beaker resources' do
+        shell('rabbitmqctl list_users') do |r|
+          expect(r.stdout).to match(/^beaker/)
+          expect(r.stdout).not_to match(/^guest/)
+          expect(r.exit_code).to eq(0)
+        end
 
-    describe command('rabbitmqctl list_permissions') do
-      it { should return_stdout /^beaker\t\.\*\t\.\*\t\.\*$/ }
+        shell('rabbitmqctl list_permissions') do |r|
+          expect(r.stdout).to match(/^beaker\t\.\*\t\.\*\t\.\*$/)
+          expect(r.exit_code).to eq(0)
+        end
+      end
     end
 
   end

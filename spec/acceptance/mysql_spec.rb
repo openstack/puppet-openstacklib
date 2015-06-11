@@ -25,8 +25,10 @@ describe 'openstacklib mysql' do
       it { is_expected.to be_listening.with('tcp') }
     end
 
-    describe command("mysql -e 'show databases;' | grep -q beaker") do
-      it { should return_exit_status 0 }
+    describe 'test database listing' do
+      it 'should list beaker database' do
+        expect(shell("mysql -e 'show databases;'|grep -q beaker").exit_code).to be_zero
+      end
     end
 
   end
