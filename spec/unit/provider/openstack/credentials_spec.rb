@@ -60,4 +60,33 @@ describe Puppet::Provider::Openstack::Credentials do
       end
     end
   end
+
+  describe 'using v3' do
+    let(:creds) do
+      creds = Puppet::Provider::Openstack::CredentialsV3.new
+    end
+    describe 'with v3' do
+      it 'uses v3 identity api' do
+        creds.identity_api_version == '3'
+      end
+    end
+    describe '#password_set? with username and project_name' do
+      it 'is successful' do
+        creds.auth_url = 'auth_url'
+        creds.password = 'password'
+        creds.project_name = 'project_name'
+        creds.username = 'username'
+        expect(creds.user_password_set?).to be_truthy
+      end
+    end
+    describe '#password_set? with user_id and project_id' do
+      it 'is successful' do
+        creds.auth_url = 'auth_url'
+        creds.password = 'password'
+        creds.project_id = 'projid'
+        creds.user_id = 'userid'
+        expect(creds.user_password_set?).to be_truthy
+      end
+    end
+  end
 end
