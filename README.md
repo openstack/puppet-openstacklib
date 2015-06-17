@@ -1,7 +1,7 @@
 openstacklib
 ============
 
-5.0.0 - 2014.2.0 - Juno
+5.1.0 - 2014.2 - Juno
 #### Table of Contents
 
 1. [Overview - What is the openstacklib module?](#overview)
@@ -328,6 +328,13 @@ Puppet Module :: OpenStack Version :: OpenStack Codename
 
 Release Notes
 -------------
+
+**5.1.0**
+
+* Update .gitreview file for project rename
+* Adding augeas insertion check
+* MySQL: change default MySQL collate to utf8_general_ci
+* spec: pin rspec-puppet to 1.0.1
 
 **5.0.0**
 
