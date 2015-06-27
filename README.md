@@ -11,7 +11,6 @@ openstacklib
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to the module](#development)
 7. [Contributors - Those with commits](#contributors)
-8. [Release Notes - Notes on the most recent updates to the module](#release-notes)
 
 Overview
 --------
@@ -325,17 +324,3 @@ Puppet Module :: OpenStack Version :: OpenStack Codename
 4.0.0         -> 2014.1.0          -> Icehouse
 5.0.0         -> 2014.2.0          -> Juno
 ```
-
-Release Notes
--------------
-
-**5.1.0**
-
-* Update .gitreview file for project rename
-* Adding augeas insertion check
-* MySQL: change default MySQL collate to utf8_general_ci
-* spec: pin rspec-puppet to 1.0.1
-
-**5.0.0**
-
-* This is the initial release of this module.
