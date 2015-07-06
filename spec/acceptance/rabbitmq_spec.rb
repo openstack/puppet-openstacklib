@@ -24,6 +24,7 @@ describe 'openstacklib class' do
         }
         $package_provider = 'yum'
       } else {
+        include ::apt
         $package_provider = 'apt'
       }
 
