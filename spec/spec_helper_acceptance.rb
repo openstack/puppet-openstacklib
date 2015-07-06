@@ -27,11 +27,10 @@ RSpec.configure do |c|
 
       # install library modules from the forge
       on host, puppet('module','install','puppetlabs-mysql'), { :acceptable_exit_codes => 0 }
+      on host, puppet('module','install','puppetlabs-rabbitmq'), { :acceptable_exit_codes => 0 }
       on host, puppet('module','install','puppetlabs-apache'), { :acceptable_exit_codes => 0 }
       on host, puppet('module','install','puppetlabs-postgresql'), { :acceptable_exit_codes => 0 }
       on host, puppet('module','install','stahnma-epel'), { :acceptable_exit_codes => 0 }
-      # until https://github.com/tamaskozak/puppetlabs-rabbitmq/commit/8bbfe320035fae2ae900211501008d63dc3c171c is part of a release
-      shell('git clone https://github.com/puppetlabs/puppetlabs-rabbitmq /etc/puppet/modules/rabbitmq')
       shell('git clone https://git.openstack.org/openstack/puppet-openstack_extras /etc/puppet/modules/openstack_extras')
       # Install the module being tested
       puppet_module_install(:source => proj_root, :module_name => 'openstacklib')
