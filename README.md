@@ -1,7 +1,8 @@
 openstacklib
 ============
 
-5.1.0 - 2014.2 - Juno
+6.0.0 - 2015.1 - Kilo
+
 #### Table of Contents
 
 1. [Overview - What is the openstacklib module?](#overview)
