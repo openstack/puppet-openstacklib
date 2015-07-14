@@ -38,7 +38,7 @@ Setup
 
 ### Installing openstacklib
 
-    example% puppet module install puppetlabs/openstacklib
+    example% puppet module install openstack/openstacklib
 
 Usage
 -----
