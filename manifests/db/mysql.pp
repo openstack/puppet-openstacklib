@@ -47,6 +47,7 @@ define openstacklib::db::mysql (
   $privileges     = 'ALL',
 ) {
 
+  include ::mysql::server
   include ::mysql::client
 
   mysql_database { $dbname:
