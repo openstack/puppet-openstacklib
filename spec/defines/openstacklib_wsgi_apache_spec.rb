@@ -86,6 +86,43 @@ describe 'openstacklib::wsgi::apache' do
       it { is_expected.to contain_file("#{platform_parameters[:httpd_ports_file]}") }
     end
 
+    describe 'when overriding parameters' do
+      let :params do
+        {
+          :wsgi_script_dir       => '/var/www/cgi-bin/keystone',
+          :wsgi_script_file      => 'main',
+          :wsgi_script_source    => '/usr/share/keystone/keystone.wsgi',
+          :servername            => 'dummy.host',
+          :bind_host             => '10.42.51.1',
+          :bind_port             => 4142,
+          :user                  => 'keystone',
+          :group                 => 'keystone',
+          :ssl                   => false,
+          :workers               => 37,
+          :vhost_custom_fragment => 'LimitRequestFieldSize 81900'
+        }
+      end
+      it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
+        'servername'                  => 'dummy.host',
+        'ip'                          => '10.42.51.1',
+        'port'                        => '4142',
+        'docroot'                     => "/var/www/cgi-bin/keystone",
+        'ssl'                         => 'false',
+        'wsgi_daemon_process'         => 'keystone_wsgi',
+        'wsgi_daemon_process_options' => {
+            'user'      => 'keystone',
+            'group'     => 'keystone',
+            'processes' => '37',
+            'threads'   => '42',
+        },
+        'wsgi_process_group'          => 'keystone_wsgi',
+        'wsgi_script_aliases'         => { '/' => "/var/www/cgi-bin/keystone/main" },
+        'require'                     => 'File[keystone_wsgi]',
+        'custom_fragment'             => 'LimitRequestFieldSize 81900',
+      )}
+
+    end
+
   end
 
   context 'on RedHat platforms' do

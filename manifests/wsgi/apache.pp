@@ -115,30 +115,36 @@
 #   (optional) The source of the WSGI script.
 #   Defaults to undef
 #
+# [*vhost_custom_fragment*]
+#   (optional) Passes a string of custom configuration
+#   directives to be placed at the end of the vhost configuration.
+#   Defaults to undef.
+#
 define openstacklib::wsgi::apache (
-  $service_name        = $name,
-  $bind_host           = undef,
-  $bind_port           = undef,
-  $group               = undef,
-  $path                = '/',
-  $priority            = '10',
-  $servername          = $::fqdn,
-  $ssl                 = false,
-  $ssl_ca              = undef,
-  $ssl_cert            = undef,
-  $ssl_certs_dir       = undef,
-  $ssl_chain           = undef,
-  $ssl_crl             = undef,
-  $ssl_crl_path        = undef,
-  $ssl_key             = undef,
-  $threads             = $::processorcount,
-  $user                = undef,
-  $workers             = 1,
-  $wsgi_daemon_process = $name,
-  $wsgi_process_group  = $name,
-  $wsgi_script_dir     = undef,
-  $wsgi_script_file    = undef,
-  $wsgi_script_source  = undef,
+  $service_name          = $name,
+  $bind_host             = undef,
+  $bind_port             = undef,
+  $group                 = undef,
+  $path                  = '/',
+  $priority              = '10',
+  $servername            = $::fqdn,
+  $ssl                   = false,
+  $ssl_ca                = undef,
+  $ssl_cert              = undef,
+  $ssl_certs_dir         = undef,
+  $ssl_chain             = undef,
+  $ssl_crl               = undef,
+  $ssl_crl_path          = undef,
+  $ssl_key               = undef,
+  $threads               = $::processorcount,
+  $user                  = undef,
+  $workers               = 1,
+  $wsgi_daemon_process   = $name,
+  $wsgi_process_group    = $name,
+  $wsgi_script_dir       = undef,
+  $wsgi_script_file      = undef,
+  $wsgi_script_source    = undef,
+  $vhost_custom_fragment = undef,
 ) {
 
   include ::apache
@@ -198,6 +204,7 @@ define openstacklib::wsgi::apache (
     wsgi_daemon_process_options => $wsgi_daemon_process_options,
     wsgi_process_group          => $wsgi_process_group,
     wsgi_script_aliases         => $wsgi_script_aliases,
+    custom_fragment             => $vhost_custom_fragment,
     require                     => File[$service_name],
   }
 
