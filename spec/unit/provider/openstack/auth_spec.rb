@@ -112,6 +112,25 @@ describe Puppet::Provider::Openstack::Auth do
         expect(response).to eq({})
       end
     end
+
+    context 'with a nonexistent file' do
+      it 'should get default rcfile when no environment or openrc file' do
+        ENV.clear
+        mock = "export OS_USERNAME='user'\nexport OS_PASSWORD='secret'\nexport OS_PROJECT_NAME='project'\nexport OS_AUTH_URL='http://127.0.0.1:5000'"
+        filename = '/root/openrc'
+
+        File.expects(:exists?).with("#{ENV['HOME']}/openrc").returns(false)
+        File.expects(:exists?).with(filename).returns(true)
+        File.expects(:open).with(filename).returns(StringIO.new(mock))
+
+        expect(klass.get_os_vars_from_rcfile("#{ENV['HOME']}/openrc")).to eq({
+          'OS_USERNAME'     => 'user',
+          'OS_PASSWORD'     => 'secret',
+          'OS_PROJECT_NAME' => 'project',
+          'OS_AUTH_URL'     => 'http://127.0.0.1:5000'
+        })
+      end
+    end
   end
 
   before(:each) do

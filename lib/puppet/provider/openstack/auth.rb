@@ -12,8 +12,9 @@ module Puppet::Provider::Openstack::Auth
 
   def get_os_vars_from_rcfile(filename)
     env = {}
-    if File.exists?(filename)
-      File.open(filename).readlines.delete_if{|l| l=~ /^#|^$/ }.each do |line|
+    rcfile = [filename, '/root/openrc'].detect { |f| File.exists? f }
+    unless rcfile.nil?
+      File.open(rcfile).readlines.delete_if{|l| l=~ /^#|^$/ }.each do |line|
         key, value = line.split('=')
         key = key.split(' ').last
         value = value.chomp.gsub(/'/, '')
