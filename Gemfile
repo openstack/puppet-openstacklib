@@ -23,6 +23,10 @@ group :development, :test do
   gem 'json'
 end
 
+group :system_tests do
+  gem 'r10k',                         :require => 'false'
+end
+
 if puppetversion = ENV['PUPPET_GEM_VERSION']
   gem 'puppet', puppetversion, :require => false
 else

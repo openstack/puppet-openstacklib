@@ -2,3 +2,4 @@
 spec/fixtures/*
 pkg
 Gemfile.lock
+openstack/
