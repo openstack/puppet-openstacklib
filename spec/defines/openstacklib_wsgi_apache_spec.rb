@@ -81,6 +81,7 @@ describe 'openstacklib::wsgi::apache' do
           'processes' => 1,
           'threads'   => global_facts[:processorcount],
         },
+        'wsgi_application_group'      => '%{GLOBAL}',
         'require'                     => 'File[keystone_wsgi]'
       )}
       it { is_expected.to contain_file("#{platform_parameters[:httpd_ports_file]}") }
@@ -89,17 +90,18 @@ describe 'openstacklib::wsgi::apache' do
     describe 'when overriding parameters' do
       let :params do
         {
-          :wsgi_script_dir       => '/var/www/cgi-bin/keystone',
-          :wsgi_script_file      => 'main',
-          :wsgi_script_source    => '/usr/share/keystone/keystone.wsgi',
-          :servername            => 'dummy.host',
-          :bind_host             => '10.42.51.1',
-          :bind_port             => 4142,
-          :user                  => 'keystone',
-          :group                 => 'keystone',
-          :ssl                   => false,
-          :workers               => 37,
-          :vhost_custom_fragment => 'LimitRequestFieldSize 81900'
+          :wsgi_script_dir         => '/var/www/cgi-bin/keystone',
+          :wsgi_script_file        => 'main',
+          :wsgi_script_source      => '/usr/share/keystone/keystone.wsgi',
+          :wsgi_pass_authorization => 'On',
+          :servername              => 'dummy.host',
+          :bind_host               => '10.42.51.1',
+          :bind_port               => 4142,
+          :user                    => 'keystone',
+          :group                   => 'keystone',
+          :ssl                     => false,
+          :workers                 => 37,
+          :vhost_custom_fragment   => 'LimitRequestFieldSize 81900'
         }
       end
       it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
@@ -117,6 +119,8 @@ describe 'openstacklib::wsgi::apache' do
         },
         'wsgi_process_group'          => 'keystone_wsgi',
         'wsgi_script_aliases'         => { '/' => "/var/www/cgi-bin/keystone/main" },
+        'wsgi_application_group'      => '%{GLOBAL}',
+        'wsgi_pass_authorization'     => 'On',
         'require'                     => 'File[keystone_wsgi]',
         'custom_fragment'             => 'LimitRequestFieldSize 81900',
       )}
