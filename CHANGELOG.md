@@ -1,3 +1,26 @@
+##2015-11-24 - 7.0.0
+###Summary
+
+This is a backwards-compatible major release for OpenStack Liberty.
+
+####Features
+- fallback to default rcfile
+- prepare $::os_package_type
+- add a proxy inifile provider
+- allow the use of an ensure_absent_val param
+- create is_service_default function
+- create os_service_default fact
+- allow to path custom fragment to vhost
+- pass necessary options to Apache when using WSGI
+
+####Bugfixes
+- fix fact for puppet facter 2.0.1+
+
+####Maintenance
+- initial msync run for all Puppet OpenStack modules
+- enable acceptance tests for openstack_config
+- remove class_parameter_defaults puppet-lint check
+
 ##2015-10-10 - 6.1.0
 ###Summary
 
