@@ -9,11 +9,18 @@ describe 'openstacklib::db::postgresql' do
     { :password_hash => password_hash }
   end
 
+  let (:pre_condition) do
+    "include ::postgresql::server"
+  end
+
   context 'on a RedHat osfamily' do
     let :facts do
       {
-        :postgres_default_version => '8.4',
-        :osfamily => 'RedHat'
+        :osfamily                  => 'RedHat',
+        :operatingsystem           => 'RedHat',
+        :operatingsystemrelease    => '7.1',
+        :operatingsystemmajrelease => '7',
+        :concat_basedir            => '/tmp',
       }
     end
 
@@ -45,7 +52,8 @@ describe 'openstacklib::db::postgresql' do
 
     context 'when notifying other resources' do
       let :pre_condition do
-        'exec { "nova-db-sync": }'
+        "include ::postgresql::server
+         exec { 'nova-db-sync': }"
       end
       let :params do
         { :notify => 'Exec[nova-db-sync]'}.merge(required_params)
@@ -56,7 +64,8 @@ describe 'openstacklib::db::postgresql' do
 
     context 'when required for other openstack services' do
       let :pre_condition do
-        'service {"keystone":}'
+        "include ::postgresql::server
+        service {'keystone':}"
       end
       let :title do
         'keystone'
@@ -73,7 +82,11 @@ describe 'openstacklib::db::postgresql' do
   context 'on a Debian osfamily' do
     let :facts do
       {
-        :osfamily => 'Debian'
+        :osfamily                  => 'Debian',
+        :operatingsystem           => 'Debian',
+        :operatingsystemrelease    => 'jessie',
+        :operatingsystemmajrelease => '8.2',
+        :concat_basedir            => '/tmp',
       }
     end
 
@@ -105,7 +118,8 @@ describe 'openstacklib::db::postgresql' do
 
     context 'when notifying other resources' do
       let :pre_condition do
-        'exec { "nova-db-sync": }'
+        "include ::postgresql::server
+         exec { 'nova-db-sync': }"
       end
       let :params do
         { :notify => 'Exec[nova-db-sync]'}.merge(required_params)
@@ -116,7 +130,8 @@ describe 'openstacklib::db::postgresql' do
 
     context 'when required for other openstack services' do
       let :pre_condition do
-        'service {"keystone":}'
+        "include ::postgresql::server
+        service {'keystone':}"
       end
       let :title do
         'keystone'
