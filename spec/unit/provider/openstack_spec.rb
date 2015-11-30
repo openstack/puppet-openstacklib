@@ -53,6 +53,30 @@ describe Puppet::Provider::Openstack do
         Puppet::Provider::Openstack.request('project', 'list', ['--long'])
       end
     end
+
+    context 'catch unauthorized errors' do
+      it 'should raise an error with non-existent user' do
+        ENV['OS_USERNAME']     = 'test'
+        ENV['OS_PASSWORD']     = 'abc123'
+        ENV['OS_PROJECT_NAME'] = 'test'
+        ENV['OS_AUTH_URL']     = 'http://127.0.0.1:5000'
+        provider.class.stubs(:openstack)
+                      .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
+                      .raises(Puppet::ExecutionFailure, 'Could not find user: test (HTTP 401)')
+        expect do
+          Puppet::Provider::Openstack.request('project', 'list', ['--long'])
+        end.to raise_error(Puppet::Error::OpenstackUnauthorizedError, /Could not authenticate/)
+      end
+
+      it 'should raise an error with not authorized to perform' do
+        provider.class.stubs(:openstack)
+                      .with('role', 'list', '--quiet', '--format', 'csv', ['--long'])
+                      .raises(Puppet::ExecutionFailure, 'You are not authorized to perform the requested action: identity:list_grants (HTTP 403)')
+        expect do
+          Puppet::Provider::Openstack.request('role', 'list', ['--long'])
+        end.to raise_error(Puppet::Error::OpenstackUnauthorizedError, /Could not authenticate/)
+      end
+    end
   end
 
   describe 'parse_csv' do
