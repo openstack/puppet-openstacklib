@@ -50,7 +50,7 @@ class Puppet::Provider::Openstack < Puppet::Provider
           end
           break
         rescue Puppet::ExecutionFailure => e
-          if e.message =~ /HTTP 401/
+          if e.message =~ /HTTP 40[13]/
             raise(Puppet::Error::OpenstackUnauthorizedError, 'Could not authenticate.')
           elsif e.message =~ /Unable to establish connection/
             current_time = Time.now.to_i
