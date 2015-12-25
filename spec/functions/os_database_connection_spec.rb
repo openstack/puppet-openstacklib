@@ -22,12 +22,22 @@ describe 'os_database_connection' do
       and_raise_error(Puppet::ParseError, /Wrong number of arguments/)
   end
 
+  it 'refuses extra params passed as String' do
+    is_expected.to run.with_params({
+        'dialect'  => 'sqlite',
+        'database' => '/var/lib/keystone/keystone.db',
+        'host'     => '127.0.0.1',
+        'port'     => '3306',
+        'extra'    => 'charset=utf-8'
+      }).and_raise_error(Puppet::ParseError, /extra should be a Hash/)
+  end
+
   it 'fails if port is provided with missing host' do
     is_expected.to run.with_params({
         'dialect'  => 'sqlite',
         'database' => '/var/lib/keystone/keystone.db',
         'port'     => '3306',
-        'charset'  => 'utf-8'
+        'extra'    => { 'charset' => 'utf-8' }
       }).and_raise_error(Puppet::ParseError, /host is required with port/)
   end
 
@@ -41,8 +51,21 @@ describe 'os_database_connection' do
           'database' => 'test',
           'username' => 'guest',
           'password' => 's3cr3t',
-          'charset'  => 'utf-8'
-        }).and_return('mysql://guest:s3cr3t@127.0.0.1:3306/test?charset=utf-8')
+          'extra'    => { 'charset' => 'utf-8', 'read_timeout' => '60' }
+        }).and_return('mysql://guest:s3cr3t@127.0.0.1:3306/test?charset=utf-8&read_timeout=60')
+    end
+
+    it 'with all parameters and charset set' do
+      is_expected.to run.with_params({
+          'dialect'  => 'mysql',
+          'host'     => '127.0.0.1',
+          'port'     => '3306',
+          'database' => 'test',
+          'username' => 'guest',
+          'password' => 's3cr3t',
+          'charset'  => 'utf-8',
+          'extra'    => { 'charset' => 'latin1', 'read_timeout' => '60' }
+        }).and_return('mysql://guest:s3cr3t@127.0.0.1:3306/test?charset=utf-8&read_timeout=60')
     end
 
     it 'without port' do
@@ -52,7 +75,7 @@ describe 'os_database_connection' do
           'database' => 'test',
           'username' => 'guest',
           'password' => 's3cr3t',
-          'charset'  => 'utf-8'
+          'extra'    => { 'charset' => 'utf-8' }
         }).and_return('mysql://guest:s3cr3t@127.0.0.1/test?charset=utf-8')
     end
 
@@ -60,7 +83,7 @@ describe 'os_database_connection' do
       is_expected.to run.with_params({
           'dialect'  => 'sqlite',
           'database' => '/var/lib/keystone/keystone.db',
-          'charset'  => 'utf-8'
+          'extra'    => { 'charset' => 'utf-8' }
         }).and_return('sqlite:////var/lib/keystone/keystone.db?charset=utf-8')
     end
 
@@ -70,7 +93,7 @@ describe 'os_database_connection' do
           'host'     => '127.0.0.1',
           'port'     => '3306',
           'database' => 'test',
-          'charset'  => 'utf-8'
+          'extra'    => { 'charset' => 'utf-8' }
         }).and_return('mysql://127.0.0.1:3306/test?charset=utf-8')
     end
 
@@ -81,7 +104,7 @@ describe 'os_database_connection' do
           'port'     => '3306',
           'database' => 'test',
           'username' => :undef,
-          'charset'  => 'utf-8'
+          'extra'    => { 'charset' => 'utf-8' }
         }).and_return('mysql://127.0.0.1:3306/test?charset=utf-8')
     end
 
@@ -92,7 +115,7 @@ describe 'os_database_connection' do
           'port'     => '3306',
           'database' => 'test',
           'username' => '',
-          'charset'  => 'utf-8'
+          'extra'    => { 'charset' => 'utf-8' }
         }).and_return('mysql://127.0.0.1:3306/test?charset=utf-8')
     end
 
@@ -103,7 +126,7 @@ describe 'os_database_connection' do
           'port'     => '3306',
           'database' => 'test',
           'username' => 'guest',
-          'charset'  => 'utf-8'
+          'extra'    => { 'charset' => 'utf-8' }
         }).and_return('mysql://guest@127.0.0.1:3306/test?charset=utf-8')
     end
 
@@ -115,7 +138,7 @@ describe 'os_database_connection' do
           'database' => 'test',
           'username' => 'guest',
           'password' => :undef,
-          'charset'  => 'utf-8'
+          'extra'    => { 'charset' => 'utf-8' }
         }).and_return('mysql://guest@127.0.0.1:3306/test?charset=utf-8')
     end
 
@@ -127,7 +150,7 @@ describe 'os_database_connection' do
           'database' => 'test',
           'username' => 'guest',
           'password' => '',
-          'charset'  => 'utf-8'
+          'extra'    => { 'charset' => 'utf-8' }
         }).and_return('mysql://guest@127.0.0.1:3306/test?charset=utf-8')
     end
   end

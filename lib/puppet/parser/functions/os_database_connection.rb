@@ -22,8 +22,9 @@ EOS
   end
 
   v.keys.each do |key|
-    unless (v[key].class == String) or (v[key] == :undef)
-      raise(Puppet::ParseError, "os_database_connection(): #{key} should be a String")
+    klass = (key == 'extra') ? Hash : String
+    unless (v[key].class == klass) or (v[key] == :undef)
+      raise(Puppet::ParseError, "os_database_connection(): #{key} should be a #{klass}")
     end
   end
 
@@ -56,9 +57,17 @@ EOS
     end
   end
 
+  # support previous charset option on the function. Setting charset will
+  # override charset if passed in via the extra parameters
   if v.include?('charset')
-    parts[:query] = "charset=#{v['charset']}"
+    if v.include?('extra')
+      v['extra'].merge!({ 'charset' => v['charset'] })
+    else
+      v['extra'] = { 'charset' => v['charset'] }
+    end
   end
+
+  parts[:query] = v['extra'].map{ |k,v| "#{k}=#{v}" }.join('&') if v.include?('extra')
 
   parts[:scheme] = v['dialect']
 
