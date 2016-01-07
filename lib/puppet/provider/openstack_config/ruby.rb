@@ -65,7 +65,13 @@ Puppet::Type.type(:openstack_config).provide(:ruby) do
   end
 
   def ensure_absent_val
-    resource[:ensure_absent_val]
+    # :array_matching => :all values comes in form of array even when they
+    # are passed as single string
+    if resource[:value].kind_of?(Array) and not resource[:ensure_absent_val].kind_of?(Array)
+      [resource[:ensure_absent_val]]
+    else
+      resource[:ensure_absent_val]
+    end
   end
 
   def file_path
