@@ -53,7 +53,12 @@ Puppet::Type.type(:openstack_config).provide(:ruby) do
   end
 
   def value
-    config.get_value(section, setting)
+    val = config.get_value(section, setting)
+    if !val.kind_of?(Array)
+      [val]
+    else
+      val
+    end
   end
 
   def section

@@ -102,7 +102,7 @@ class OpenStackConfig
       if value.nil? or @settings[setting_name] == value
         @settings.delete(setting_name)
       else
-        value.eafach do |val|
+        value.each do |val|
           @settings[setting_name].delete(val)
         end
       end
@@ -134,13 +134,19 @@ class OpenStackConfig
     end
 
     def remove_lines(setting_name, value=nil)
-      @lines.each_with_index do |line, index|
-        if (match = @@SETTING_REGEX.match(line))
-          if match[2] == setting_name
-            if value.nil? or (
-                value.kind_of?(Array) and value.include?(match[4])
-              )
-              lines.delete_at(index)
+      if value.kind_of?(Array)
+        val_arr = value
+      else
+        val_arr = [value]
+      end
+      val_arr.each do |val|
+        @lines.each_with_index do |line, index|
+          if (match = @@SETTING_REGEX.match(line))
+            if match[2] == setting_name
+              if val.nil? or val_arr.include?(match[4])
+                @lines.delete_at(index)
+                break
+              end
             end
           end
         end
