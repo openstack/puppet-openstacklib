@@ -1,0 +1,4 @@
+---
+features:
+  - Add an "extra" hash parameter to os_database_connection that allows to extend
+    the database uri configuration.

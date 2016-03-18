@@ -1,0 +1,3 @@
+---
+fixes:
+  - Catch HTTP 403 responses (not authorized requests) in openstack provider.

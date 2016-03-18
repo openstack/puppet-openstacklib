@@ -1,0 +1,6 @@
+---
+features:
+  - Utility to handle IPv6 address brackets with normalize_ip_for_uri
+    is a function that help us to add brackets to IPv6 addresses
+    when missing. The function moved to puppetlabs-stdlib but is not in latest release
+    yet. Once it's done, we'll probably drop this function so our modules will use stdlib.

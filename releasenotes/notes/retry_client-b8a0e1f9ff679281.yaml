@@ -1,0 +1,7 @@
+---
+fixes:
+  - Add retries to the openstack command.
+    Increase command timeout to 20s and request timeout to 60s
+    and sleep 3s between retries. Do not retry non-idempotent actions.
+    This is a more robust implementation that will prevent failures in case
+    of Keystone API failures during a deployment.
