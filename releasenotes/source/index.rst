@@ -1,8 +1,18 @@
-=================================
-puppet-openstacklib Release Notes
-=================================
+=============================================
+Welcome to puppet-openstacklib Release Notes!
+=============================================
+
+Contents
+========
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    unreleased
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
