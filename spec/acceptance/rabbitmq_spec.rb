@@ -10,7 +10,8 @@ describe 'openstacklib class' do
 
       if $::osfamily == 'RedHat' {
         class { '::openstack_extras::repo::redhat::redhat':
-          release => 'kilo',
+          release     => 'kilo',
+          manage_epel => false,
         }
         $package_provider = 'yum'
       } else {
