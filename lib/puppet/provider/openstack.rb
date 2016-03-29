@@ -21,8 +21,11 @@ class Puppet::Provider::Openstack < Puppet::Provider
 
   # timeout the openstack command
   # after this number of seconds
-  # retry the command until the request_timeout
-  def self.command_timeout
+  # retry the command until the request_timeout,
+  # unless it's a no_retry_actions call
+  def self.command_timeout(action=nil)
+    # give no_retry actions the full time limit to finish
+    return self.request_timeout() if no_retry_actions.include? action
     20
   end
 
@@ -42,7 +45,8 @@ class Puppet::Provider::Openstack < Puppet::Provider
   # with command_timeout
   def self.openstack(*args)
     begin
-      Timeout.timeout(command_timeout) do
+      action = args[1]
+      Timeout.timeout(command_timeout(action)) do
         openstack_command *args
       end
     rescue Timeout::Error
@@ -99,8 +103,8 @@ class Puppet::Provider::Openstack < Puppet::Provider
         rescue Puppet::ExecutionFailure => exception
           raise Puppet::Error::OpenstackUnauthorizedError, 'Could not authenticate' if exception.message =~ /HTTP 40[13]/
           raise exception if current_time > end_time
-          debug "Non-fatal error: '#{exception.message}'. Retrying for #{end_time - current_time} more seconds"
           raise exception if no_retry_actions.include? action
+          debug "Non-fatal error: '#{exception.message}'. Retrying for #{end_time - current_time} more seconds"
           sleep retry_sleep
           retry
         end
