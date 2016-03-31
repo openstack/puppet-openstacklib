@@ -50,7 +50,7 @@ class Puppet::Provider::Openstack < Puppet::Provider
         openstack_command *args
       end
     rescue Timeout::Error
-      raise Puppet::ExecutionFailure, "Command: 'openstack #{args.inspect}' has been running for more then #{command_timeout} seconds!"
+      raise Puppet::ExecutionFailure, "Command: 'openstack #{args.inspect}' has been running for more then #{command_timeout(action)} seconds!"
     end
   end
 
