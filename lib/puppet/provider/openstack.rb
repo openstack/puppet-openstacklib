@@ -13,32 +13,31 @@ class Puppet::Provider::Openstack < Puppet::Provider
   initvars # so commands will work
   commands :openstack_command => 'openstack'
 
-  # this actions are not idempotent and retries can cause
-  # duplications or endless loops
-  def self.no_retry_actions
-    %w(create remove delete)
-  end
-
-  # timeout the openstack command
-  # after this number of seconds
-  # retry the command until the request_timeout
-  def self.command_timeout
-    20
+  @@no_retry_actions = %w(create remove delete)
+  @@command_timeout  = 20
+  @@request_timeout  = 60
+  @@retry_sleep      = 3
+  class << self
+    [:no_retry_actions, :request_timeout, :retry_sleep].each do |m|
+      define_method m do
+        self.class_variable_get("@@#{m}")
+      end
+      define_method :"#{m}=" do |value|
+        self.class_variable_set("@@#{m}", value)
+      end
+    end
   end
 
   # timeout the entire request with error
   # after this number of seconds
-  def self.request_timeout
-    60
+  # retry the command until the request_timeout,
+  # unless it's a no_retry_actions call
+  def self.command_timeout(action=nil)
+    # give no_retry actions the full time limit to finish
+    return self.request_timeout() if no_retry_actions.include? action
+    self.class_variable_get("@@command_timeout")
   end
 
-  # sleep for this number of seconds
-  # between command retries
-  def self.retry_sleep
-    3
-  end
-
-  # run the openstack command
   # with command_timeout
   def self.openstack(*args)
     begin
@@ -53,6 +52,18 @@ class Puppet::Provider::Openstack < Puppet::Provider
   # get the current timestamp
   def self.current_time
     Time.now.to_i
+  end
+
+  def self.request_without_retry(&block)
+    previous_timeout = self.request_timeout
+    rc = nil
+    if block_given?
+      self.request_timeout = 0
+      rc = yield
+    end
+  ensure
+    self.request_timeout = previous_timeout
+    rc
   end
 
   # Returns an array of hashes, where the keys are the downcased CSV headers
