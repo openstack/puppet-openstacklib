@@ -13,15 +13,13 @@ describe 'openstacklib class' do
           release     => 'kilo',
           manage_epel => false,
         }
-        $package_provider = 'yum'
       } else {
         include ::apt
-        $package_provider = 'apt'
       }
 
       class { '::rabbitmq':
         delete_guest_user => true,
-        package_provider  => $package_provider
+        package_provider  => $::package_provider
       }
 
       # openstacklib resources
