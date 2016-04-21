@@ -1,0 +1,8 @@
+#!/bin/bash
+<% @services.each do |service| %>
+if [ "$1" == "<%= service %>" ]
+then
+  exit 101
+fi
+<% end %>
+

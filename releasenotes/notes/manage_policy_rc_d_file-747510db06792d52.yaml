@@ -1,0 +1,11 @@
+---
+features:
+  - Add a class that takes an array of services that can be
+    configured to not autostart on package install. The most
+    notable example is keystone. The policy-rc.d file is
+    generated to return the correct exit code to prevent the
+    services from autostarting on package install. This change
+    is only meant for debian based systems.
+issues:
+  - ubuntu cloud archive keystone package is auto-starting the
+    eventlet process on package install.
