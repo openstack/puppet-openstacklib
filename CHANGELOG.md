@@ -1,3 +1,25 @@
+##2016-05-20 - 7.1.0
+
+###Summary
+
+This is a feature and bugfix release in the Liberty series.
+
+####Features
+
+- Add policy-rc.d class
+- Catch HTTP 403 response
+- Utility to handle IPv6 address brackets
+- Update os_database_connection with extra param
+
+####Bugfixes
+
+- Avoid duplicate client resource
+
+####Maintenance
+
+- Fix unit tests failing against Puppet 4.3.0
+
+
 ##2015-11-24 - 7.0.0
 ###Summary
 

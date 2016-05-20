@@ -1,7 +1,7 @@
 openstacklib
 ============
 
-7.0.0 - 2015.2 - Liberty
+7.1.0 - 2015.2 - Liberty
 
 #### Table of Contents
 
@@ -325,5 +325,5 @@ Puppet Module :: OpenStack Version :: OpenStack Codename
 4.0.0         -> 2014.1.0          -> Icehouse
 5.0.0         -> 2014.2.0          -> Juno
 6.0.0         -> 2015.1.0          -> Kilo
-7.0.0         -> 2015.2.0          -> Liberty
+7.1.0         -> 2015.2.0          -> Liberty
 ```
