@@ -1,4 +1,5 @@
-require 'puppet/provider/openstack/credentials'
+#require 'puppet/provider/openstack/credentials'
+require File.join(File.dirname(__FILE__), '..','..','..', 'puppet/provider/openstack/credentials')
 
 module Puppet::Provider::Openstack::Auth
 
