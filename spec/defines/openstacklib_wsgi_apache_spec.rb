@@ -84,7 +84,7 @@ describe 'openstacklib::wsgi::apache' do
         'wsgi_application_group'      => '%{GLOBAL}',
         'require'                     => 'File[keystone_wsgi]'
       )}
-      it { is_expected.to contain_file("#{platform_parameters[:httpd_ports_file]}") }
+      it { is_expected.to contain_concat("#{platform_parameters[:httpd_ports_file]}") }
     end
 
     describe 'when overriding parameters' do
