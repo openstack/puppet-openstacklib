@@ -78,7 +78,7 @@ describe 'openstacklib::messaging::rabbitmq' do
         params.merge!( :manage_vhost => false )
       end
 
-      it { is_expected.not_to contain_rabbitmq_vhost }
+      it { is_expected.not_to contain_rabbitmq_vhost('/') }
     end
 
   end
