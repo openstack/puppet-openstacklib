@@ -25,7 +25,7 @@ define openstacklib::db::mysql::host_access (
 ) {
   validate_re($title, '_', 'Title must be $dbname_$host')
 
-  $host = inline_template('<%= @title.split("_").last %>')
+  $host = inline_template('<%= @title.split("_").last.downcase %>')
 
   mysql_user { "${user}@${host}":
     password_hash => $password_hash,
