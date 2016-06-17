@@ -1,0 +1,3 @@
+---
+features:
+  - Added policy_rcd provider for managing policy-rc.d for Debian family.
