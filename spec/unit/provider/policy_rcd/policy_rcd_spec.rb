@@ -20,13 +20,17 @@ describe provider_class do
     resource.provider
   end
 
+  let(:header) do
+    "#!/bin/bash\n# THIS FILE MANAGED BY PUPPET\n"
+  end
+
   describe 'managing policy' do
     describe '#create' do
       it 'creates a policy when policy-rc.d doesnt exist' do
         file = mock('file')
         provider.stubs(:policy_rcd).returns(file)
         File.expects(:exist?).with(file).returns(false)
-        content = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n[[ \"$1\" == \"service\" ]] && exit 101\n"
+        content = "#{header}[[ \"$1\" == \"service\" ]] && exit 101\n"
         provider.class.expects(:write_to_file).with(file, content)
         provider.create
       end
@@ -44,11 +48,11 @@ describe provider_class do
     describe '#destroy' do
       it 'destroy a policy' do
         file = mock('file')
-        file_content = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n[[ \"$1\" == \"service\" ]] && exit 101\n"
+        file_content = "#{header}[[ \"$1\" == \"service\" ]] && exit 101\n"
         provider.stubs(:policy_rcd).returns(file)
         File.expects(:exist?).with(file).returns(true)
         provider.stubs(:file_lines).returns(file_content.split("\n"))
-        provider.class.expects(:write_to_file).with(file, ['# THIS FILE MANAGED BY PUPPET', '#!/bin/bash'], true)
+        provider.class.expects(:write_to_file).with(file, ['#!/bin/bash', '# THIS FILE MANAGED BY PUPPET'], true)
         provider.destroy
       end
     end
@@ -57,15 +61,15 @@ describe provider_class do
       it 'update a policy' do
         file = mock('file')
         provider.stubs(:policy_rcd).returns(file)
-        file_content = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n[[ \"$1\" == \"service\" ]] && exit 102\n"
+        file_content = "#{header}[[ \"$1\" == \"service\" ]] && exit 102\n"
         provider.stubs(:file_lines).returns(file_content.split("\n"))
-        provider.class.expects(:write_to_file).with(file, ["# THIS FILE MANAGED BY PUPPET", "#!/bin/bash", "[[ \"$1\" == \"service\" ]] && exit 101\n"], true)
+        provider.class.expects(:write_to_file).with(file, ['#!/bin/bash', "# THIS FILE MANAGED BY PUPPET", "[[ \"$1\" == \"service\" ]] && exit 101\n"], true)
         provider.flush
       end
 
       it 'dont update a policy' do
         file = mock('file')
-        file_content = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n[[ \"$1\" == \"service\" ]] && exit 101\n"
+        file_content = "#{header}[[ \"$1\" == \"service\" ]] && exit 101\n"
         provider.stubs(:policy_rcd).returns(file)
         provider.stubs(:file_lines).returns(file_content.split("\n"))
         provider.flush
@@ -76,7 +80,7 @@ describe provider_class do
       it 'should exists on Debian family' do
         provider.stubs(:check_os).returns(true)
         file = mock('file')
-        file_content = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n[[ \"$1\" == \"service\" ]] && exit 101\n"
+        file_content = "#{header}[[ \"$1\" == \"service\" ]] && exit 101\n"
         provider.stubs(:policy_rcd).returns(file)
         provider.stubs(:check_policy_rcd).returns(true)
         provider.stubs(:file_lines).returns(file_content.split("\n"))
@@ -86,7 +90,7 @@ describe provider_class do
       it 'should not exists on Debian family when file is present' do
         provider.stubs(:check_os).returns(true)
         file = mock('file')
-        file_content = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n[[ \"$1\" == \"new-service\" ]] && exit 101\n"
+        file_content = "#{header}[[ \"$1\" == \"new-service\" ]] && exit 101\n"
         provider.stubs(:policy_rcd).returns(file)
         provider.stubs(:check_policy_rcd).returns(true)
         provider.stubs(:file_lines).returns(file_content.split("\n"))
@@ -113,6 +117,7 @@ describe provider_class do
         File.expects(:open).with(file, 'a+').returns(policy)
         policy.expects(:puts).with(content)
         policy.expects(:close)
+        File.expects(:chmod).with(0744, file)
         provider.class.write_to_file(file, content)
       end
 
@@ -124,6 +129,7 @@ describe provider_class do
         File.expects(:open).with(file, 'a+').returns(policy)
         policy.expects(:puts).with(content)
         policy.expects(:close)
+        File.expects(:chmod).with(0744, file)
         provider.class.write_to_file(file, content, true)
       end
     end

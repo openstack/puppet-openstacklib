@@ -33,6 +33,7 @@ Puppet::Type.type(:policy_rcd).provide(:policy_rcd) do
     policy = File.open(file, 'a+')
     policy.puts(content)
     policy.close
+    File.chmod(0744, file)
   end
 
   def exists?
@@ -51,7 +52,7 @@ Puppet::Type.type(:policy_rcd).provide(:policy_rcd) do
 
   def create
     unless check_policy_rcd
-      header = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n"
+      header = "#!/bin/bash\n# THIS FILE MANAGED BY PUPPET\n"
     else
       header = ""
     end
