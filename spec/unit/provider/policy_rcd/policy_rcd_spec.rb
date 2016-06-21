@@ -20,8 +20,6 @@ describe provider_class do
     resource.provider
   end
 
-  subject { provider }
-
   describe 'managing policy' do
     describe '#create' do
       it 'creates a policy when policy-rc.d doesnt exist' do
@@ -71,6 +69,62 @@ describe provider_class do
         provider.stubs(:policy_rcd).returns(file)
         provider.stubs(:file_lines).returns(file_content.split("\n"))
         provider.flush
+      end
+    end
+
+    describe '#exists?' do
+      it 'should exists on Debian family' do
+        provider.stubs(:check_os).returns(true)
+        file = mock('file')
+        file_content = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n[[ \"$1\" == \"service\" ]] && exit 101\n"
+        provider.stubs(:policy_rcd).returns(file)
+        provider.stubs(:check_policy_rcd).returns(true)
+        provider.stubs(:file_lines).returns(file_content.split("\n"))
+        expect(provider.exists?).to be_truthy
+      end
+
+      it 'should not exists on Debian family when file is present' do
+        provider.stubs(:check_os).returns(true)
+        file = mock('file')
+        file_content = "# THIS FILE MANAGED BY PUPPET\n#!/bin/bash\n[[ \"$1\" == \"new-service\" ]] && exit 101\n"
+        provider.stubs(:policy_rcd).returns(file)
+        provider.stubs(:check_policy_rcd).returns(true)
+        provider.stubs(:file_lines).returns(file_content.split("\n"))
+        expect(provider.exists?).to be_falsey
+      end
+
+      it 'should not exists on Debian family when file is not present' do
+        provider.stubs(:check_os).returns(true)
+        provider.stubs(:check_policy_rcd).returns(false)
+        expect(provider.exists?).to be_falsey
+      end
+
+      it 'should exists on non-Debian family' do
+        provider.stubs(:check_os).returns(false)
+        expect(provider.exists?).to be_truthy
+      end
+    end
+
+    describe 'write_to_file' do
+      it 'should write to file' do
+        file = mock
+        policy = mock
+        content = 'some_content'
+        File.expects(:open).with(file, 'a+').returns(policy)
+        policy.expects(:puts).with(content)
+        policy.expects(:close)
+        provider.class.write_to_file(file, content)
+      end
+
+      it 'should truncate file' do
+        file = mock
+        policy = mock
+        content = 'some_content'
+        File.expects(:truncate).with(file, 0)
+        File.expects(:open).with(file, 'a+').returns(policy)
+        policy.expects(:puts).with(content)
+        policy.expects(:close)
+        provider.class.write_to_file(file, content, true)
       end
     end
   end
