@@ -15,7 +15,9 @@ class Puppet::Provider::Openstack < Puppet::Provider
 
   @@no_retry_actions = %w(create remove delete)
   @@command_timeout  = 20
-  @@request_timeout  = 60
+  # Fails on the 8th retry for a max of 181s (~3min) before total
+  # failure.
+  @@request_timeout  = 170
   @@retry_sleep      = 3
   class << self
     [:no_retry_actions, :request_timeout, :retry_sleep].each do |m|
@@ -45,7 +47,7 @@ class Puppet::Provider::Openstack < Puppet::Provider
         openstack_command *args
       end
     rescue Timeout::Error
-      raise Puppet::ExecutionFailure, "Command: 'openstack #{args.inspect}' has been running for more then #{command_timeout} seconds!"
+      raise Puppet::ExecutionFailure, "Command: 'openstack #{args.inspect}' has been running for more then #{command_timeout(action)} seconds"
     end
   end
 
@@ -73,6 +75,8 @@ class Puppet::Provider::Openstack < Puppet::Provider
     Puppet::Util.withenv(env) do
       rv = nil
       end_time = current_time + request_timeout
+      start_time = current_time
+      retry_count = 0
       loop do
         begin
           if action == 'list'
@@ -109,10 +113,17 @@ class Puppet::Provider::Openstack < Puppet::Provider
           break
         rescue Puppet::ExecutionFailure => exception
           raise Puppet::Error::OpenstackUnauthorizedError, 'Could not authenticate' if exception.message =~ /HTTP 40[13]/
-          raise exception if current_time > end_time
+          if current_time > end_time
+            error_message = exception.message
+            error_message += " (tried #{retry_count}, for a total of #{end_time - start_time } seconds)"
+            raise(Puppet::ExecutionFailure, error_message)
+          end
+
+          raise exception if no_retry_actions.include? action
           debug "Non-fatal error: '#{exception.message}'. Retrying for #{end_time - current_time} more seconds"
           raise exception if no_retry_actions.include? action
           sleep retry_sleep
+          retry_count += 1
           retry
         end
       end
