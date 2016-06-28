@@ -103,7 +103,7 @@ name="test"
             .times(3)
         provider.class.stubs(:sleep)
         provider.class.stubs(:current_time)
-            .returns(0, 10, 10, 20, 20, 100, 100)
+            .returns(0, 10, 10, 20, 20, 180, 180)
         expect do
           Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         end.to raise_error Puppet::ExecutionFailure, /Unable to establish connection/
