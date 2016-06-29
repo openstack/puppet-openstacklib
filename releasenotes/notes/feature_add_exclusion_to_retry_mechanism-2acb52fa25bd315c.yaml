@@ -1,0 +1,5 @@
+---
+features:
+  - Add the possibility to exclude some exception from retry
+    mechanism. It helps to fix `bug 1597357
+    <https://bugs.launchpad.net/puppet-keystone/+bug/1597357>`__
