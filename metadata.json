@@ -26,7 +26,7 @@
     },
     {
       "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": ["12.04","14.04"]
+      "operatingsystemrelease": ["14.04","16.04"]
     }
   ],
   "description": "Puppet module library to expose common functionality between OpenStack modules.",
