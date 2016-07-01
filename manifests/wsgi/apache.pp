@@ -203,6 +203,7 @@ define openstacklib::wsgi::apache (
     docroot_owner               => $user,
     docroot_group               => $group,
     priority                    => $priority,
+    setenvif                    => ['X-Forwarded-Proto https HTTPS=1'],
     ssl                         => $ssl,
     ssl_cert                    => $ssl_cert,
     ssl_key                     => $ssl_key,
