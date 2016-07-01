@@ -1,0 +1,12 @@
+---
+features:
+  - Add a manifest which is loaded by all puppet modules in
+    manifests/param.pp. This is described in
+    `bug 1599113
+    <https://bugs.launchpad.net/puppet-openstacklib/+bug/1599113>`__
+
+fixes:
+  - The first feature would help fixing RDO package using virtual
+    package which is a recurring problem.  Example of such problem is
+    `bug 1599113
+    <https://bugs.launchpad.net/puppet-keystone/+bug/1597753>`__
