@@ -46,6 +46,46 @@ describe 'openstacklib::service_validation' do
 
     end
 
+    context 'with unless parameter' do
+      let :params do
+        required_params.merge!({ :unless  => 'pwd' })
+      end
+
+      it { is_expected.to contain_exec("execute #{title} validation").with(
+        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider  => 'shell',
+        :command   => 'nova list',
+        :tries     => '10',
+        :try_sleep => '2',
+        :unless    => 'pwd',
+      )}
+
+      it { is_expected.to contain_anchor("create #{title} anchor").with(
+        :require => "Exec[execute #{title} validation]",
+      )}
+
+    end
+
+    context 'with onlyif parameter' do
+      let :params do
+        required_params.merge!({:onlyif  => 'pwd' })
+      end
+
+      it { is_expected.to contain_exec("execute #{title} validation").with(
+        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider  => 'shell',
+        :command   => 'nova list',
+        :tries     => '10',
+        :try_sleep => '2',
+        :onlyif    => 'pwd',
+      )}
+
+      it { is_expected.to contain_anchor("create #{title} anchor").with(
+        :require => "Exec[execute #{title} validation]",
+      )}
+
+    end
+
     context 'when omitting a required parameter command' do
       let :params do
         required_params.delete(:command)
