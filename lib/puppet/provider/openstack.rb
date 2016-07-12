@@ -48,7 +48,7 @@ class Puppet::Provider::Openstack < Puppet::Provider
         openstack_command *args
       end
     rescue Timeout::Error
-      raise Puppet::ExecutionFailure, "Command: 'openstack #{args.inspect}' has been running for more then #{command_timeout(action)} seconds"
+      raise Puppet::ExecutionFailure, "Command: 'openstack #{args.inspect}' has been running for more than #{command_timeout(action)} seconds"
     end
   end
 
@@ -71,8 +71,13 @@ class Puppet::Provider::Openstack < Puppet::Provider
 
   # Returns an array of hashes, where the keys are the downcased CSV headers
   # with underscores instead of spaces
-  def self.request(service, action, properties, credentials=nil)
+  #
+  # @param options [Hash] Other options
+  # @options :no_retry_exception_msgs [Array<Regexp>,Regexp] exception without retries
+  def self.request(service, action, properties, credentials=nil, options={})
     env = credentials ? credentials.to_env : {}
+    no_retry = options[:no_retry_exception_msgs]
+
     Puppet::Util.withenv(env) do
       rv = nil
       end_time = current_time + request_timeout
@@ -121,6 +126,12 @@ class Puppet::Provider::Openstack < Puppet::Provider
           end
 
           raise exception if no_retry_actions.include? action
+          if no_retry
+            no_retry = [no_retry] unless no_retry.is_a?(Array)
+            no_retry.each do |nr|
+              raise exception if exception.message.match(nr)
+            end
+          end
           debug "Non-fatal error: '#{exception.message}'. Retrying for #{end_time - current_time} more seconds"
           sleep retry_sleep
           retry_count += 1
