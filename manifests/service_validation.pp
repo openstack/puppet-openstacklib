@@ -76,6 +76,7 @@ define openstacklib::service_validation(
     try_sleep => $try_sleep,
     onlyif    => $onlyif,
     unless    => $unless,
+    logoutput => 'on_failure',
   }
 
   anchor { "create ${service_name} anchor":
