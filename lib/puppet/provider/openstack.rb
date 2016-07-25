@@ -14,8 +14,8 @@ class Puppet::Provider::Openstack < Puppet::Provider
   commands :openstack_command => 'openstack'
 
   @@no_retry_actions = %w(create remove delete)
-  @@command_timeout  = 20
-  # Fails on the 8th retry for a max of 181s (~3min) before total
+  @@command_timeout  = 40
+  # Fails on the 5th retry for a max of 212s (~3.5min) before total
   # failure.
   @@request_timeout  = 170
   @@retry_sleep      = 3
