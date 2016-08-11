@@ -213,6 +213,61 @@ string; optional; default to '10'
 Number of seconds between validation attempts;
 string; optional; default to '2'
 
+#### Defined provider for openstack_config: ini_setting
+
+It provides an interface to any INI configuration file as they are
+used in Openstack modules.
+
+You use it like this:
+
+```
+Puppet::Type.type(:<module>_config).provide(
+  :openstackconfig,
+  :parent => Puppet::Type.type(:openstack_config).provider(:ini_setting)
+) do
+```
+
+It has the standard features of the upstream puppetlabs' `inifile`
+module as it's a direct children of it.  Furthermore it can transform
+a value with some function of you're choice, enabling you to get value
+that get filled at run-time like an `uuid`.
+
+For an example of how that's working you can have a look at this
+[review](https://review.openstack.org/#/c/347468/)
+
+#### Defined provider for openstack_config: ruby
+
+This one has the same basic features as the ini_setting one but the
+ability to transformation the value.  It offers another feature,
+though.  It can parse array.  What it enables one to do is to parse
+this correctly:
+
+```
+[DEFAULT]
+conf1 = value1
+conf1 = value2
+```
+
+On the opposite side if you put that:
+
+```
+module_config { 'DEFAULT/conf1' : value => ['value1', 'value2'] }
+```
+
+in your manifest, it will properly be written as the example above.
+
+To use this provider you use this:
+
+```
+Puppet::Type.type(:<module>_config).provide(
+  :openstackconfig,
+  :parent => Puppet::Type.type(:openstack_config).provider(:ruby)
+) do
+```
+
+and define you type with ```:array_matching => :all```.  An example of
+such provider is ```nova_config```.  Have a look for inspiration.
+
 Implementation
 --------------
 
