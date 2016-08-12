@@ -12,15 +12,15 @@ describe 'openstacklib class' do
         class { '::openstack_extras::repo::redhat::redhat':
           release => 'kilo',
         }
-        $package_provider = 'yum'
+        $package_provider_real = 'yum'
       } else {
         include ::apt
-        $package_provider = 'apt'
+        $package_provider_real = 'apt'
       }
 
       class { '::rabbitmq':
         delete_guest_user => true,
-        package_provider  => $package_provider
+        package_provider  => $package_provider_real
       }
 
       # openstacklib resources
