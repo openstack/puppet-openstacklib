@@ -28,6 +28,10 @@ Puppet::Type.type(:openstack_config).provide(:ruby) do
     end
   end
 
+  def self.namevar(section_name, setting)
+    "#{section_name}/#{setting}"
+  end
+
   def exists?
     if resource[:value] == ensure_absent_val
       resource[:ensure] = :absent
