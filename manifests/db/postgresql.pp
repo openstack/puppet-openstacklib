@@ -34,7 +34,8 @@ define openstacklib::db::postgresql (
 
   if ((($::operatingsystem == 'RedHat' or $::operatingsystem == 'CentOS') and (versioncmp($::operatingsystemmajrelease, '6') <= 0))
     or ($::operatingsystem == 'Fedora' and (versioncmp($::operatingsystemmajrelease, '14') <= 0))) {
-    warning('The system packages handling the postgresql infrastructure for OpenStack are out of date and should not be relied on for database migrations.')
+    warning('The system packages handling the postgresql infrastructure for OpenStack \
+              are out of date and should not be relied on for database migrations.')
   }
 
   postgresql::server::db { $dbname:
