@@ -37,6 +37,10 @@
 # The provider to use for the exec command;
 # string; optional; default to 'shell'
 #
+# [*timeout*]
+# The maximum time the command should take;
+# string; optional; default to '60'
+#
 # [*tries*]
 # Number of times to retry validation;
 # string; optional; default to '10'
@@ -62,6 +66,7 @@ define openstacklib::service_validation(
   $try_sleep    = '2',
   $onlyif       = undef,
   $unless       = undef,
+  $timeout      = '60',
 ) {
 
   if $onlyif and $unless {
@@ -72,6 +77,7 @@ define openstacklib::service_validation(
     path      => $path,
     provider  => $provider,
     command   => $command,
+    timeout   => $timeout,
     tries     => $tries,
     try_sleep => $try_sleep,
     onlyif    => $onlyif,
