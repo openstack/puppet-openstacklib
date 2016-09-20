@@ -6,8 +6,10 @@ describe 'normalize_ip_for_uri' do
   it { should run.with_params('127.0.0.1').and_return('127.0.0.1')}
   it { should run.with_params('::1').and_return('[::1]')}
   it { should run.with_params('[2001::01]').and_return('[2001::01]')}
-  it do
-    is_expected.to run.with_params('one', 'two')
-      .and_raise_error(ArgumentError, /Wrong number of arguments/)
-  end
+  # You're not forced to pass an array, a list of argument will do.
+  it { should run.with_params('::1','::2').and_return(['[::1]','[::2]'])}
+  it { should run.with_params(['::1','::2']).and_return(['[::1]','[::2]'])}
+  it { should run.with_params(['::1','[::2]','::3']).and_return(['[::1]','[::2]','[::3]'])}
+  it { should run.with_params(['192.168.0.1','[::2]']).and_return(['192.168.0.1','[::2]'])}
+  it { should run.with_params(['192.168.0.1','::2']).and_return(['192.168.0.1','[::2]'])}
 end
