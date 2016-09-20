@@ -3,7 +3,6 @@ require 'ipaddr'
 module Puppet::Parser::Functions
   newfunction(:normalize_ip_for_uri,
               :type => :rvalue,
-              :arity => 1,
               :doc => <<-EOD
     Add brackets if the argument is an IPv6 address.
     Returns the argument untouched otherwise.
@@ -13,19 +12,26 @@ module Puppet::Parser::Functions
     and port 8080.  This code will change it to
     [2001::1:8080] as it's a valid ip address.  This
     shouldn't be an issue in most cases.
+    If an array is given, each member will be normalized to
+    a valid IPv6 address with brackets when needed.
     EOD
-  ) do |args|
-    ip = args[0]
-    begin
-      if IPAddr.new(ip).ipv6?
-        unless ip.match(/\[.+\]/)
-          Puppet.debug("IP #{ip} is changed to [#{ip}]")
-          ip = "[#{ip}]"
+    ) do |args|
+    result = []
+    args = args[0] if args[0].kind_of?(Array)
+    args.each do |ip|
+      begin
+        if IPAddr.new(ip).ipv6?
+          unless ip.match(/\[.+\]/)
+            Puppet.debug("IP #{ip} is changed to [#{ip}]")
+            ip = "[#{ip}]"
+          end
         end
+      rescue ArgumentError
+        # ignore it
       end
-    rescue ArgumentError => e
-      # ignore it
+      result << ip
     end
-    return ip
+    return result[0] if args.size == 1
+    result
   end
 end

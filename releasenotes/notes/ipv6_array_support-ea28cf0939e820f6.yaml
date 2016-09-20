@@ -1,0 +1,4 @@
+---
+features:
+  - Allow to give an array of IP addresses to normalize_ip_for_uri and normalize
+    each IP in the list.
