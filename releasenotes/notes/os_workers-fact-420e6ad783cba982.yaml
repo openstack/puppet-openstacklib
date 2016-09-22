@@ -1,0 +1,6 @@
+---
+features:
+  - Created a new fact called $::os_workers to be used as the defaults for any
+    of the openstack service worker configurations. This fact will have a value
+    between '2' and '8'. The value of this fact is the larger value between '2'
+    and the number of processors divided by '4' but will not exceed '8'.
