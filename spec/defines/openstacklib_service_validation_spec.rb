@@ -33,13 +33,14 @@ describe 'openstacklib::service_validation' do
       end
 
       it { is_expected.to contain_exec("execute #{title} validation").with(
-        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
-        :provider  => 'shell',
-        :command   => 'nova list',
-        :timeout   => '60',
-        :tries     => '10',
-        :try_sleep => '2',
-        :logoutput => 'on_failure',
+        :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider    => 'shell',
+        :command     => 'nova list',
+        :refreshonly => false,
+        :timeout     => '60',
+        :tries       => '10',
+        :try_sleep   => '2',
+        :logoutput   => 'on_failure',
       )}
 
       it { is_expected.to contain_anchor("create #{title} anchor").with(
@@ -54,13 +55,14 @@ describe 'openstacklib::service_validation' do
       end
 
       it { is_expected.to contain_exec("execute #{title} validation").with(
-        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
-        :provider  => 'shell',
-        :command   => 'nova list',
-        :timeout   => '60',
-        :tries     => '10',
-        :try_sleep => '2',
-        :unless    => 'pwd',
+        :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider    => 'shell',
+        :command     => 'nova list',
+        :refreshonly => false,
+        :timeout     => '60',
+        :tries       => '10',
+        :try_sleep   => '2',
+        :unless      => 'pwd',
       )}
 
       it { is_expected.to contain_anchor("create #{title} anchor").with(
@@ -75,13 +77,14 @@ describe 'openstacklib::service_validation' do
       end
 
       it { is_expected.to contain_exec("execute #{title} validation").with(
-        :path      => '/usr/bin:/bin:/usr/sbin:/sbin',
-        :provider  => 'shell',
-        :command   => 'nova list',
-        :timeout   => '60',
-        :tries     => '10',
-        :try_sleep => '2',
-        :onlyif    => 'pwd',
+        :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
+        :provider    => 'shell',
+        :command     => 'nova list',
+        :refreshonly => false,
+        :timeout     => '60',
+        :tries       => '10',
+        :try_sleep   => '2',
+        :onlyif      => 'pwd',
       )}
 
       it { is_expected.to contain_anchor("create #{title} anchor").with(
