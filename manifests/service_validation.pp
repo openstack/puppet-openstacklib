@@ -37,6 +37,10 @@
 # The provider to use for the exec command;
 # string; optional; default to 'shell'
 #
+# [*refreshonly*]
+# If the service validation should only occur on a refresh/notification;
+# boolean; optional; default to false
+#
 # [*timeout*]
 # The maximum time the command should take;
 # string; optional; default to '60'
@@ -62,11 +66,12 @@ define openstacklib::service_validation(
   $service_name = $name,
   $path         = '/usr/bin:/bin:/usr/sbin:/sbin',
   $provider     = shell,
+  $refreshonly  = false,
+  $timeout      = '60',
   $tries        = '10',
   $try_sleep    = '2',
   $onlyif       = undef,
   $unless       = undef,
-  $timeout      = '60',
 ) {
 
   if $onlyif and $unless {
@@ -74,15 +79,16 @@ define openstacklib::service_validation(
   }
 
   exec { "execute ${service_name} validation":
-    path      => $path,
-    provider  => $provider,
-    command   => $command,
-    timeout   => $timeout,
-    tries     => $tries,
-    try_sleep => $try_sleep,
-    onlyif    => $onlyif,
-    unless    => $unless,
-    logoutput => 'on_failure',
+    command     => $command,
+    path        => $path,
+    provider    => $provider,
+    refreshonly => $refreshonly,
+    timeout     => $timeout,
+    tries       => $tries,
+    try_sleep   => $try_sleep,
+    onlyif      => $onlyif,
+    unless      => $unless,
+    logoutput   => 'on_failure',
   }
 
   anchor { "create ${service_name} anchor":
