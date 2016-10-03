@@ -1,0 +1,4 @@
+---
+fixes:
+  - Add support for multiple regions in base provider code used by other puppet
+    modules.
