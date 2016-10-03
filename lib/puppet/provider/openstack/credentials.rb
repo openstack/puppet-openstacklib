@@ -6,7 +6,8 @@ class Puppet::Provider::Openstack::Credentials
   KEYS = [
     :auth_url, :password, :project_name, :username,
     :token, :url,
-    :identity_api_version
+    :identity_api_version,
+    :region_name
   ]
 
   KEYS.each { |var| attr_accessor var }
