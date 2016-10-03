@@ -114,6 +114,7 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.token = 'token'
         creds.url = 'url'
         creds.identity_api_version = 'identity_api_version'
+        creds.region_name = 'Region1'
         expect(creds.to_env).to eq({
           'OS_USERNAME'             => 'username',
           'OS_PASSWORD'             => 'password',
@@ -121,7 +122,8 @@ describe Puppet::Provider::Openstack::Credentials do
           'OS_AUTH_URL'             => 'auth_url',
           'OS_TOKEN'                => 'token',
           'OS_URL'                  => 'url',
-          'OS_IDENTITY_API_VERSION' => 'identity_api_version'
+          'OS_IDENTITY_API_VERSION' => 'identity_api_version',
+          'OS_REGION_NAME'          => 'Region1',
         })
       end
     end
