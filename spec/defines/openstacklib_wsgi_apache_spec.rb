@@ -23,7 +23,7 @@ describe 'openstacklib::wsgi::apache' do
 
   let :global_facts do
     {
-      :processorcount => 42,
+      :os_workers     => 8,
       :concat_basedir => '/var/lib/puppet/concat',
       :fqdn           => 'some.host.tld'
     }
@@ -79,7 +79,7 @@ describe 'openstacklib::wsgi::apache' do
           'user'      => 'keystone',
           'group'     => 'keystone',
           'processes' => 1,
-          'threads'   => global_facts[:processorcount],
+          'threads'   => global_facts[:os_workers],
         },
         'wsgi_application_group'      => '%{GLOBAL}',
         'require'                     => 'File[keystone_wsgi]',
@@ -116,7 +116,7 @@ describe 'openstacklib::wsgi::apache' do
             'user'      => 'keystone',
             'group'     => 'keystone',
             'processes' => '37',
-            'threads'   => '42',
+            'threads'   => '8',
         },
         'wsgi_process_group'          => 'keystone_wsgi',
         'wsgi_script_aliases'         => { '/' => "/var/www/cgi-bin/keystone/main" },

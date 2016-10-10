@@ -85,7 +85,7 @@
 #
 # [*threads*]
 #   (optional) The number of threads for the vhost.
-#   Defaults to $::processorcount
+#   Defaults to $::os_workers
 #
 # [*user*]
 #   (optional) User with permissions on the script
@@ -145,7 +145,7 @@ define openstacklib::wsgi::apache (
   $ssl_crl                 = undef,
   $ssl_crl_path            = undef,
   $ssl_key                 = undef,
-  $threads                 = $::processorcount,
+  $threads                 = $::os_workers,
   $user                    = undef,
   $workers                 = 1,
   $wsgi_daemon_process     = $name,
