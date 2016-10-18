@@ -1,0 +1,6 @@
+---
+features:
+  - For the users that result from the usage of the mysql resource, it is now
+    possible to specify the TLS options. This is useful if one wants to force
+    the user to only connect using TLS, or if one wants to force the usage of
+    client certificates for this specific user.

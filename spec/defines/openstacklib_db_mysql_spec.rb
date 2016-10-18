@@ -24,9 +24,10 @@ describe 'openstacklib::db::mysql' do
         :collate => 'utf8_general_ci'
       )}
       it { is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
-        :user       => title,
-        :database   => title,
-        :privileges => 'ALL'
+        :user        => title,
+        :database    => title,
+        :privileges  => 'ALL',
+        :tls_options => ['NONE'],
       )}
     end
 
@@ -45,6 +46,7 @@ describe 'openstacklib::db::mysql' do
         :privileges   => 'ALL',
         :create_user  => true,
         :create_grant => true,
+        :tls_options => ['NONE'],
       )}
     end
 
@@ -63,6 +65,7 @@ describe 'openstacklib::db::mysql' do
         :privileges   => 'ALL',
         :create_user  => true,
         :create_grant => true,
+        :tls_options => ['NONE'],
       )}
     end
 
@@ -194,6 +197,19 @@ describe 'openstacklib::db::mysql' do
         :collate => 'utf8_general_ci'
       )}
       it { is_expected.to_not contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1") }
+    end
+
+    context "overriding tls_options" do
+      let :params do
+        { :tls_options => ['SSL'] }.merge(required_params)
+      end
+
+      it {is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+        :user          => title,
+        :password_hash => params[:password_hash],
+        :database      => title,
+        :tls_options   => ['SSL'],
+      )}
     end
 
   end
