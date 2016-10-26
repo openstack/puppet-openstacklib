@@ -42,7 +42,7 @@ describe 'openstacklib::wsgi::apache' do
   end
 
   shared_examples_for 'apache serving a service with mod_wsgi' do
-    it { is_expected.to contain_service('httpd').with_name(platform_parameters[:httpd_service_name]) }
+    it { is_expected.to contain_service('httpd').with_name(platform_params[:httpd_service_name]) }
     it { is_expected.to contain_class('apache') }
     it { is_expected.to contain_class('apache::mod::wsgi') }
 
@@ -85,7 +85,7 @@ describe 'openstacklib::wsgi::apache' do
         'require'                     => 'File[keystone_wsgi]',
         'setenvif'                    => ['X-Forwarded-Proto https HTTPS=1']
       )}
-      it { is_expected.to contain_concat("#{platform_parameters[:httpd_ports_file]}") }
+      it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
     end
 
     describe 'when overriding parameters' do
@@ -130,40 +130,26 @@ describe 'openstacklib::wsgi::apache' do
 
   end
 
-  context 'on RedHat platforms' do
-    let :facts do
-      global_facts.merge({
-        :osfamily               => 'RedHat',
-        :operatingsystemrelease => '7.0'
-      })
-    end
+  on_supported_os({
+    :supported_os   => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts(global_facts))
+      end
 
-    let :platform_parameters do
-      {
-        :httpd_service_name => 'httpd',
-        :httpd_ports_file   => '/etc/httpd/conf/ports.conf',
-      }
+      let(:platform_params) do
+        case facts[:osfamily]
+        when 'Debian'
+          { :httpd_service_name => 'apache2',
+            :httpd_ports_file   => '/etc/apache2/ports.conf', }
+        when 'RedHat'
+          { :httpd_service_name => 'httpd',
+            :httpd_ports_file   => '/etc/httpd/conf/ports.conf', }
+        end
+      end
+      it_configures 'apache serving a service with mod_wsgi'
     end
-
-    it_configures 'apache serving a service with mod_wsgi'
   end
 
-  context 'on Debian platforms' do
-    let :facts do
-      global_facts.merge({
-        :osfamily               => 'Debian',
-        :operatingsystem        => 'Debian',
-        :operatingsystemrelease => '7.0'
-      })
-    end
-
-    let :platform_parameters do
-      {
-        :httpd_service_name => 'apache2',
-        :httpd_ports_file   => '/etc/apache2/ports.conf',
-      }
-    end
-
-    it_configures 'apache serving a service with mod_wsgi'
-  end
 end

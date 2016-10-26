@@ -21,37 +21,82 @@ require 'spec_helper'
 
 describe 'openstacklib::policyrcd' do
 
-  let :params do
-    { :services => ['keystone']
-    }
-  end
+  shared_examples_for 'openstacklib::policyrcd on Debian platforms' do
+    context "with single service" do
+      let :params do
+        { :services => ['keystone'] }
+      end
 
-  let :test_facts do
-    { :operatingsystem           => 'default',
-      :operatingsystemrelease    => 'default'
-    }
-  end
+      let(:contents) {
+        <<-eof
+#!/bin/bash
 
-  context 'on Debian platform' do
+if [ "$1" == "keystone" ]
+then
+  exit 101
+fi
 
-    let :facts do
-      @default_facts.merge(test_facts.merge(
-        { :osfamily => 'Debian' }
-      ))
-    end
 
-    describe "with default value" do
+eof
+      }
 
       it 'creates policy-rc.d file' do
-        verify_contents(catalogue, '/usr/sbin/policy-rc.d', [
-          '#!/bin/bash',
-          '',
-          'if [ "$1" == "keystone" ]',
-          'then',
-          '  exit 101',
-          'fi'
-        ])
+        is_expected.to contain_file('/usr/sbin/policy-rc.d').with_content(contents)
+      end
+    end
+
+    context "with multiple services" do
+      let :params do
+        { :services => ['keystone', 'nova'] }
+      end
+
+      let(:contents) {
+        <<-eof
+#!/bin/bash
+
+if [ "$1" == "keystone" ]
+then
+  exit 101
+fi
+
+if [ "$1" == "nova" ]
+then
+  exit 101
+fi
+
+
+eof
+      }
+
+      it 'creates policy-rc.d file' do
+        is_expected.to contain_file('/usr/sbin/policy-rc.d').with_content(contents)
+      end
+    end
+
+  end
+
+  shared_examples_for 'openstacklib::policyrcd on RedHat platforms' do
+    describe "with single service" do
+      let :params do
+        { :services => ['keystone'] }
+      end
+
+      it 'does not create policy-rc.d file' do
+        is_expected.to_not contain_file('/usr/sbin/policy-rc.d')
       end
     end
   end
+
+  on_supported_os({
+    :supported_os   => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
+      end
+
+      it_configures "openstacklib::policyrcd on #{facts[:osfamily]} platforms"
+    end
+  end
+
 end

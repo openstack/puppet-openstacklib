@@ -83,19 +83,16 @@ describe 'openstacklib::messaging::rabbitmq' do
 
   end
 
-  context 'on a Debian osfamily' do
-    let :facts do
-      { :osfamily => "Debian" }
-    end
+  on_supported_os({
+    :supported_os   => OSDefaults.get_supported_os
+  }).each do |os,facts|
+    context "on #{os}" do
+      let (:facts) do
+        facts.merge!(OSDefaults.get_facts())
+      end
 
-    include_examples 'openstacklib::messaging::rabbitmq examples'
+      it_configures 'openstacklib::messaging::rabbitmq examples'
+    end
   end
 
-  context 'on a RedHat osfamily' do
-    let :facts do
-      { :osfamily => 'RedHat' }
-    end
-
-    include_examples 'openstacklib::messaging::rabbitmq examples'
-  end
 end
