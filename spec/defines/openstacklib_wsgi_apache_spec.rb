@@ -102,7 +102,8 @@ describe 'openstacklib::wsgi::apache' do
           :group                   => 'keystone',
           :ssl                     => false,
           :workers                 => 37,
-          :vhost_custom_fragment   => 'LimitRequestFieldSize 81900'
+          :vhost_custom_fragment   => 'LimitRequestFieldSize 81900',
+          :allow_encoded_slashes   => 'on',
         }
       end
       it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
@@ -124,6 +125,7 @@ describe 'openstacklib::wsgi::apache' do
         'wsgi_pass_authorization'     => 'On',
         'require'                     => 'File[keystone_wsgi]',
         'custom_fragment'             => 'LimitRequestFieldSize 81900',
+         'allow_encoded_slashes'      => 'on',
       )}
 
     end

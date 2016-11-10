@@ -129,6 +129,13 @@
 #   directives to be placed at the end of the vhost configuration.
 #   Defaults to undef.
 #
+# [*allow_encoded_slashes*]
+#   (optional) If set, uses apache's AllowEncodedSlashes option in the vhost.
+#   This option is passed to puppetlabs-apache, which accepts only 4
+#   options: undef, "on", "off" or "nodecode". This is thus validated in the
+#   underlying vhost resource.
+#   Defaults to undef.
+#
 define openstacklib::wsgi::apache (
   $service_name            = $name,
   $bind_host               = undef,
@@ -156,6 +163,7 @@ define openstacklib::wsgi::apache (
   $wsgi_application_group  = '%{GLOBAL}',
   $wsgi_pass_authorization = undef,
   $vhost_custom_fragment   = undef,
+  $allow_encoded_slashes   = undef,
 ) {
 
   include ::apache
@@ -219,6 +227,7 @@ define openstacklib::wsgi::apache (
     wsgi_application_group      => $wsgi_application_group,
     wsgi_pass_authorization     => $wsgi_pass_authorization,
     custom_fragment             => $vhost_custom_fragment,
+    allow_encoded_slashes       => $allow_encoded_slashes,
     require                     => File[$service_name],
   }
 
