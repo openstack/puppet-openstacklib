@@ -124,6 +124,12 @@
 #   script when the equivalent HTTP request headers are present.
 #   Defaults to undef
 #
+# [*wsgi_chunked_request*]
+#   (optional) Makes the vhost allow chunked requests which is useful for
+#   handling TE (Transfer-Encoding), chunked or gzip. This sets the
+#   WSGIChunkedRequest option in the vhost.
+#   Defaults to undef
+#
 # [*vhost_custom_fragment*]
 #   (optional) Passes a string of custom configuration
 #   directives to be placed at the end of the vhost configuration.
@@ -162,6 +168,7 @@ define openstacklib::wsgi::apache (
   $wsgi_script_source      = undef,
   $wsgi_application_group  = '%{GLOBAL}',
   $wsgi_pass_authorization = undef,
+  $wsgi_chunked_request    = undef,
   $vhost_custom_fragment   = undef,
   $allow_encoded_slashes   = undef,
 ) {
@@ -226,6 +233,7 @@ define openstacklib::wsgi::apache (
     wsgi_script_aliases         => $wsgi_script_aliases,
     wsgi_application_group      => $wsgi_application_group,
     wsgi_pass_authorization     => $wsgi_pass_authorization,
+    wsgi_chunked_request        => $wsgi_chunked_request,
     custom_fragment             => $vhost_custom_fragment,
     allow_encoded_slashes       => $allow_encoded_slashes,
     require                     => File[$service_name],
