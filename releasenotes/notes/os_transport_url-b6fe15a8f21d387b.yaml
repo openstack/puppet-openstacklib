@@ -1,0 +1,4 @@
+---
+features:
+  - os_transport_url puppet parser function can be used to generate valid
+    transport_url URIs from a hash of connection parameters.
