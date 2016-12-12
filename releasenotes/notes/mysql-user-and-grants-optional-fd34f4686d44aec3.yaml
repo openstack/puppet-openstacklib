@@ -1,0 +1,9 @@
+---
+features:
+  - Add the ability to skip the mysql user and/or grant creation as part of the
+    openstack::db::mysql resource.
+fixes:
+  - openstack::db::mysql could not be used to create multiple databases
+    with the same user/password for access due to a duplicate mysql_user
+    resource declaration. Now the user and/or grant creation process can be
+    skipped if they already exist.

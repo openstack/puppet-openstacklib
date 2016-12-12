@@ -40,9 +40,11 @@ describe 'openstacklib::db::mysql' do
         :collate => 'utf8_general_ci'
       )}
       it { is_expected.to contain_openstacklib__db__mysql__host_access("#{params[:dbname]}_127.0.0.1").with(
-        :user       => title,
-        :database   => params[:dbname],
-        :privileges => 'ALL'
+        :user         => title,
+        :database     => params[:dbname],
+        :privileges   => 'ALL',
+        :create_user  => true,
+        :create_grant => true,
       )}
     end
 
@@ -56,9 +58,11 @@ describe 'openstacklib::db::mysql' do
         :collate => 'utf8_general_ci'
       )}
       it { is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
-        :user       => params[:user],
-        :database   => title,
-        :privileges => 'ALL',
+        :user         => params[:user],
+        :database     => title,
+        :privileges   => 'ALL',
+        :create_user  => true,
+        :create_grant => true,
       )}
     end
 
@@ -141,6 +145,55 @@ describe 'openstacklib::db::mysql' do
         :password_hash => params[:password_hash],
         :database      => title
       )}
+    end
+
+    context 'with skipping user creation' do
+      let :params do
+        { :create_user => false }.merge(required_params)
+      end
+
+      it { is_expected.to contain_mysql_database(title).with(
+        :charset => 'utf8',
+        :collate => 'utf8_general_ci'
+      )}
+      it { is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+        :user         => title,
+        :database     => title,
+        :privileges   => 'ALL',
+        :create_user  => false,
+        :create_grant => true,
+      )}
+    end
+
+    context 'with skipping grant creation' do
+      let :params do
+        { :create_grant => false }.merge(required_params)
+      end
+
+      it { is_expected.to contain_mysql_database(title).with(
+        :charset => 'utf8',
+        :collate => 'utf8_general_ci'
+      )}
+      it { is_expected.to contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+        :user         => title,
+        :database     => title,
+        :privileges   => 'ALL',
+        :create_user  => true,
+        :create_grant => false,
+      )}
+    end
+
+    context 'with skipping user and grant creation' do
+      let :params do
+        { :create_user => false,
+          :create_grant => false }.merge(required_params)
+      end
+
+      it { is_expected.to contain_mysql_database(title).with(
+        :charset => 'utf8',
+        :collate => 'utf8_general_ci'
+      )}
+      it { is_expected.to_not contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1") }
     end
 
   end
