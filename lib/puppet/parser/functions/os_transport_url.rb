@@ -113,6 +113,9 @@ EOS
 
   if v.include?('hosts')
     hosts = function_normalize_ip_for_uri([v['hosts']])
+    # normalize_ip_for_uri may return a string, so check that we still have an
+    # array
+    hosts = [hosts] if hosts.kind_of?(String)
     hosts = hosts.map{ |h| "#{h}:#{v['port']}" } if v.include?('port')
     if parts.include?(:userinfo)
       parts[:hostinfo] = hosts.map { |h| "#{parts[:userinfo]}@#{h}" }.join(',')
