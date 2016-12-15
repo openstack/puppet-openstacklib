@@ -1,0 +1,12 @@
+---
+features:
+  - Moved existing $::os_workers to $::os_workers_small
+  - Updated $::os_workers to have a value between '2' and '12'.
+    The value of this fact is the larger value between '2'
+    and the number of processors divided by '2' but will not
+    exceed '12'.
+  - Created fact $::os_workers_large to have a value of number
+    of processors divided by '2'
+fixes:
+  - bug 1650424 The current calculation for os_workers negatively
+    impacts api response times
