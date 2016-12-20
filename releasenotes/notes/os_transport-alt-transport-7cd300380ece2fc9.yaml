@@ -1,0 +1,4 @@
+---
+fixes:
+  - bug 1651215 The transport parameter was not being used so
+    transport was fixed value 'rabbit'
