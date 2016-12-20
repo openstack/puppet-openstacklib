@@ -208,7 +208,7 @@ describe 'os_transport_url' do
         }).and_return('rabbit://guest@127.0.0.1:5672/virt?read_timeout=60')
     end
 
-    it 'with ssl overrides ssl in querty hash' do
+    it 'with ssl overrides ssl in quert hash' do
       is_expected.to run.with_params({
           'transport'    => 'rabbit',
           'host'         => '127.0.0.1',
@@ -219,6 +219,51 @@ describe 'os_transport_url' do
           'ssl'          => '1',
           'query'        => { 'read_timeout' => '60' , 'ssl' => '0'},
         }).and_return('rabbit://guest@127.0.0.1:5672/virt?read_timeout=60&ssl=1')
+    end
+
+    it 'with ssl as boolean string' do
+      is_expected.to run.with_params({
+          'transport'    => 'rabbit',
+          'host'         => '127.0.0.1',
+          'port'         => '5672',
+          'username'     => 'guest',
+          'password'     => '',
+          'virtual_host' => 'virt',
+          'ssl'          => 'true',
+          'query'        => { 'read_timeout' => '60' },
+        }).and_return('rabbit://guest@127.0.0.1:5672/virt?read_timeout=60&ssl=1')
+      is_expected.to run.with_params({
+          'transport'    => 'rabbit',
+          'host'         => '127.0.0.1',
+          'port'         => '5672',
+          'username'     => 'guest',
+          'password'     => '',
+          'virtual_host' => 'virt',
+          'ssl'          => 'false',
+          'query'        => { 'read_timeout' => '60' },
+        }).and_return('rabbit://guest@127.0.0.1:5672/virt?read_timeout=60&ssl=0')
+      is_expected.to run.with_params({
+          'transport'    => 'rabbit',
+          'host'         => '127.0.0.1',
+          'port'         => '5672',
+          'username'     => 'guest',
+          'password'     => '',
+          'virtual_host' => 'virt',
+          'ssl'          => 'True',
+          'query'        => { 'read_timeout' => '60' },
+        }).and_return('rabbit://guest@127.0.0.1:5672/virt?read_timeout=60&ssl=1')
+      is_expected.to run.with_params({
+          'transport'    => 'rabbit',
+          'host'         => '127.0.0.1',
+          'port'         => '5672',
+          'username'     => 'guest',
+          'password'     => '',
+          'virtual_host' => 'virt',
+          'ssl'          => 'False',
+          'query'        => { 'read_timeout' => '60' },
+        }).and_return('rabbit://guest@127.0.0.1:5672/virt?read_timeout=60&ssl=0')
+
+
     end
 
   end

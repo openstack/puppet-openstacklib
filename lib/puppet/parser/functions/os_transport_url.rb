@@ -129,10 +129,15 @@ EOS
   # support previous ssl option on the function. Setting ssl will
   # override ssl if passed in via the query parameters
   if v.include?('ssl')
+    # ssl can be passed in as a query paramter but should be 0/1. See
+    # http://docs.celeryproject.org/projects/kombu/en/latest/userguide/connections.html#urls
+    # so we rely on the stdlib str2bool and bool2num to ensure it's in the
+    # format
+    ssl_val = function_bool2num([function_str2bool([v['ssl']])])
     if v.include?('query')
-      v['query'].merge!({ 'ssl' => v['ssl'] })
+      v['query'].merge!({ 'ssl' => ssl_val })
     else
-      v['query'] = { 'ssl' => v['ssl'] }
+      v['query'] = { 'ssl' => ssl_val }
     end
   end
 
