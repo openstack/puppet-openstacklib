@@ -94,6 +94,8 @@ EOS
     raise(Puppet::ParseError, 'os_transport_url(): cannot use both host and hosts.')
   end
 
+  parts[:transport] = v['transport']
+
   if v.include?('username') and (v['username'] != :undef) and (v['username'].to_s != '')
     parts[:userinfo] = URI.escape(v['username'])
     if v.include?('password') and (v['password'] != :undef) and (v['password'].to_s != '')
