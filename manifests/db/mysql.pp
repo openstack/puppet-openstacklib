@@ -46,6 +46,10 @@
 #    setup. Set to false to skip the user creation.
 #    Defaults to true.
 #
+#  [*tls_options*]
+#    The TLS options that the user will have
+#    Defaults to ['NONE']
+#
 define openstacklib::db::mysql (
   $password_hash,
   $dbname         = $title,
@@ -57,6 +61,7 @@ define openstacklib::db::mysql (
   $privileges     = 'ALL',
   $create_user    = true,
   $create_grant   = true,
+  $tls_options    = ['NONE'],
 ) {
 
   include ::mysql::server
@@ -80,6 +85,7 @@ define openstacklib::db::mysql (
       privileges    => $privileges,
       create_user   => $create_user,
       create_grant  => $create_grant,
+      tls_options   => $tls_options,
     }
   }
 }

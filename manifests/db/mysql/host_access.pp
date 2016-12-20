@@ -27,6 +27,10 @@
 #    setup. Set to false to skip the user creation.
 #    Defaults to true.
 #
+#  [*tls_options*]
+#    The TLS options that the user will have
+#    Defaults to ['NONE']
+#
 define openstacklib::db::mysql::host_access (
   $user,
   $password_hash,
@@ -34,6 +38,7 @@ define openstacklib::db::mysql::host_access (
   $privileges,
   $create_user  = true,
   $create_grant = true,
+  $tls_options = ['NONE'],
 ) {
   validate_re($title, '_', 'Title must be $dbname_$host')
 
@@ -42,6 +47,7 @@ define openstacklib::db::mysql::host_access (
   if $create_user {
     mysql_user { "${user}@${host}":
       password_hash => $password_hash,
+      tls_options   => $tls_options,
       require       => Mysql_database[$database],
     }
   }

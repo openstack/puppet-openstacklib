@@ -20,7 +20,8 @@ describe 'openstacklib::db::mysql::host_access' do
       end
 
       it { is_expected.to contain_mysql_user("#{params[:user]}@10.0.0.1").with(
-        :password_hash => params[:password_hash]
+        :password_hash => params[:password_hash],
+        :tls_options   => ['NONE']
       )}
 
       it { is_expected.to contain_mysql_grant("#{params[:user]}@10.0.0.1/#{params[:database]}.*").with(
