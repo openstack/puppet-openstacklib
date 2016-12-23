@@ -262,8 +262,16 @@ describe 'os_transport_url' do
           'ssl'          => 'False',
           'query'        => { 'read_timeout' => '60' },
         }).and_return('rabbit://guest@127.0.0.1:5672/virt?read_timeout=60&ssl=0')
+    end
 
-
+    it 'with alternative transport and single host array for hosts' do
+      is_expected.to run.with_params({
+          'transport'    => 'amqp',
+          'hosts'        =>  [ '127.0.0.1' ],
+          'port'         => '5672',
+          'username'     => 'guest',
+          'password'     => 's3cr3t',
+        }).and_return('amqp://guest:s3cr3t@127.0.0.1:5672/')
     end
 
   end
