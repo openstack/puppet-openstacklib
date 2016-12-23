@@ -37,6 +37,19 @@ describe 'os_transport_url' do
 
   context 'creates the correct transport URI' do
 
+    it 'with a single host array for hosts' do
+      is_expected.to run.with_params({
+          'transport'    => 'rabbit',
+          'hosts'        =>  [ '127.0.0.1' ],
+          'port'         => '5672',
+          'username'     => 'guest',
+          'password'     => 's3cr3t',
+          'virtual_host' => 'virt',
+          'ssl'          => '1',
+          'query'        => { 'read_timeout' => '60' },
+        }).and_return('rabbit://guest:s3cr3t@127.0.0.1:5672/virt?read_timeout=60&ssl=1')
+    end
+
     it 'with all params for a single host' do
       is_expected.to run.with_params({
           'transport'    => 'rabbit',
