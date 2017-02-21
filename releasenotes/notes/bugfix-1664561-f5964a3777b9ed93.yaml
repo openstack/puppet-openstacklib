@@ -1,0 +1,4 @@
+---
+fixes:
+  - Bugfix 1664561. Allow to use Integers and Strings
+    for the port parameter.

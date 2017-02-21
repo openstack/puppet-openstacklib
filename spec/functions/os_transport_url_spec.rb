@@ -50,11 +50,37 @@ describe 'os_transport_url' do
         }).and_return('rabbit://guest:s3cr3t@127.0.0.1:5672/virt?read_timeout=60&ssl=1')
     end
 
+    it 'with a single host array for hosts and integer port' do
+      is_expected.to run.with_params({
+          'transport'    => 'rabbit',
+          'hosts'        =>  [ '127.0.0.1' ],
+          'port'         => 5672,
+          'username'     => 'guest',
+          'password'     => 's3cr3t',
+          'virtual_host' => 'virt',
+          'ssl'          => '1',
+          'query'        => { 'read_timeout' => '60' },
+        }).and_return('rabbit://guest:s3cr3t@127.0.0.1:5672/virt?read_timeout=60&ssl=1')
+    end
+
     it 'with all params for a single host' do
       is_expected.to run.with_params({
           'transport'    => 'rabbit',
           'host'         => '127.0.0.1',
           'port'         => '5672',
+          'username'     => 'guest',
+          'password'     => 's3cr3t',
+          'virtual_host' => 'virt',
+          'ssl'          => '1',
+          'query'        => { 'read_timeout' => '60' },
+        }).and_return('rabbit://guest:s3cr3t@127.0.0.1:5672/virt?read_timeout=60&ssl=1')
+    end
+
+    it 'with all params for a single host and integer port' do
+      is_expected.to run.with_params({
+          'transport'    => 'rabbit',
+          'host'         => '127.0.0.1',
+          'port'         => 5672,
           'username'     => 'guest',
           'password'     => 's3cr3t',
           'virtual_host' => 'virt',
@@ -74,7 +100,15 @@ describe 'os_transport_url' do
       is_expected.to run.with_params({
           'transport' => 'rabbit',
           'host'      => 'fe80::ca5b:76ff:fe4b:be3b',
-          'port'      => '5672'
+          'port'      => '5672',
+        }).and_return('rabbit://[fe80::ca5b:76ff:fe4b:be3b]:5672/')
+    end
+
+    it 'with a single ipv6 address and integer port' do
+      is_expected.to run.with_params({
+          'transport' => 'rabbit',
+          'host'      => 'fe80::ca5b:76ff:fe4b:be3b',
+          'port'      => 5672,
         }).and_return('rabbit://[fe80::ca5b:76ff:fe4b:be3b]:5672/')
     end
 
@@ -83,6 +117,18 @@ describe 'os_transport_url' do
           'transport'    => 'rabbit',
           'hosts'        => ['1.1.1.1', '2.2.2.2'],
           'port'         => '5672',
+          'username'     => 'guest',
+          'password'     => 's3cr3t',
+          'virtual_host' => 'virt',
+          'query'        => { 'read_timeout' => '60' },
+      }).and_return('rabbit://guest:s3cr3t@1.1.1.1:5672,guest:s3cr3t@2.2.2.2:5672/virt?read_timeout=60')
+    end
+
+    it 'with all params with multiple hosts and integer port' do
+      is_expected.to run.with_params({
+          'transport'    => 'rabbit',
+          'hosts'        => ['1.1.1.1', '2.2.2.2'],
+          'port'         => 5672,
           'username'     => 'guest',
           'password'     => 's3cr3t',
           'virtual_host' => 'virt',
