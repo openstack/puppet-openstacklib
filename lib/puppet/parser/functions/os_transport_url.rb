@@ -10,7 +10,7 @@ Valid hash parameteres:
  * transport - (string) type of transport, 'rabbit' or 'amqp'
  * host - (string) single host
  * hosts - (array) array of hosts to use
- * port - (string) port to connect to
+ * port - (string | integer) port to connect to
  * username - (string) connection username
  * password - (string) connection password
  * virtual_host - (string) virtual host to connect to
@@ -68,6 +68,7 @@ EOS
 
   # type checking for the parameter hash
   v.keys.each do |key|
+    v[key] = v[key].to_s if key == 'port'
     klass = (key == 'hosts') ? Array : String
     klass = (key == 'query') ? Hash : klass
     unless (v[key].class == klass) or (v[key] == :undef)
@@ -105,7 +106,7 @@ EOS
 
   if v.include?('host')
     host = function_normalize_ip_for_uri([v['host']])
-    host += ":#{v['port']}" if v.include?('port')
+    host += ":#{v['port'].to_s}" if v.include?('port')
     if parts.include?(:userinfo)
       parts[:hostinfo] = "#{parts[:userinfo]}@#{host}"
     else
@@ -118,7 +119,7 @@ EOS
     # normalize_ip_for_uri may return a string, so check that we still have an
     # array
     hosts = [hosts] if hosts.kind_of?(String)
-    hosts = hosts.map{ |h| "#{h}:#{v['port']}" } if v.include?('port')
+    hosts = hosts.map{ |h| "#{h}:#{v['port'].to_s}" } if v.include?('port')
     if parts.include?(:userinfo)
       parts[:hostinfo] = hosts.map { |h| "#{parts[:userinfo]}@#{h}" }.join(',')
     else
