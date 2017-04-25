@@ -1,33 +1,61 @@
 {
-  "name": "openstack-openstacklib",
-  "version": "8.2.0",
-  "author": "Puppet Labs and OpenStack Contributors",
-  "summary": "Puppet OpenStack Libraries",
-  "license": "Apache-2.0",
-  "source": "git://github.com/openstack/puppet-openstacklib.git",
-  "project_page": "https://launchpad.net/puppet-openstacklib",
-  "issues_url": "https://bugs.launchpad.net/puppet-openstacklib",
-  "requirements": [
-    { "name": "pe", "version_requirement": ">= 3.2.0 <= 2016.1.0" },
-    { "name": "puppet", "version_requirement": ">= 3.0.0 < 5.0.0" }
-  ],
-  "operatingsystem_support": [
-    {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": ["7"]
-    },
-    {
-      "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": ["14.04"]
-    }
-  ],
-  "description": "Puppet module library to expose common functionality between OpenStack modules.",
-  "dependencies": [
-    { "name": "puppetlabs/apache", "version_requirement": ">=1.8.0 <2.0.0" },
-    { "name": "puppetlabs/inifile", "version_requirement": ">=1.4.0 <2.0.0" },
-    { "name": "puppetlabs/mysql", "version_requirement": ">=3.6.0 <4.0.0" },
-    { "name": "puppetlabs/stdlib", "version_requirement": ">=4.9.0 <5.0.0" },
-    { "name": "puppetlabs/rabbitmq", "version_requirement": ">=5.3.1 <6.0.0" },
-    { "name": "puppetlabs/postgresql", "version_requirement": ">=4.6.0 <5.0.0" }
-  ]
+    "author": "Puppet Labs and OpenStack Contributors",
+    "dependencies": [
+        {
+            "name": "puppetlabs/apache",
+            "version_requirement": ">=1.8.0 <2.0.0"
+        },
+        {
+            "name": "puppetlabs/inifile",
+            "version_requirement": ">=1.4.0 <2.0.0"
+        },
+        {
+            "name": "puppetlabs/mysql",
+            "version_requirement": ">=3.6.0 <4.0.0"
+        },
+        {
+            "name": "puppetlabs/stdlib",
+            "version_requirement": ">=4.9.0 <5.0.0"
+        },
+        {
+            "name": "puppetlabs/rabbitmq",
+            "version_requirement": ">=5.3.1 <6.0.0"
+        },
+        {
+            "name": "puppetlabs/postgresql",
+            "version_requirement": ">=4.6.0 <5.0.0"
+        }
+    ],
+    "description": "Puppet module library to expose common functionality between OpenStack modules.",
+    "issues_url": "https://bugs.launchpad.net/puppet-openstacklib",
+    "license": "Apache-2.0",
+    "name": "openstack-openstacklib",
+    "operatingsystem_support": [
+        {
+            "operatingsystem": "RedHat",
+            "operatingsystemrelease": [
+                "7"
+            ]
+        },
+        {
+            "operatingsystem": "Ubuntu",
+            "operatingsystemrelease": [
+                "14.04"
+            ]
+        }
+    ],
+    "project_page": "https://launchpad.net/puppet-openstacklib",
+    "requirements": [
+        {
+            "name": "pe",
+            "version_requirement": ">= 3.2.0 <= 2016.1.0"
+        },
+        {
+            "name": "puppet",
+            "version_requirement": ">= 3.0.0 < 5.0.0"
+        }
+    ],
+    "source": "git://github.com/openstack/puppet-openstacklib.git",
+    "summary": "Puppet OpenStack Libraries",
+    "version": "8.3.0"
 }
