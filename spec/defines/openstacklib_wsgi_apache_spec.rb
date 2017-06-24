@@ -132,6 +132,34 @@ describe 'openstacklib::wsgi::apache' do
 
     end
 
+    describe 'when wsgi_daemon_process_options are overriden' do
+      let :params do
+        {
+          :bind_port                   => 5000,
+          :group                       => 'keystone',
+          :ssl                         => true,
+          :user                        => 'keystone',
+          :wsgi_script_dir             => '/var/www/cgi-bin/keystone',
+          :wsgi_script_file            => 'main',
+          :wsgi_script_source          => '/usr/share/keystone/keystone.wsgi',
+          :custom_wsgi_process_options => {
+            'user'        => 'someotheruser',
+            'group'       => 'someothergroup',
+            'python_path' => '/my/python/admin/path',
+          },
+        }
+      end
+      it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
+        'wsgi_daemon_process_options' => {
+          'user'         => 'someotheruser',
+          'group'        => 'someothergroup',
+          'processes'    => 1,
+          'threads'      => global_facts[:os_workers],
+          'display-name' => 'keystone_wsgi',
+          'python_path'  => '/my/python/admin/path',
+        },
+      )}
+    end
   end
 
   on_supported_os({

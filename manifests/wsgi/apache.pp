@@ -134,6 +134,14 @@
 #   WSGIChunkedRequest option in the vhost.
 #   Defaults to undef
 #
+# [*custom_wsgi_process_options*]
+#   (optional) gives you the oportunity to add custom process options or to
+#   overwrite the default options for the WSGI process.
+#   eg. to use a virtual python environment for the WSGI process
+#   you could set it to:
+#   { python-path => '/my/python/virtualenv' }
+#   Defaults to {}
+#
 # [*vhost_custom_fragment*]
 #   (optional) Passes a string of custom configuration
 #   directives to be placed at the end of the vhost configuration.
@@ -147,35 +155,36 @@
 #   Defaults to undef.
 #
 define openstacklib::wsgi::apache (
-  $service_name              = $name,
-  $bind_host                 = undef,
-  $bind_port                 = undef,
-  $group                     = undef,
-  $path                      = '/',
-  $priority                  = '10',
-  $servername                = $::fqdn,
-  $ssl                       = false,
-  $ssl_ca                    = undef,
-  $ssl_cert                  = undef,
-  $ssl_certs_dir             = undef,
-  $ssl_chain                 = undef,
-  $ssl_crl                   = undef,
-  $ssl_crl_path              = undef,
-  $ssl_key                   = undef,
-  $threads                   = $::os_workers,
-  $user                      = undef,
-  $workers                   = 1,
-  $wsgi_daemon_process       = $name,
-  $wsgi_process_display_name = $name,
-  $wsgi_process_group        = $name,
-  $wsgi_script_dir           = undef,
-  $wsgi_script_file          = undef,
-  $wsgi_script_source        = undef,
-  $wsgi_application_group    = '%{GLOBAL}',
-  $wsgi_pass_authorization   = undef,
-  $wsgi_chunked_request      = undef,
-  $vhost_custom_fragment     = undef,
-  $allow_encoded_slashes     = undef,
+  $service_name                = $name,
+  $bind_host                   = undef,
+  $bind_port                   = undef,
+  $group                       = undef,
+  $path                        = '/',
+  $priority                    = '10',
+  $servername                  = $::fqdn,
+  $ssl                         = false,
+  $ssl_ca                      = undef,
+  $ssl_cert                    = undef,
+  $ssl_certs_dir               = undef,
+  $ssl_chain                   = undef,
+  $ssl_crl                     = undef,
+  $ssl_crl_path                = undef,
+  $ssl_key                     = undef,
+  $threads                     = $::os_workers,
+  $user                        = undef,
+  $workers                     = 1,
+  $wsgi_daemon_process         = $name,
+  $wsgi_process_display_name   = $name,
+  $wsgi_process_group          = $name,
+  $wsgi_script_dir             = undef,
+  $wsgi_script_file            = undef,
+  $wsgi_script_source          = undef,
+  $wsgi_application_group      = '%{GLOBAL}',
+  $wsgi_pass_authorization     = undef,
+  $wsgi_chunked_request        = undef,
+  $custom_wsgi_process_options = {},
+  $vhost_custom_fragment       = undef,
+  $allow_encoded_slashes       = undef,
 ) {
 
   include ::apache
@@ -205,13 +214,16 @@ define openstacklib::wsgi::apache (
     mode   => '0644',
   }
 
-  $wsgi_daemon_process_options = {
-    user         => $user,
-    group        => $group,
-    processes    => $workers,
-    threads      => $threads,
-    display-name => $wsgi_process_display_name,
-  }
+  $wsgi_daemon_process_options = merge (
+    {
+      user         => $user,
+      group        => $group,
+      processes    => $workers,
+      threads      => $threads,
+      display-name => $wsgi_process_display_name,
+    },
+    $custom_wsgi_process_options,
+  )
   $wsgi_script_aliases = hash([$path_real,"${wsgi_script_dir}/${wsgi_script_file}"])
 
   ::apache::vhost { $service_name:
