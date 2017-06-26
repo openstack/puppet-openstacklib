@@ -198,6 +198,7 @@ define openstacklib::wsgi::apache (
 
   file { $service_name:
     ensure  => file,
+    links   => follow,
     path    => "${wsgi_script_dir}/${wsgi_script_file}",
     source  => $wsgi_script_source,
     owner   => $user,
