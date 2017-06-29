@@ -57,6 +57,7 @@ describe 'openstacklib::wsgi::apache' do
 
       it { is_expected.to contain_file('keystone_wsgi').with(
         'ensure'  => 'file',
+	'links'   => 'follow',
         'path'    => '/var/www/cgi-bin/keystone/main',
         'source'  => '/usr/share/keystone/keystone.wsgi',
         'owner'   => 'keystone',
