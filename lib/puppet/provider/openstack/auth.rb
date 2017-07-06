@@ -16,10 +16,13 @@ module Puppet::Provider::Openstack::Auth
     rcfile = [filename, '/root/openrc'].detect { |f| File.exists? f }
     unless rcfile.nil?
       File.open(rcfile).readlines.delete_if{|l| l=~ /^#|^$/ }.each do |line|
-        key, value = line.split('=')
-        key = key.split(' ').last
-        value = value.chomp.gsub(/'/, '')
-        env.merge!(key => value) if key =~ /OS_/
+        # we only care about the OS_ vars from the file LP#1699950
+        if line =~ /OS_/
+          key, value = line.split('=')
+          key = key.split(' ').last
+          value = value.chomp.gsub(/'/, '')
+          env.merge!(key => value) if key =~ /OS_/
+        end
       end
     end
     return env

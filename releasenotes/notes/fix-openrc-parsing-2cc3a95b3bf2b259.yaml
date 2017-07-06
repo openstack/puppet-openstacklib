@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Improve openrc parsing to prevent issues when additional bash code is
+    present in a user's openrc file. LP#1699950

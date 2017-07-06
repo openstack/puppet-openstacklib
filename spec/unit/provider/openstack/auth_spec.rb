@@ -102,6 +102,22 @@ describe Puppet::Provider::Openstack::Auth do
       end
     end
 
+    context 'with a valid RC file with extra code in it' do
+      it 'provides a hash' do
+        mock = "export OS_USERNAME='test'\nexport OS_PASSWORD='abc123'\nexport OS_PROJECT_NAME='test'\nexport OS_AUTH_URL='http://127.0.0.1:5000'\n_openstack() {\n foo\n} "
+        filename = 'file'
+        File.expects(:exists?).with('file').returns(true)
+        File.expects(:open).with('file').returns(StringIO.new(mock))
+
+        response = klass.get_os_vars_from_rcfile(filename)
+        expect(response).to eq({
+          "OS_AUTH_URL"     => "http://127.0.0.1:5000",
+          "OS_PASSWORD"     => "abc123",
+          "OS_PROJECT_NAME" => "test",
+          "OS_USERNAME"     => "test"})
+      end
+    end
+
     context 'with an empty file' do
       it 'provides an empty hash' do
         filename = 'file'
