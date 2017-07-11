@@ -71,8 +71,10 @@ define openstacklib::db::mysql (
     ensure  => present,
     charset => $charset,
     collate => $collate,
-    require => [ Class['mysql::server'], Class['mysql::client'] ],
   }
+
+  Class['mysql::server'] ~> Mysql_database<| title == $dbname |>
+  Class['mysql::client'] ~> Mysql_database<| title == $dbname |>
 
   if $create_user or $create_grant {
     $allowed_hosts_list = unique(concat(any2array($allowed_hosts), [$host]))

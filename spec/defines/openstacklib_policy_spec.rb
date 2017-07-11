@@ -20,7 +20,6 @@ describe 'openstacklib::policy::base' do
           'lens'    => 'Json.lns',
           'incl'    => '/etc/nova/policy.json',
           'changes' => 'set dict/entry[*][.="context_is_admin or owner"]/string "foo:bar"',
-          'require' => 'Augeas[/etc/nova/policy.json-context_is_admin or owner-foo:bar-add]'
         )
       end
 

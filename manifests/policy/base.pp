@@ -38,8 +38,10 @@ define openstacklib::policy::base (
     lens    => 'Json.lns',
     incl    => $file_path,
     changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
-    require => Augeas["${file_path}-${key}-${value}-add"],
   }
+
+  Augeas<| title == "${file_path}-${key}-${value}-add" |> ~>
+    Augeas<| title == "${file_path}-${key}-${value}" |>
 
 }
 

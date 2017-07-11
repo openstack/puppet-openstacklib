@@ -43,10 +43,6 @@ describe 'openstacklib::service_validation' do
         :logoutput   => 'on_failure',
       )}
 
-      it { is_expected.to contain_anchor("create #{title} anchor").with(
-        :require => "Exec[execute #{title} validation]",
-      )}
-
     end
 
     context 'with unless parameter' do
@@ -65,10 +61,6 @@ describe 'openstacklib::service_validation' do
         :unless      => 'pwd',
       )}
 
-      it { is_expected.to contain_anchor("create #{title} anchor").with(
-        :require => "Exec[execute #{title} validation]",
-      )}
-
     end
 
     context 'with onlyif parameter' do
@@ -85,10 +77,6 @@ describe 'openstacklib::service_validation' do
         :tries       => '10',
         :try_sleep   => '2',
         :onlyif      => 'pwd',
-      )}
-
-      it { is_expected.to contain_anchor("create #{title} anchor").with(
-        :require => "Exec[execute #{title} validation]",
       )}
 
     end

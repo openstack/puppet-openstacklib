@@ -52,7 +52,6 @@ describe 'openstacklib::wsgi::apache' do
         'ensure'  => 'directory',
         'owner'   => 'keystone',
         'group'   => 'keystone',
-        'require' => 'Package[httpd]'
       )}
 
       it { is_expected.to contain_file('keystone_wsgi').with(
@@ -84,7 +83,6 @@ describe 'openstacklib::wsgi::apache' do
           'display-name' => 'keystone_wsgi',
         },
         'wsgi_application_group'      => '%{GLOBAL}',
-        'require'                     => 'File[keystone_wsgi]',
         'setenvif'                    => ['X-Forwarded-Proto https HTTPS=1']
       )}
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
@@ -128,7 +126,6 @@ describe 'openstacklib::wsgi::apache' do
         'wsgi_application_group'      => '%{GLOBAL}',
         'wsgi_pass_authorization'     => 'On',
         'wsgi_chunked_request'        => 'On',
-        'require'                     => 'File[keystone_wsgi]',
         'custom_fragment'             => 'LimitRequestFieldSize 81900',
          'allow_encoded_slashes'      => 'on',
       )}

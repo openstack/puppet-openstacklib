@@ -48,16 +48,18 @@ define openstacklib::db::mysql::host_access (
     mysql_user { "${user}@${host}":
       password_hash => $password_hash,
       tls_options   => $tls_options,
-      require       => Mysql_database[$database],
     }
+    Mysql_database<| title == $database |> ~>
+      Mysql_user<| title == "${user}@${host}" |>
   }
 
   if $create_grant {
     mysql_grant { "${user}@${host}/${database}.*":
       privileges => $privileges,
       table      => "${database}.*",
-      require    => Mysql_user["${user}@${host}"],
       user       => "${user}@${host}",
     }
+    Mysql_user<| title == "${user}@${host}" |> ~>
+      Mysql_grant<| title == "${user}@${host}/${database}.*" |>
   }
 }

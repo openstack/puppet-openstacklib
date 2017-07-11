@@ -189,22 +189,20 @@ define openstacklib::wsgi::apache (
 
   if !defined(File[$wsgi_script_dir]) {
     file { $wsgi_script_dir:
-      ensure  => directory,
-      owner   => $user,
-      group   => $group,
-      require => Package['httpd'],
+      ensure => directory,
+      owner  => $user,
+      group  => $group,
     }
   }
 
   file { $service_name:
-    ensure  => file,
-    links   => follow,
-    path    => "${wsgi_script_dir}/${wsgi_script_file}",
-    source  => $wsgi_script_source,
-    owner   => $user,
-    group   => $group,
-    mode    => '0644',
-    require => File[$wsgi_script_dir],
+    ensure => file,
+    links  => follow,
+    path   => "${wsgi_script_dir}/${wsgi_script_file}",
+    source => $wsgi_script_source,
+    owner  => $user,
+    group  => $group,
+    mode   => '0644',
   }
 
   $wsgi_daemon_process_options = {
@@ -243,7 +241,10 @@ define openstacklib::wsgi::apache (
     wsgi_chunked_request        => $wsgi_chunked_request,
     custom_fragment             => $vhost_custom_fragment,
     allow_encoded_slashes       => $allow_encoded_slashes,
-    require                     => File[$service_name],
   }
 
+  Package<| name == 'httpd' |>
+  ~> File<| title == $wsgi_script_dir |>
+  ~> File <| title == $service_name |>
+  ~> Apache::Vhost<| title == $service_name |>
 }
