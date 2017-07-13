@@ -243,8 +243,8 @@ define openstacklib::wsgi::apache (
     allow_encoded_slashes       => $allow_encoded_slashes,
   }
 
-  Package<| name == 'httpd' |>
+  Package<| title == 'httpd' |>
   ~> File<| title == $wsgi_script_dir |>
-  ~> File <| title == $service_name |>
+  ~> File<| title == $service_name |>
   ~> Apache::Vhost<| title == $service_name |>
 }
