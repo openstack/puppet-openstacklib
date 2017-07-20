@@ -91,8 +91,8 @@ define openstacklib::service_validation(
     logoutput   => 'on_failure',
   }
 
-  anchor { "create ${service_name} anchor": } ->
-    Exec<| title == "execute ${service_name} validation" |>
+  anchor { "create ${service_name} anchor": }
+    -> Exec<| title == "execute ${service_name} validation" |>
 
 }
 

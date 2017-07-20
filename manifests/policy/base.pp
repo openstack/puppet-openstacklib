@@ -40,8 +40,8 @@ define openstacklib::policy::base (
     changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
   }
 
-  Augeas<| title == "${file_path}-${key}-${value}-add" |> ~>
-    Augeas<| title == "${file_path}-${key}-${value}" |>
+  Augeas<| title == "${file_path}-${key}-${value}-add" |>
+    ~> Augeas<| title == "${file_path}-${key}-${value}" |>
 
 }
 

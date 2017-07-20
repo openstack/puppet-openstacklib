@@ -49,8 +49,8 @@ define openstacklib::db::mysql::host_access (
       password_hash => $password_hash,
       tls_options   => $tls_options,
     }
-    Mysql_database<| title == $database |> ~>
-      Mysql_user<| title == "${user}@${host}" |>
+    Mysql_database<| title == $database |>
+      ~> Mysql_user<| title == "${user}@${host}" |>
   }
 
   if $create_grant {
@@ -59,7 +59,7 @@ define openstacklib::db::mysql::host_access (
       table      => "${database}.*",
       user       => "${user}@${host}",
     }
-    Mysql_user<| title == "${user}@${host}" |> ~>
-      Mysql_grant<| title == "${user}@${host}/${database}.*" |>
+    Mysql_user<| title == "${user}@${host}" |>
+      ~> Mysql_grant<| title == "${user}@${host}/${database}.*" |>
   }
 }
