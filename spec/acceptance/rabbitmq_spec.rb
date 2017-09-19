@@ -6,21 +6,9 @@ describe 'openstacklib class' do
 
     it 'should work with no errors' do
       pp= <<-EOS
-      Exec { logoutput => 'on_failure' }
-
-      if $::osfamily == 'RedHat' {
-        class { '::openstack_extras::repo::redhat::redhat':
-          release     => 'kilo',
-          manage_epel => false,
-        }
-      } else {
-        include ::apt
-      }
-
-      class { '::rabbitmq':
-        delete_guest_user => true,
-        package_provider  => $::package_provider
-      }
+      include ::openstack_integration
+      include ::openstack_integration::repos
+      include ::openstack_integration::rabbitmq
 
       # openstacklib resources
       include ::openstacklib::openstackclient
