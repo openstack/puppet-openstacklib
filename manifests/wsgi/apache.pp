@@ -85,7 +85,7 @@
 #
 # [*threads*]
 #   (optional) The number of threads for the vhost.
-#   Defaults to $::os_workers
+#   Defaults to 1
 #
 # [*user*]
 #   (optional) User with permissions on the script
@@ -93,7 +93,7 @@
 #
 # [*workers*]
 #   (optional) The number of workers for the vhost.
-#   Defaults to '1'
+#   Defaults to $::os_workers
 #
 # [*wsgi_daemon_process*]
 #   (optional) Name of the WSGI daemon process.
@@ -170,9 +170,9 @@ define openstacklib::wsgi::apache (
   $ssl_crl                     = undef,
   $ssl_crl_path                = undef,
   $ssl_key                     = undef,
-  $threads                     = $::os_workers,
+  $threads                     = 1,
   $user                        = undef,
-  $workers                     = 1,
+  $workers                     = $::os_workers,
   $wsgi_daemon_process         = $name,
   $wsgi_process_display_name   = $name,
   $wsgi_process_group          = $name,
