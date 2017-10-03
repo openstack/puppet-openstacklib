@@ -37,7 +37,9 @@ describe 'openstacklib::wsgi::apache' do
       :user               => 'keystone',
       :wsgi_script_dir    => '/var/www/cgi-bin/keystone',
       :wsgi_script_file   => 'main',
-      :wsgi_script_source => '/usr/share/keystone/keystone.wsgi'
+      :wsgi_script_source => '/usr/share/keystone/keystone.wsgi',
+      :access_log_file    => false,
+      :access_log_format  => false,
     }
   end
 
@@ -83,7 +85,9 @@ describe 'openstacklib::wsgi::apache' do
           'display-name' => 'keystone_wsgi',
         },
         'wsgi_application_group'      => '%{GLOBAL}',
-        'setenvif'                    => ['X-Forwarded-Proto https HTTPS=1']
+        'setenvif'                    => ['X-Forwarded-Proto https HTTPS=1'],
+        'access_log_file'             => false,
+        'access_log_format'           => false,
       )}
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
     end
@@ -105,6 +109,9 @@ describe 'openstacklib::wsgi::apache' do
           :workers                 => 37,
           :vhost_custom_fragment   => 'LimitRequestFieldSize 81900',
           :allow_encoded_slashes   => 'on',
+          :access_log_file         => '/var/log/httpd/access_log',
+          :access_log_format       => 'some format',
+          :error_log_file          => '/var/log/httpd/error_log'
         }
       end
       it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
@@ -127,7 +134,10 @@ describe 'openstacklib::wsgi::apache' do
         'wsgi_pass_authorization'     => 'On',
         'wsgi_chunked_request'        => 'On',
         'custom_fragment'             => 'LimitRequestFieldSize 81900',
-         'allow_encoded_slashes'      => 'on',
+        'allow_encoded_slashes'       => 'on',
+        'access_log_file'             => '/var/log/httpd/access_log',
+        'access_log_format'           => 'some format',
+        'error_log_file'              => '/var/log/httpd/error_log'
       )}
 
     end
