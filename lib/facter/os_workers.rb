@@ -45,6 +45,6 @@ Facter.add(:os_workers_large) do
   has_weight 100
   setcode do
     processors = Facter.value('processorcount')
-    [ (processors.to_i / 2) ]
+    [ (processors.to_i / 2), 1 ].max
   end
 end

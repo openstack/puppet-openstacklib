@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    The os_workers_large fact now returns an Integer instead of a Tuple.
+    It will also return a minimum value of 1.
