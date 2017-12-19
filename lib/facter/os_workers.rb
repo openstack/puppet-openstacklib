@@ -48,3 +48,16 @@ Facter.add(:os_workers_large) do
     [ (processors.to_i / 2), 1 ].max
   end
 end
+
+#
+# Heat Engine service can be more stressed than other services, so
+# a minimum of 4 and maximum of 24 workers should be fine, still
+# calculating with the number of processors.
+#
+Facter.add(:os_workers_heat_engine) do
+  has_weight 100
+  setcode do
+    processors = Facter.value('processorcount')
+    [ [ (processors.to_i / 2), 4 ].max, 24 ].min
+  end
+end

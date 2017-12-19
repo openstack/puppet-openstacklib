@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Implement a new fact, $::os_workers_heat_engine that is responding to
+    a specific need with Heat Engine service, where minimum of workers will
+    be 4 and maximum of 24.
