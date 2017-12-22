@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe 'os_workers_large' do
 
-  before { Facter.clear }
-  after { Facter.clear }
+  before { Facter.flush }
 
   context 'with processorcount=1' do
     before do
