@@ -3,17 +3,29 @@ require 'spec_helper'
 describe 'openstacklib::policy::base' do
 
 
-  shared_examples_for 'openstacklib::policy' do
+  shared_examples_for 'openstacklib::policy::base' do
     context 'with some basic parameters' do
       let :title do
         'nova-contest_is_admin'
       end
 
       let :params do
-        {:file_path => '/etc/nova/policy.json',
-        :key       => 'context_is_admin or owner',
-        :value     => 'foo:bar'}
+        {
+          :file_path  => '/etc/nova/policy.json',
+          :key        => 'context_is_admin or owner',
+          :value      => 'foo:bar',
+          :file_mode  => '0644',
+          :file_user  => 'foo',
+          :file_group => 'bar'
+        }
       end
+
+      it {
+        is_expected.to contain_file('/etc/nova/policy.json').with(
+          :mode  => '0644',
+          :owner => 'foo',
+          :group => 'bar')
+      }
 
       it 'configures (modifies) the proper policy' do
         is_expected.to contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar').with(
@@ -45,7 +57,7 @@ describe 'openstacklib::policy::base' do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      it_configures 'openstacklib::policy'
+      it_configures 'openstacklib::policy::base'
     end
   end
 

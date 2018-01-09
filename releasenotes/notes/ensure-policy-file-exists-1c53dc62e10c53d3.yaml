@@ -1,0 +1,9 @@
+---
+fixes:
+  - |
+    The upstream services are moving their policy files into code which means
+    they may not exist if a user tries to customize the policies. We've added
+    an file resource to openstacklib::policy::base to ensure the file exists
+    but this means that the user/group need to be passed into the module or
+    it will possibly lock out services from being able to read this file as
+    the defaults limit it to just root:root.
