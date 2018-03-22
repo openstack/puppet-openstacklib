@@ -142,7 +142,7 @@ describe 'openstacklib::wsgi::apache' do
 
     end
 
-    describe 'when wsgi_daemon_process_options are overriden' do
+    describe 'when wsgi_daemon_process_options are overridden' do
       let :params do
         {
           :bind_port                   => 5000,
