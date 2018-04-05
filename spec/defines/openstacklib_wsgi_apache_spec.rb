@@ -85,9 +85,15 @@ describe 'openstacklib::wsgi::apache' do
           'display-name' => 'keystone_wsgi',
         },
         'wsgi_application_group'      => '%{GLOBAL}',
+        'headers'                     => nil,
         'setenvif'                    => ['X-Forwarded-Proto https HTTPS=1'],
         'access_log_file'             => false,
+        'access_log_pipe'             => false,
+        'access_log_syslog'           => false,
         'access_log_format'           => false,
+        'error_log_file'              => nil,
+        'error_log_pipe'              => nil,
+        'error_log_syslog'            => nil
       )}
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
     end
@@ -100,6 +106,7 @@ describe 'openstacklib::wsgi::apache' do
           :wsgi_script_source      => '/usr/share/keystone/keystone.wsgi',
           :wsgi_pass_authorization => 'On',
           :wsgi_chunked_request    => 'On',
+          :headers                 => 'set X-Frame-Options "DENY"',
           :servername              => 'dummy.host',
           :bind_host               => '10.42.51.1',
           :bind_port               => 4142,
@@ -110,8 +117,10 @@ describe 'openstacklib::wsgi::apache' do
           :vhost_custom_fragment   => 'LimitRequestFieldSize 81900',
           :allow_encoded_slashes   => 'on',
           :access_log_file         => '/var/log/httpd/access_log',
+          :access_log_syslog       => 'syslog:local0',
           :access_log_format       => 'some format',
-          :error_log_file          => '/var/log/httpd/error_log'
+          :error_log_file          => '/var/log/httpd/error_log',
+          :error_log_syslog        => 'syslog:local0'
         }
       end
       it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
@@ -133,11 +142,14 @@ describe 'openstacklib::wsgi::apache' do
         'wsgi_application_group'      => '%{GLOBAL}',
         'wsgi_pass_authorization'     => 'On',
         'wsgi_chunked_request'        => 'On',
+        'headers'                     => 'set X-Frame-Options "DENY"',
         'custom_fragment'             => 'LimitRequestFieldSize 81900',
         'allow_encoded_slashes'       => 'on',
         'access_log_file'             => '/var/log/httpd/access_log',
+        'access_log_syslog'           => 'syslog:local0',
         'access_log_format'           => 'some format',
-        'error_log_file'              => '/var/log/httpd/error_log'
+        'error_log_file'              => '/var/log/httpd/error_log',
+        'error_log_syslog'            => 'syslog:local0'
       )}
 
     end
