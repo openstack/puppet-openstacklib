@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    openstacklib::wsgi::apache now has a parameter named custom_wsgi_script_aliases
+    which can be used to add more WSGI script alises to the apache::vhost resource.
+    These additional WSGI script aliases is added upon the default script alias which
+    is $path combined with $wsgi_script_dir and $wsgi_script_file.

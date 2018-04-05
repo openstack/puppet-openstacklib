@@ -146,6 +146,12 @@
 #   { python-path => '/my/python/virtualenv' }
 #   Defaults to {}
 #
+# [*custom_wsgi_script_aliases*]
+#   (Optional) Pass a hash with any extra WSGI script aliases that you want
+#   to load for the same vhost, this is then combined with the default
+#   script alias built usin $path, $wsgi_script_dir and $wsgi_script_file.
+#   Defaults to undef
+#
 # [*vhost_custom_fragment*]
 #   (Optional) Passes a string of custom configuration
 #   directives to be placed at the end of the vhost configuration.
@@ -220,6 +226,7 @@ define openstacklib::wsgi::apache (
   $wsgi_chunked_request        = undef,
   $headers                     = undef,
   $custom_wsgi_process_options = {},
+  $custom_wsgi_script_aliases  = undef,
   $vhost_custom_fragment       = undef,
   $allow_encoded_slashes       = undef,
   $access_log_file             = false,
@@ -268,7 +275,14 @@ define openstacklib::wsgi::apache (
     },
     $custom_wsgi_process_options,
   )
-  $wsgi_script_aliases = hash([$path_real,"${wsgi_script_dir}/${wsgi_script_file}"])
+
+  $wsgi_script_aliases_default = hash([$path_real,"${wsgi_script_dir}/${wsgi_script_file}"])
+
+  if $custom_wsgi_script_aliases {
+    $wsgi_script_aliases_real = merge($wsgi_script_aliases_default, $custom_wsgi_script_aliases)
+  } else {
+    $wsgi_script_aliases_real = $wsgi_script_aliases_default
+  }
 
   ::apache::vhost { $service_name:
     ensure                      => 'present',
@@ -291,7 +305,7 @@ define openstacklib::wsgi::apache (
     wsgi_daemon_process         => $wsgi_daemon_process,
     wsgi_daemon_process_options => $wsgi_daemon_process_options,
     wsgi_process_group          => $wsgi_process_group,
-    wsgi_script_aliases         => $wsgi_script_aliases,
+    wsgi_script_aliases         => $wsgi_script_aliases_real,
     wsgi_application_group      => $wsgi_application_group,
     wsgi_pass_authorization     => $wsgi_pass_authorization,
     wsgi_chunked_request        => $wsgi_chunked_request,

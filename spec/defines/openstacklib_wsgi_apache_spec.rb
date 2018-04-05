@@ -101,28 +101,30 @@ describe 'openstacklib::wsgi::apache' do
     describe 'when overriding parameters' do
       let :params do
         {
-          :wsgi_script_dir         => '/var/www/cgi-bin/keystone',
-          :wsgi_script_file        => 'main',
-          :wsgi_script_source      => '/usr/share/keystone/keystone.wsgi',
-          :wsgi_pass_authorization => 'On',
-          :wsgi_chunked_request    => 'On',
-          :headers                 => 'set X-Frame-Options "DENY"',
-          :servername              => 'dummy.host',
-          :bind_host               => '10.42.51.1',
-          :bind_port               => 4142,
-          :user                    => 'keystone',
-          :group                   => 'keystone',
-          :ssl                     => false,
-          :workers                 => 37,
-          :vhost_custom_fragment   => 'LimitRequestFieldSize 81900',
-          :allow_encoded_slashes   => 'on',
-          :access_log_file         => '/var/log/httpd/access_log',
-          :access_log_syslog       => 'syslog:local0',
-          :access_log_format       => 'some format',
-          :error_log_file          => '/var/log/httpd/error_log',
-          :error_log_syslog        => 'syslog:local0'
+          :wsgi_script_dir            => '/var/www/cgi-bin/keystone',
+          :wsgi_script_file           => 'main',
+          :wsgi_script_source         => '/usr/share/keystone/keystone.wsgi',
+          :wsgi_pass_authorization    => 'On',
+          :wsgi_chunked_request       => 'On',
+          :custom_wsgi_script_aliases => { '/admin' => '/var/www/cgi-bin/keystone/admin' },
+          :headers                    => 'set X-Frame-Options "DENY"',
+          :servername                 => 'dummy.host',
+          :bind_host                  => '10.42.51.1',
+          :bind_port                  => 4142,
+          :user                       => 'keystone',
+          :group                      => 'keystone',
+          :ssl                        => false,
+          :workers                    => 37,
+          :vhost_custom_fragment      => 'LimitRequestFieldSize 81900',
+          :allow_encoded_slashes      => 'on',
+          :access_log_file            => '/var/log/httpd/access_log',
+          :access_log_syslog          => 'syslog:local0',
+          :access_log_format          => 'some format',
+          :error_log_file             => '/var/log/httpd/error_log',
+          :error_log_syslog           => 'syslog:local0'
         }
       end
+
       it { is_expected.to contain_apache__vhost('keystone_wsgi').with(
         'servername'                  => 'dummy.host',
         'ip'                          => '10.42.51.1',
@@ -138,7 +140,10 @@ describe 'openstacklib::wsgi::apache' do
             'display-name' => 'keystone_wsgi',
         },
         'wsgi_process_group'          => 'keystone_wsgi',
-        'wsgi_script_aliases'         => { '/' => "/var/www/cgi-bin/keystone/main" },
+        'wsgi_script_aliases'         => {
+          '/'      => '/var/www/cgi-bin/keystone/main',
+          '/admin' => '/var/www/cgi-bin/keystone/admin',
+        },
         'wsgi_application_group'      => '%{GLOBAL}',
         'wsgi_pass_authorization'     => 'On',
         'wsgi_chunked_request'        => 'On',
