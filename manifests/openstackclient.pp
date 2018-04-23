@@ -5,11 +5,20 @@
 # == Parameters
 #
 #  [*package_ensure*]
-#    Ensure state of the openstackclient package.
-#    Optional. Defaults to 'present'.
+#    (Optional) Ensure state of the openstackclient package.
+#    Defaults to 'present'
 #
 class openstacklib::openstackclient(
   $package_ensure = 'present',
 ){
-  ensure_packages('python-openstackclient', {'ensure' => $package_ensure, tag => 'openstack'})
+
+  $openstackclient_package_name = $::os_package_type ? {
+    'debian' => 'python3-openstackclient',
+    default  => 'python-openstackclient',
+  }
+
+  ensure_packages($openstackclient_package_name, {
+    'ensure' => $package_ensure,
+    'tag'    => 'openstack'
+  })
 }
