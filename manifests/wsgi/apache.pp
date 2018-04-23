@@ -23,119 +23,123 @@
 # == Parameters
 #
 # [*service_name*]
-#   (optional) Name of the service to run.
+#   (Optional) Name of the service to run.
 #   Example: nova-api
 #   Defaults to $name
 #
 # [*servername*]
-#   (optional) The servername for the virtualhost.
+#   (Optional) The servername for the virtualhost
 #   Defaults to $::fqdn
 #
 # [*bind_host*]
-#   (optional) The host/ip address Apache will listen on.
-#   Defaults to undef (listen on all ip addresses).
+#   (Optional) The host/ip address Apache will listen on.
+#   Defaults to undef (listen on all ip addresses)
 #
 # [*bind_port*]
-#   (optional) The port to listen.
+#   (Optional) The port to listen.
 #   Defaults to undef
 #
 # [*group*]
-#   (optional) Group with permissions on the script
+#   (Optional) Group with permissions on the script.
 #   Defaults to undef
 #
 # [*path*]
-#   (optional) The prefix for the endpoint.
+#   (Optional) The prefix for the endpoint.
 #   Defaults to '/'
 #
 # [*priority*]
-#   (optional) The priority for the vhost.
+#   (Optional) The priority for the vhost.
 #   Defaults to '10'
 #
 # [*ssl*]
-#   (optional) Use ssl ? (boolean)
+#   (Optional) Use SSL.
 #   Defaults to false
 #
 # [*ssl_cert*]
-#   (optional) Path to SSL certificate
-#   Default to apache::vhost 'ssl_*' defaults.
+#   (Optional) Path to SSL certificate.
+#   Default to apache::vhost 'ssl_*' defaults
 #
 # [*ssl_key*]
-#   (optional) Path to SSL key
-#   Default to apache::vhost 'ssl_*' defaults.
+#   (Optional) Path to SSL key.
+#   Default to apache::vhost 'ssl_*' defaults
 #
 # [*ssl_chain*]
-#   (optional) SSL chain
-#   Default to apache::vhost 'ssl_*' defaults.
+#   (Optional) SSL chain.
+#   Default to apache::vhost 'ssl_*' defaults
 #
 # [*ssl_ca*]
-#   (optional) Path to SSL certificate authority
-#   Default to apache::vhost 'ssl_*' defaults.
+#   (Optional) Path to SSL certificate authority.
+#   Default to apache::vhost 'ssl_*' defaults
 #
 # [*ssl_crl_path*]
-#   (optional) Path to SSL certificate revocation list
-#   Default to apache::vhost 'ssl_*' defaults.
+#   (Optional) Path to SSL certificate revocation list.
+#   Default to apache::vhost 'ssl_*' defaults
 #
 # [*ssl_crl*]
-#   (optional) SSL certificate revocation list name
-#   Default to apache::vhost 'ssl_*' defaults.
+#   (Optional) SSL certificate revocation list name.
+#   Default to apache::vhost 'ssl_*' defaults
 #
 # [*ssl_certs_dir*]
-#   (optional) Path to SSL certificate directory
-#   Default to apache::vhost 'ssl_*' defaults.
+#   (Optional) Path to SSL certificate directory
+#   Default to apache::vhost 'ssl_*' defaults
 #
 # [*threads*]
-#   (optional) The number of threads for the vhost.
+#   (Optional) The number of threads for the vhost.
 #   Defaults to 1
 #
 # [*user*]
-#   (optional) User with permissions on the script
+#   (Optional) User with permissions on the script
 #   Defaults to undef
 #
 # [*workers*]
-#   (optional) The number of workers for the vhost.
+#   (Optional) The number of workers for the vhost.
 #   Defaults to $::os_workers
 #
 # [*wsgi_daemon_process*]
-#   (optional) Name of the WSGI daemon process.
+#   (Optional) Name of the WSGI daemon process.
 #   Defaults to $name
 #
 # [*wsgi_process_display_name*]
-#   (optional) Name of the WSGI process display-name.
+#   (Optional) Name of the WSGI process display-name.
 #   Defaults to $name
 #
 # [*wsgi_process_group*]
-#   (optional) Name of the WSGI process group.
+#   (Optional) Name of the WSGI process group.
 #   Defaults to $name
 #
 # [*wsgi_script_dir*]
-#   (optional) The directory path of the WSGI script.
+#   (Optional) The directory path of the WSGI script.
 #   Defaults to undef
 #
 # [*wsgi_script_file*]
-#   (optional) The file path of the WSGI script.
+#   (Optional) The file path of the WSGI script.
 #   Defaults to undef
 #
 # [*wsgi_script_source*]
-#   (optional) The source of the WSGI script.
+#   (Optional) The source of the WSGI script.
 #   Defaults to undef
 #
 # [*wsgi_application_group*]
-#   (optional) The application group of the WSGI script.
+#   (Optional) The application group of the WSGI script.
 #   Defaults to '%{GLOBAL}'
 #
 # [*wsgi_pass_authorization*]
-#   (optional) Whether HTTP authorisation headers are passed through to a WSGI
+#   (Optional) Whether HTTP authorisation headers are passed through to a WSGI
 #   script when the equivalent HTTP request headers are present.
 #   Defaults to undef
 #
 # [*wsgi_chunked_request*]
-#   (optional) Makes the vhost allow chunked requests which is useful for
+#   (Optional) Makes the vhost allow chunked requests which is useful for
 #   handling TE (Transfer-Encoding), chunked or gzip. This sets the
 #   WSGIChunkedRequest option in the vhost.
 #   Defaults to undef
 #
+# [*headers*]
+#   (Optional) Headers for the vhost.
+#   Defaults to undef
+#
 # [*custom_wsgi_process_options*]
-#   (optional) gives you the oportunity to add custom process options or to
+#   (Optional) gives you the oportunity to add custom process options or to
 #   overwrite the default options for the WSGI process.
 #   eg. to use a virtual python environment for the WSGI process
 #   you could set it to:
@@ -143,28 +147,48 @@
 #   Defaults to {}
 #
 # [*vhost_custom_fragment*]
-#   (optional) Passes a string of custom configuration
+#   (Optional) Passes a string of custom configuration
 #   directives to be placed at the end of the vhost configuration.
-#   Defaults to undef.
+#   Defaults to undef
 #
 # [*allow_encoded_slashes*]
-#   (optional) If set, uses apache's AllowEncodedSlashes option in the vhost.
+#   (Optional) If set, uses apache's AllowEncodedSlashes option in the vhost.
 #   This option is passed to puppetlabs-apache, which accepts only 4
 #   options: undef, "on", "off" or "nodecode". This is thus validated in the
 #   underlying vhost resource.
-#   Defaults to undef.
+#   Defaults to undef
 #
-#   [*access_log_file*]
-#     The log file name for the virtualhost.
-#     Optional. Defaults to false.
+# [*access_log_file*]
+#   (Optional) The log file name for the virtualhost.
+#   access_log_file and access_log_pipe is mutually exclusive.
+#   Defaults to false
 #
-#   [*access_log_format*]
-#     The log format for the virtualhost.
-#     Optional. Defaults to false.
+# [*access_log_pipe*]
+#   (Optional) Specifies a pipe where Apache sends access logs for the virtualhost.
+#   access_log_file and access_log_pipe is mutually exclusive.
+#   Defaults to false
 #
-#   [*error_log_file*]
-#     The error log file name for the virtualhost.
-#     Optional. Defaults to undef.
+# [*access_log_syslog*]
+#   (Optional) Sends the virtualhost access log messages to syslog.
+#   Defaults to false
+#
+# [*access_log_format*]
+#   (Optional) The log format for the virtualhost.
+#   Defaults to false
+#
+# [*error_log_file*]
+#   (Optional) The error log file name for the virtualhost.
+#   error_log_file and error_log_pipe is mutually exclusive.
+#   Defaults to undef
+#
+# [*error_log_pipe*]
+#   (Optional) Specifies a pipe where Apache sends error logs for the virtualhost.
+#   error_log_file and error_log_pipe is mutually exclusive.
+#   Defaults to undef
+#
+# [*error_log_syslog*]
+#   (Optional) Sends the virtualhost error log messages to syslog.
+#   Defaults to undef
 #
 define openstacklib::wsgi::apache (
   $service_name                = $name,
@@ -194,12 +218,17 @@ define openstacklib::wsgi::apache (
   $wsgi_application_group      = '%{GLOBAL}',
   $wsgi_pass_authorization     = undef,
   $wsgi_chunked_request        = undef,
+  $headers                     = undef,
   $custom_wsgi_process_options = {},
   $vhost_custom_fragment       = undef,
   $allow_encoded_slashes       = undef,
   $access_log_file             = false,
+  $access_log_pipe             = false,
+  $access_log_syslog           = false,
   $access_log_format           = false,
   $error_log_file              = undef,
+  $error_log_pipe              = undef,
+  $error_log_syslog            = undef,
 ) {
 
   include ::apache
@@ -266,11 +295,16 @@ define openstacklib::wsgi::apache (
     wsgi_application_group      => $wsgi_application_group,
     wsgi_pass_authorization     => $wsgi_pass_authorization,
     wsgi_chunked_request        => $wsgi_chunked_request,
+    headers                     => $headers,
     custom_fragment             => $vhost_custom_fragment,
     allow_encoded_slashes       => $allow_encoded_slashes,
     access_log_file             => $access_log_file,
+    access_log_pipe             => $access_log_pipe,
+    access_log_syslog           => $access_log_syslog,
     access_log_format           => $access_log_format,
     error_log_file              => $error_log_file,
+    error_log_pipe              => $error_log_pipe,
+    error_log_syslog            => $error_log_syslog,
   }
 
   Package<| title == 'httpd' |>

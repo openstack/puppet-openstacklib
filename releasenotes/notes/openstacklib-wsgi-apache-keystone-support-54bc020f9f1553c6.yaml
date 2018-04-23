@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    openstacklib::wsgi::apache now has support for headers, access_log_pipe,
+    access_log_syslog, error_log_pipe and error_log_syslog params which will
+    be added to the apache::vhost setup.
