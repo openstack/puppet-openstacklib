@@ -61,6 +61,10 @@
 # Run the exec if all conditions in the array return false.
 # string or array; optional; default to 'undef'
 #
+# [*environment*]
+# Environment to use
+# string; optional; default to empty array
+#
 define openstacklib::service_validation(
   $command,
   $service_name = $name,
@@ -72,6 +76,7 @@ define openstacklib::service_validation(
   $try_sleep    = '2',
   $onlyif       = undef,
   $unless       = undef,
+  $environment  = [],
 ) {
 
   if $onlyif and $unless {
@@ -80,6 +85,7 @@ define openstacklib::service_validation(
 
   exec { "execute ${service_name} validation":
     command     => $command,
+    environment => $environment,
     path        => $path,
     provider    => $provider,
     refreshonly => $refreshonly,

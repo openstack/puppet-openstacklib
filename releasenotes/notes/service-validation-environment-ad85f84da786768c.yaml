@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    There's a new environment variable for service-validation. With it, it is
+    possible to pass in things like OS_PASWORD which should never appear in
+    the command line.

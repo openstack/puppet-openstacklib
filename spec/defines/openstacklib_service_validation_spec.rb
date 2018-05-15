@@ -36,13 +36,13 @@ describe 'openstacklib::service_validation' do
         :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
         :provider    => 'shell',
         :command     => 'nova list',
+        :environment => [],
         :refreshonly => false,
         :timeout     => '60',
         :tries       => '10',
         :try_sleep   => '2',
         :logoutput   => 'on_failure',
       )}
-
     end
 
     context 'with unless parameter' do
@@ -60,12 +60,11 @@ describe 'openstacklib::service_validation' do
         :try_sleep   => '2',
         :unless      => 'pwd',
       )}
-
     end
 
     context 'with onlyif parameter' do
       let :params do
-        required_params.merge!({:onlyif  => 'pwd' })
+        required_params.merge!({ :onlyif  => 'pwd' })
       end
 
       it { is_expected.to contain_exec("execute #{title} validation").with(
@@ -78,13 +77,23 @@ describe 'openstacklib::service_validation' do
         :try_sleep   => '2',
         :onlyif      => 'pwd',
       )}
+    end
 
+    context 'with environment parameter' do
+      let :params do
+        required_params.merge!({ :environment => ['OS_PASSWORD=secret'] })
+      end
+
+      it { is_expected.to contain_exec("execute #{title} validation").with(
+        :environment => ['OS_PASSWORD=secret'],
+      )}
     end
 
     context 'when omitting a required parameter command' do
       let :params do
         required_params.delete(:command)
       end
+
       it { expect { is_expected.to raise_error(Puppet::Error) } }
     end
 
