@@ -316,6 +316,11 @@ Contributors
 
 * https://github.com/stackforge/puppet-openstacklib/graphs/contributors
 
+Release Notes
+-------------
+
+* https://docs.openstack.org/releasenotes/puppet-openstacklib
+
 Versioning
 ----------
 
