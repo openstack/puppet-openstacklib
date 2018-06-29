@@ -37,6 +37,14 @@ describe provider_class do
     }
   end
 
+  let(:immutable_properties) do
+    {
+      :name              => 'DEFAULT/foo',
+      :value             => '<_IMMUTABLE_>',
+      :ensure            => :present,
+    }
+  end
+
   let(:type) do
     Puppet::Type.newtype(:test_config) do
       newparam(:name, :namevar => true)
@@ -56,6 +64,15 @@ describe provider_class do
     end
   end
 
+  let(:immutable_type) do
+    Puppet::Type.newtype(:test_config) do
+      newparam(:name, :namevar => true)
+      newparam(:ensure)
+      newproperty(:value)
+      newparam(:ensure_absent_val)
+    end
+  end
+
   let(:resource) do
     resource = type.new(properties)
     resource
@@ -63,6 +80,11 @@ describe provider_class do
 
   let(:transform_resource) do
     resource = transform_type.new(transform_properties)
+    resource
+  end
+
+  let(:immutable_resource) do
+    resource = immutable_type.new(immutable_properties)
     resource
   end
 
@@ -107,6 +129,42 @@ describe provider_class do
       provider.transform(:to, transform_resource[:value])
       expect(transform_resource[:value]).to eq 'BAR'
     end
+
+  context 'immutable' do
+    # could not set fact using the classic let(:facts) idiom.
+    it 'ensure to no change when value set' do
+      child_conf = Class.new(provider_class) do
+          def self.file_path
+            '/some/file/path'
+          end
+          # current value
+          def value
+            'foo'
+          end
+      end
+      provider = child_conf.new(immutable_resource)
+      provider.exists?
+      expect(immutable_resource[:value]).to eq 'foo'
+      expect(immutable_resource[:ensure]).to eq :present
+    end
+
+    it 'ensure to no change when value unset' do
+      child_conf = Class.new(provider_class) do
+          def self.file_path
+            '/some/file/path'
+          end
+          # current value
+          def value
+            [nil]
+          end
+      end
+      provider = child_conf.new(immutable_resource)
+
+      provider.exists?
+      expect(immutable_resource[:value]).to eq nil
+      expect(immutable_resource[:ensure]).to eq :absent
+    end
+  end
 
   end
 
