@@ -1,11 +1,20 @@
+require 'facter'
+
 Puppet::Type.type(:openstack_config).provide(
   :ini_setting,
   :parent => Puppet::Type.type(:ini_setting).provider(:ruby)
 ) do
 
   def exists?
+    immutable_string = Facter.value(:os_immutable) || '<_IMMUTABLE_>'
     if resource[:value] == ensure_absent_val
       resource[:ensure] = :absent
+    elsif resource[:value] == immutable_string or resource[:value] == [immutable_string]
+      resource[:value] = value
+      # when the value is undefined, we keep it that way.
+      if value.nil? or (value.kind_of?(Array) and value[0].nil?)
+        resource[:ensure] = :absent
+      end
     end
     super
   end
