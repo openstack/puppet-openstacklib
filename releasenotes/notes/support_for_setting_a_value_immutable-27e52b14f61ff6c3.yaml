@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    This add `os_immutable` fact that can be used in the puppet
+    openstack module as value for all types that inherit
+    openstack_config.  Using ::os_immutable as a value of the
+    configuration parameter will tell puppet to not change the current
+    value, whatever it is.
