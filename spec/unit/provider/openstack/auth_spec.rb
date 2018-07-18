@@ -46,7 +46,7 @@ describe Puppet::Provider::Openstack::Auth do
               'OS_PROJECT_NAME'         => 'tenant',
               'OS_AUTH_URL'             => 'http://127.0.0.1:5000',
               'OS_TOKEN'                => 'token',
-              'OS_URL'                  => 'http://127.0.0.1:35357',
+              'OS_URL'                  => 'http://127.0.0.1:5000',
               'OS_IDENTITY_API_VERSION' => '2.0',
               'OS_NOT_VALID'            => 'notvalid'
         }
@@ -57,7 +57,7 @@ describe Puppet::Provider::Openstack::Auth do
         "OS_PASSWORD"             => "secret",
         "OS_PROJECT_NAME"         => "tenant",
         "OS_TOKEN"                => "token",
-        "OS_URL"                  => "http://127.0.0.1:35357",
+        "OS_URL"                  => "http://127.0.0.1:5000",
         "OS_USERNAME"             => "user")
     end
   end
