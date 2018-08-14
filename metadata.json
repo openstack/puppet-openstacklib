@@ -70,5 +70,5 @@
     ],
     "source": "git://github.com/openstack/puppet-openstacklib.git",
     "summary": "Puppet OpenStack Libraries",
-    "version": "13.2.0"
+    "version": "13.3.0"
 }
