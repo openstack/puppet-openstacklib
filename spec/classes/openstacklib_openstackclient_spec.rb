@@ -11,6 +11,19 @@ describe 'openstacklib::openstackclient' do
         )
       end
     end
+
+    context 'with non default package name' do
+      let :params do
+        { :package_name => 'my-openstackclient' }
+      end
+
+      it 'installs my-openstackclient' do
+        is_expected.to contain_package('my-openstackclient').with(
+          :ensure => 'present',
+          :tag    => 'openstack'
+        )
+      end
+    end
   end
 
   on_supported_os({
