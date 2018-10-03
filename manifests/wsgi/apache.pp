@@ -252,6 +252,7 @@ define openstacklib::wsgi::apache (
       ensure => directory,
       owner  => $user,
       group  => $group,
+      mode   => '0755',
     }
   }
 
