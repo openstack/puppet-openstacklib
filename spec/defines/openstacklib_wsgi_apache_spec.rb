@@ -54,6 +54,7 @@ describe 'openstacklib::wsgi::apache' do
         'ensure'  => 'directory',
         'owner'   => 'keystone',
         'group'   => 'keystone',
+        'mode'    => '0755',
       )}
 
       it { is_expected.to contain_file('keystone_wsgi').with(
