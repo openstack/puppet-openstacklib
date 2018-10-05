@@ -5,8 +5,11 @@
 #
 class openstacklib::params {
 
-  $openstackclient_package_name = $::os_package_type ? {
-    'debian' => 'python3-openstackclient',
-    default  => 'python-openstackclient',
+  if ($::os_package_type == 'debian') or ($::os['name'] == 'Fedora') or
+     ($::os['family'] == 'RedHat' and Integer.new($::os['release']['major']) > 7) {
+    $pyvers = '3'
+  } else {
+    $pyvers = ''
   }
+  $openstackclient_package_name = "python${pyvers}-openstackclient"
 }
