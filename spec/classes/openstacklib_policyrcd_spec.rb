@@ -20,11 +20,12 @@
 require 'spec_helper'
 
 describe 'openstacklib::policyrcd' do
-
-  shared_examples_for 'openstacklib::policyrcd on Debian platforms' do
-    context "with single service" do
+  shared_examples 'openstacklib::policyrcd on Debian platforms' do
+    context 'with single service' do
       let :params do
-        { :services => ['keystone'] }
+        {
+          :services => ['keystone']
+        }
       end
 
       let(:contents) {
@@ -40,14 +41,14 @@ fi
 eof
       }
 
-      it 'creates policy-rc.d file' do
-        is_expected.to contain_file('/usr/sbin/policy-rc.d').with_content(contents)
-      end
+      it { should contain_file('/usr/sbin/policy-rc.d').with_content(contents) }
     end
 
-    context "with multiple services" do
+    context 'with multiple services' do
       let :params do
-        { :services => ['keystone', 'nova'] }
+        {
+          :services => ['keystone', 'nova']
+        }
       end
 
       let(:contents) {
@@ -68,35 +69,31 @@ fi
 eof
       }
 
-      it 'creates policy-rc.d file' do
-        is_expected.to contain_file('/usr/sbin/policy-rc.d').with_content(contents)
-      end
+      it { should contain_file('/usr/sbin/policy-rc.d').with_content(contents) }
     end
-
   end
 
-  shared_examples_for 'openstacklib::policyrcd on RedHat platforms' do
-    describe "with single service" do
+  shared_examples 'openstacklib::policyrcd on RedHat platforms' do
+    context 'with single service' do
       let :params do
-        { :services => ['keystone'] }
+        {
+          :services => ['keystone']
+        }
       end
 
-      it 'does not create policy-rc.d file' do
-        is_expected.to_not contain_file('/usr/sbin/policy-rc.d')
-      end
+      it { should_not contain_file('/usr/sbin/policy-rc.d') }
     end
   end
 
   on_supported_os({
-    :supported_os   => OSDefaults.get_supported_os
+    :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      it_configures "openstacklib::policyrcd on #{facts[:osfamily]} platforms"
+      it_behaves_like "openstacklib::policyrcd on #{facts[:osfamily]} platforms"
     end
   end
-
 end
