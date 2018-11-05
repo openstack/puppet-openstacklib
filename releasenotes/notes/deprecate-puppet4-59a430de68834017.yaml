@@ -1,0 +1,8 @@
+---
+prelude: >
+    Puppet OpenStack has in this release deprecated Puppet 4 support.
+    This older version of Puppet is EOL since October 2018 and will only
+    get security fixes. We will continue to support this Puppet version
+    for the duration of this release with minimal testing. In the next
+    release Puppet 4 support will be removed completely and you should
+    move to using Puppet 5 or the newly released Puppet 6.
