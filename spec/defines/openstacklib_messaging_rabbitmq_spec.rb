@@ -18,28 +18,28 @@
 require 'spec_helper'
 
 describe 'openstacklib::messaging::rabbitmq' do
-
   let (:title) { 'nova' }
 
   shared_examples 'openstacklib::messaging::rabbitmq examples' do
-
     let :params do
       {}
     end
 
     context 'with default parameters' do
-      it { is_expected.to contain_rabbitmq_user('guest').with(
+      it { should contain_rabbitmq_user('guest').with(
         :admin    => false,
         :password => 'guest',
         :provider => 'rabbitmqctl',
       )}
-      it { is_expected.to contain_rabbitmq_user_permissions('guest@/').with(
+
+      it { should contain_rabbitmq_user_permissions('guest@/').with(
         :configure_permission => '.*',
         :write_permission     => '.*',
         :read_permission      => '.*',
         :provider             => 'rabbitmqctl',
       )}
-      it { is_expected.to contain_rabbitmq_vhost('/').with(
+
+      it { should contain_rabbitmq_vhost('/').with(
         :provider => 'rabbitmqctl',
       )}
     end
@@ -57,18 +57,20 @@ describe 'openstacklib::messaging::rabbitmq' do
         )
       end
 
-      it { is_expected.to contain_rabbitmq_user('nova').with(
+      it { should contain_rabbitmq_user('nova').with(
         :admin    => true,
         :password => 'secrete',
         :provider => 'rabbitmqctl',
       )}
-      it { is_expected.to contain_rabbitmq_user_permissions('nova@/nova').with(
+
+      it { should contain_rabbitmq_user_permissions('nova@/nova').with(
         :configure_permission => '.nova',
         :write_permission     => '.nova',
         :read_permission      => '.nova',
         :provider             => 'rabbitmqctl',
       )}
-      it { is_expected.to contain_rabbitmq_vhost('/nova').with(
+
+      it { should contain_rabbitmq_vhost('/nova').with(
         :provider => 'rabbitmqctl',
       )}
     end
@@ -78,20 +80,19 @@ describe 'openstacklib::messaging::rabbitmq' do
         params.merge!( :manage_vhost => false )
       end
 
-      it { is_expected.not_to contain_rabbitmq_vhost('/') }
+      it { should_not contain_rabbitmq_vhost('/') }
     end
-
   end
 
   on_supported_os({
-    :supported_os   => OSDefaults.get_supported_os
+    :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      it_configures 'openstacklib::messaging::rabbitmq examples'
+      it_behaves_like 'openstacklib::messaging::rabbitmq examples'
     end
   end
 

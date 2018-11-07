@@ -18,21 +18,21 @@
 require 'spec_helper'
 
 describe 'openstacklib::service_validation' do
-
   let (:title) { 'nova-api' }
 
   let :required_params do
-    { :command => 'nova list' }
+    {
+      :command => 'nova list'
+    }
   end
 
   shared_examples 'openstacklib::service_validation examples' do
-
     context 'with only required parameters' do
       let :params do
         required_params
       end
 
-      it { is_expected.to contain_exec("execute #{title} validation").with(
+      it { should contain_exec("execute #{title} validation").with(
         :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
         :provider    => 'shell',
         :command     => 'nova list',
@@ -50,7 +50,7 @@ describe 'openstacklib::service_validation' do
         required_params.merge!({ :unless  => 'pwd' })
       end
 
-      it { is_expected.to contain_exec("execute #{title} validation").with(
+      it { should contain_exec("execute #{title} validation").with(
         :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
         :provider    => 'shell',
         :command     => 'nova list',
@@ -67,7 +67,7 @@ describe 'openstacklib::service_validation' do
         required_params.merge!({ :onlyif  => 'pwd' })
       end
 
-      it { is_expected.to contain_exec("execute #{title} validation").with(
+      it { should contain_exec("execute #{title} validation").with(
         :path        => '/usr/bin:/bin:/usr/sbin:/sbin',
         :provider    => 'shell',
         :command     => 'nova list',
@@ -84,31 +84,29 @@ describe 'openstacklib::service_validation' do
         required_params.merge!({ :environment => ['OS_PASSWORD=secret'] })
       end
 
-      it { is_expected.to contain_exec("execute #{title} validation").with(
+      it { should contain_exec("execute #{title} validation").with(
         :environment => ['OS_PASSWORD=secret'],
       )}
     end
 
     context 'when omitting a required parameter command' do
       let :params do
-        required_params.delete(:command)
+        {}
       end
 
-      it { expect { is_expected.to raise_error(Puppet::Error) } }
+      it { should raise_error(Puppet::Error) }
     end
-
   end
 
   on_supported_os({
-    :supported_os   => OSDefaults.get_supported_os
+    :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
         facts.merge!(OSDefaults.get_facts())
       end
 
-      it_configures 'openstacklib::service_validation examples'
+      it_behaves_like 'openstacklib::service_validation examples'
     end
   end
-
 end

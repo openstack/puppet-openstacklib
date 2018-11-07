@@ -1,33 +1,30 @@
 require 'spec_helper'
 
 describe 'openstacklib::openstackclient' do
-
   shared_examples_for 'openstacklib::openstackclient' do
     context 'with default params' do
-      it 'installs openstackclient' do
-        is_expected.to contain_package(platform_params[:openstackclient_package_name]).with(
-          :ensure => 'present',
-          :tag    => 'openstack'
-        )
-      end
+      it { should contain_package(platform_params[:openstackclient_package_name]).with(
+        :ensure => 'present',
+        :tag    => 'openstack'
+      )}
     end
 
     context 'with non default package name' do
       let :params do
-        { :package_name => 'my-openstackclient' }
+        {
+          :package_name => 'my-openstackclient'
+        }
       end
 
-      it 'installs my-openstackclient' do
-        is_expected.to contain_package('my-openstackclient').with(
-          :ensure => 'present',
-          :tag    => 'openstack'
-        )
-      end
+      it { should contain_package('my-openstackclient').with(
+        :ensure => 'present',
+        :tag    => 'openstack'
+      )}
     end
   end
 
   on_supported_os({
-    :supported_os   => OSDefaults.get_supported_os
+    :supported_os => OSDefaults.get_supported_os
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
