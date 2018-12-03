@@ -189,6 +189,14 @@ describe 'openstacklib::wsgi::apache' do
         },
       )}
     end
+
+    context 'with multiple ports' do
+      before do
+        params.merge!( :bind_port => [35357, 5000] )
+      end
+
+      it { should contain_apache__vhost('keystone_wsgi').with_port(params[:bind_port]) }
+    end
   end
 
   on_supported_os({
