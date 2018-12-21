@@ -13,13 +13,14 @@ openstacklib
 1. [Overview - What is the openstacklib module?](#overview)
 2. [Module Description - What does the module do?](#module-description)
 3. [Setup - The basics of getting started with openstacklib](#setup)
-4. [Implementation - An under-the-hood peek at what the module is doing](#implementation)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
-7. [Contributors - Those with commits](#contributors)
-8. [Release Notes - Release notes for the project](#release-notes)
-9. [Repository - The project source code repository](#repository)
-10. [Versioning - Notes on the version numbering scheme](#versioning)
+4. [Usage - The usage of the openstacklib module](#usage)
+5. [Implementation - An under-the-hood peek at what the module is doing](#implementation)
+6. [Limitations - OS compatibility, etc.](#limitations)
+7. [Development - Guide for contributing to the module](#development)
+8. [Contributors - Those with commits](#contributors)
+9. [Release Notes - Release notes for the project](#release-notes)
+10. [Repository - The project source code repository](#repository)
+11. [Versioning - Notes on the version numbering scheme](#versioning)
 
 Overview
 --------
