@@ -23,7 +23,7 @@
         },
         {
             "name": "puppetlabs/postgresql",
-            "version_requirement": ">=3.3.0 <5.10.0"
+            "version_requirement": ">=5.10.0 <6.0.0"
         }
     ],
     "description": "Puppet module library to expose common functionality between OpenStack modules.",
