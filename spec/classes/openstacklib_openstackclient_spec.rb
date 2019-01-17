@@ -32,7 +32,7 @@ describe 'openstacklib::openstackclient' do
       end
 
       let(:platform_params) do
-        if facts[:os_package_type] == 'debian' or (facts[:os_package_type] == 'rpm' \
+        if facts[:osfamily] == 'Debian' or (facts[:os_package_type] == 'rpm' \
             and facts[:operatingsystemrelease].to_i > 7) then
           openstackclient_package_name = 'python3-openstackclient'
         else
