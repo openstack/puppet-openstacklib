@@ -66,7 +66,7 @@ For example, in heat::db::mysql you might declare:
 
 ```
 ::openstacklib::db::mysql { 'heat':
-    password_hash => mysql_password($password),
+    password_hash => mysql::password($password),
     dbname        => $dbname,
     user          => $user,
     host          => $host,
@@ -82,7 +82,7 @@ set up. For example, in keystone::db::mysql you would have:
 
 ```
 ::openstacklib::db::mysql { 'keystone':
-    password_hash => mysql_password($password),
+    password_hash => mysql::password($password),
     dbname        => $dbname,
     user          => $user,
     host          => $host,
