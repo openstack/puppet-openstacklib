@@ -11,7 +11,7 @@ describe 'openstacklib mysql' do
       class { '::mysql::server': }
 
       ::openstacklib::db::mysql { 'beaker':
-        password_hash => mysql_password('keystone'),
+        password_hash => mysql::password('keystone'),
         allowed_hosts => '127.0.0.1',
       }
       EOS

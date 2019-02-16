@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    The openstacklib module and all other OpenStack modules depending on this
+    module now requires a puppetlabs-mysql version >= 6.0.0
