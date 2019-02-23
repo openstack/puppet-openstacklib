@@ -12,8 +12,7 @@ class openstacklib::policy (
   $policies = {},
 ) {
 
-  validate_hash($policies)
+  validate_legacy(Hash, 'validate_hash', $policies)
 
   create_resources('openstacklib::policy::base', $policies)
-
 }
