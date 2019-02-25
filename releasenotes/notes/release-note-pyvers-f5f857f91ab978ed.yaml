@@ -1,0 +1,8 @@
+---
+upgrade:
+  - |
+    The openstacklib module now provides a variable openstacklib::params::pyvers
+    that is used by all other OpenStack modules to determine if the operating
+    system has packages with python3 or python3. It's very important that you
+    have an updated openstacklib module when upgrading before using all other
+    modules.
