@@ -26,7 +26,7 @@ openstacklib
 Overview
 --------
 
-The openstacklib module is a part of [OpenStack](https://git.openstack.org),
+The openstacklib module is a part of [OpenStack](https://opendev.org/openstack),
 an effort by the Openstack infrastructure team to provide continuous integration
 testing and code review for Openstack and Openstack community projects not part
 of the core software.  The module itself is used to expose common functionality
