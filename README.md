@@ -329,7 +329,7 @@ Release Notes
 Repository
 ----------
 
-* https://git.openstack.org/cgit/openstack/puppet-openstacklib
+* https://opendev.org/openstack/puppet-openstacklib
 
 Versioning
 ----------
