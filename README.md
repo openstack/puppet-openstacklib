@@ -245,7 +245,7 @@ a value with some function of you're choice, enabling you to get value
 that get filled at run-time like an `uuid`.
 
 For an example of how that's working you can have a look at this
-[review](https://review.openstack.org/#/c/347468/)
+[review](https://review.opendev.org/#/c/347468/)
 
 #### Defined provider for openstack_config: ruby
 
