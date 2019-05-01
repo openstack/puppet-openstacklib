@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    Puppet OpenStack does not officially support Puppet 4 anymore. Deployments
+    should use Puppet 5 or Puppet 6.
