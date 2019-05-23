@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Utility to handle prefixing IPv6 address with ``inet6:``. This is useful
+    for services relying on python-memcached which require the
+    ``inet6:[<ip_address]:<port>`` format.
