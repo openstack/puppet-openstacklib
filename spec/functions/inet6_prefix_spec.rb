@@ -8,6 +8,7 @@ describe 'inet6_prefix' do
   it { should run.with_params('[::1]:80').and_return('inet6:[::1]:80')}
   it { should run.with_params('[2001::01]').and_return('inet6:[2001::01]')}
   it { should run.with_params('[2001::01]:80').and_return('inet6:[2001::01]:80')}
+  it { should run.with_params('inet6:[2001::01]:80').and_return('inet6:[2001::01]:80')}
   # You're not forced to pass an array, a list of argument will do.
   it { should run.with_params('::1','::2').and_return(['inet6:[::1]','inet6:[::2]'])}
   it { should run.with_params(['::1','::2']).and_return(['inet6:[::1]','inet6:[::2]'])}
