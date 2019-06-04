@@ -40,7 +40,7 @@ describe Puppet::Provider::Openstack::Auth do
 
   describe '#set_credentials' do
     it 'adds keys to the object' do
-      credentials = Puppet::Provider::Openstack::CredentialsV2_0.new
+      credentials = Puppet::Provider::Openstack::CredentialsV3.new
       set = { 'OS_USERNAME'             => 'user',
               'OS_PASSWORD'             => 'secret',
               'OS_PROJECT_NAME'         => 'tenant',
@@ -151,7 +151,7 @@ describe Puppet::Provider::Openstack::Auth do
 
   before(:each) do
     class Puppet::Provider::Openstack::AuthTester
-      @credentials =  Puppet::Provider::Openstack::CredentialsV2_0.new
+      @credentials =  Puppet::Provider::Openstack::CredentialsV3.new
     end
   end
 
@@ -159,7 +159,7 @@ describe Puppet::Provider::Openstack::Auth do
     context 'with no valid credentials' do
       it 'fails to authenticate' do
         expect { klass.request('project', 'list', ['--long']) }.to raise_error(Puppet::Error::OpenstackAuthInputError, "Insufficient credentials to authenticate")
-        expect(klass.instance_variable_get(:@credentials).to_env).to eq({})
+        expect(klass.instance_variable_get(:@credentials).to_env).to eq({'OS_IDENTITY_API_VERSION' => '3'})
       end
     end
 
@@ -179,10 +179,11 @@ describe Puppet::Provider::Openstack::Auth do
         response = klass.request('project', 'list', ['--long'])
         expect(response.first[:description]).to eq("Test tenant")
         expect(klass.instance_variable_get(:@credentials).to_env).to eq({
-          'OS_USERNAME'     => 'test',
-          'OS_PASSWORD'     => 'abc123',
-          'OS_PROJECT_NAME' => 'test',
-          'OS_AUTH_URL'     => 'http://127.0.0.1:5000'
+          'OS_USERNAME'             => 'test',
+          'OS_PASSWORD'             => 'abc123',
+          'OS_PROJECT_NAME'         => 'test',
+          'OS_AUTH_URL'             => 'http://127.0.0.1:5000',
+          'OS_IDENTITY_API_VERSION' => '3'
         })
       end
     end
@@ -201,8 +202,9 @@ describe Puppet::Provider::Openstack::Auth do
         response = klass.request('project', 'list', ['--long'])
         expect(response.first[:description]).to eq("Test tenant")
         expect(klass.instance_variable_get(:@credentials).to_env).to eq({
-          'OS_TOKEN' => 'test',
-          'OS_URL'   => 'http://127.0.0.1:5000',
+          'OS_IDENTITY_API_VERSION' => '3',
+          'OS_TOKEN'                => 'test',
+          'OS_URL'                  => 'http://127.0.0.1:5000',
         })
       end
     end
@@ -224,10 +226,11 @@ describe Puppet::Provider::Openstack::Auth do
         response = provider.class.request('project', 'list', ['--long'])
         expect(response.first[:description]).to eq("Test tenant")
         expect(klass.instance_variable_get(:@credentials).to_env).to eq({
-          'OS_USERNAME'     => 'test',
-          'OS_PASSWORD'     => 'abc123',
-          'OS_PROJECT_NAME' => 'test',
-          'OS_AUTH_URL'     => 'http://127.0.0.1:5000'
+          'OS_USERNAME'             => 'test',
+          'OS_PASSWORD'             => 'abc123',
+          'OS_PROJECT_NAME'         => 'test',
+          'OS_AUTH_URL'             => 'http://127.0.0.1:5000',
+          'OS_IDENTITY_API_VERSION' => '3'
         })
       end
     end
@@ -248,8 +251,9 @@ describe Puppet::Provider::Openstack::Auth do
         response = klass.request('project', 'list', ['--long'])
         expect(response.first[:description]).to eq("Test tenant")
         expect(klass.instance_variable_get(:@credentials).to_env).to eq({
-          'OS_TOKEN' => 'test',
-          'OS_URL'   => 'abc123',
+          'OS_IDENTITY_API_VERSION' => '3',
+          'OS_TOKEN'                => 'test',
+          'OS_URL'                  => 'abc123',
         })
       end
     end
