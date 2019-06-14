@@ -7,7 +7,7 @@ require 'puppet/provider/openstack/credentials'
 describe Puppet::Provider::Openstack::Credentials do
 
   let(:creds) do
-    creds = Puppet::Provider::Openstack::CredentialsV2_0.new
+    creds = Puppet::Provider::Openstack::CredentialsV3.new
   end
 
   describe "#set with valid value" do
@@ -75,8 +75,8 @@ describe Puppet::Provider::Openstack::Credentials do
   end
 
   describe '#version' do
-    it 'is version 2' do
-      expect(creds.version).to eq('2.0')
+    it 'is version 3' do
+      expect(creds.version).to eq('3')
     end
   end
 

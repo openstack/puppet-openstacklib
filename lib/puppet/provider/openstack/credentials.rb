@@ -58,9 +58,6 @@ class Puppet::Provider::Openstack::Credentials
   end
 end
 
-class Puppet::Provider::Openstack::CredentialsV2_0 < Puppet::Provider::Openstack::Credentials
-end
-
 class Puppet::Provider::Openstack::CredentialsV3 < Puppet::Provider::Openstack::Credentials
 
   KEYS = [
