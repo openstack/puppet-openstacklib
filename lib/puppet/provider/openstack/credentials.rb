@@ -5,7 +5,7 @@ class Puppet::Provider::Openstack::Credentials
 
   KEYS = [
     :auth_url, :password, :project_name, :username,
-    :token, :url,
+    :token, :endpoint, :url,
     :identity_api_version,
     :region_name,
     :interface
@@ -28,7 +28,7 @@ class Puppet::Provider::Openstack::Credentials
   end
 
   def service_token_set?
-    return true if @token && @url
+    return true if (@token && @endpoint) || (@token && @url)
   end
 
   def to_env

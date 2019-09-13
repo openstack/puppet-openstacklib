@@ -35,7 +35,7 @@ describe Puppet::Provider::Openstack::Auth do
     ENV['OS_PROJECT_NAME'] = nil
     ENV['OS_AUTH_URL']     = nil
     ENV['OS_TOKEN']        = nil
-    ENV['OS_URL']          = nil
+    ENV['OS_ENDPOINT']     = nil
   end
 
   describe '#set_credentials' do
@@ -46,7 +46,7 @@ describe Puppet::Provider::Openstack::Auth do
               'OS_PROJECT_NAME'         => 'tenant',
               'OS_AUTH_URL'             => 'http://127.0.0.1:5000',
               'OS_TOKEN'                => 'token',
-              'OS_URL'                  => 'http://127.0.0.1:5000',
+              'OS_ENDPOINT'             => 'http://127.0.0.1:5000',
               'OS_IDENTITY_API_VERSION' => '2.0',
               'OS_NOT_VALID'            => 'notvalid'
         }
@@ -57,7 +57,7 @@ describe Puppet::Provider::Openstack::Auth do
         "OS_PASSWORD"             => "secret",
         "OS_PROJECT_NAME"         => "tenant",
         "OS_TOKEN"                => "token",
-        "OS_URL"                  => "http://127.0.0.1:5000",
+        "OS_ENDPOINT"             => "http://127.0.0.1:5000",
         "OS_USERNAME"             => "user")
     end
   end
@@ -192,7 +192,7 @@ describe Puppet::Provider::Openstack::Auth do
       it 'is successful' do
         klass.expects(:get_os_vars_from_env)
              .returns({ 'OS_TOKEN'     => 'test',
-                        'OS_URL'       => 'http://127.0.0.1:5000',
+                        'OS_ENDPOINT'  => 'http://127.0.0.1:5000',
                         'OS_NOT_VALID' => 'notvalid' })
         klass.expects(:openstack)
              .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
@@ -204,7 +204,7 @@ describe Puppet::Provider::Openstack::Auth do
         expect(klass.instance_variable_get(:@credentials).to_env).to eq({
           'OS_IDENTITY_API_VERSION' => '3',
           'OS_TOKEN'                => 'test',
-          'OS_URL'                  => 'http://127.0.0.1:5000',
+          'OS_ENDPOINT'             => 'http://127.0.0.1:5000',
         })
       end
     end
@@ -240,7 +240,7 @@ describe Puppet::Provider::Openstack::Auth do
         # return incomplete creds from env
         klass.expects(:get_os_vars_from_env)
              .returns({ 'OS_TOKEN' => 'incomplete' })
-        mock = "export OS_TOKEN='test'\nexport OS_URL='abc123'\nexport OS_NOT_VALID='notvalid'\n"
+        mock = "export OS_TOKEN='test'\nexport OS_ENDPOINT='abc123'\nexport OS_NOT_VALID='notvalid'\n"
         File.expects(:exists?).with("#{ENV['HOME']}/openrc").returns(true)
         File.expects(:open).with("#{ENV['HOME']}/openrc").returns(StringIO.new(mock))
         klass.expects(:openstack)
@@ -253,7 +253,7 @@ describe Puppet::Provider::Openstack::Auth do
         expect(klass.instance_variable_get(:@credentials).to_env).to eq({
           'OS_IDENTITY_API_VERSION' => '3',
           'OS_TOKEN'                => 'test',
-          'OS_URL'                  => 'abc123',
+          'OS_ENDPOINT'             => 'abc123',
         })
       end
     end

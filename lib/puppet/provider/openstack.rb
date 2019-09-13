@@ -119,6 +119,7 @@ class Puppet::Provider::Openstack < Puppet::Provider
           break
         rescue Puppet::ExecutionFailure => exception
           raise Puppet::Error::OpenstackUnauthorizedError, 'Could not authenticate' if exception.message =~ /HTTP 40[13]/
+          raise Puppet::Error::OpenstackUnauthorizedError, 'Could not authenticate' if exception.message.match(/Missing value \S* required for auth plugin/)
           if current_time > end_time
             error_message = exception.message
             error_message += " (tried #{retry_count}, for a total of #{end_time - start_time } seconds)"

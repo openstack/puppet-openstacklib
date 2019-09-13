@@ -32,7 +32,7 @@ describe Puppet::Provider::Openstack::Credentials do
     context "with service credentials" do
       it 'is successful' do
         creds.token = 'token'
-        creds.url = 'url'
+        creds.endpoint = 'endpoint'
         expect(creds.service_token_set?).to be_truthy
         expect(creds.user_password_set?).to be_falsey
       end
@@ -88,7 +88,7 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.project_name = 'project_name'
         creds.username = 'username'
         creds.token = 'token'
-        creds.url = 'url'
+        creds.endpoint = 'endpoint'
         creds.identity_api_version = 'identity_api_version'
         creds.unset
         expect(creds.auth_url).to eq('')
@@ -96,7 +96,7 @@ describe Puppet::Provider::Openstack::Credentials do
         expect(creds.project_name).to eq('')
         expect(creds.username).to eq('')
         expect(creds.token).to eq('')
-        expect(creds.url).to eq('')
+        expect(creds.endpoint).to eq('')
         expect(creds.identity_api_version).to eq('identity_api_version')
         newcreds = Puppet::Provider::Openstack::CredentialsV3.new
         expect(newcreds.identity_api_version).to eq('3')
@@ -112,7 +112,7 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.project_name = 'project_name'
         creds.username = 'username'
         creds.token = 'token'
-        creds.url = 'url'
+        creds.endpoint = 'endpoint'
         creds.identity_api_version = 'identity_api_version'
         creds.region_name = 'Region1'
         expect(creds.to_env).to eq({
@@ -121,7 +121,7 @@ describe Puppet::Provider::Openstack::Credentials do
           'OS_PROJECT_NAME'         => 'project_name',
           'OS_AUTH_URL'             => 'auth_url',
           'OS_TOKEN'                => 'token',
-          'OS_URL'                  => 'url',
+          'OS_ENDPOINT'             => 'endpoint',
           'OS_IDENTITY_API_VERSION' => 'identity_api_version',
           'OS_REGION_NAME'          => 'Region1',
         })
