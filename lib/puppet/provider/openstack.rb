@@ -45,7 +45,7 @@ class Puppet::Provider::Openstack < Puppet::Provider
     begin
       action = args[1]
       Timeout.timeout(command_timeout(action)) do
-        execute([command(:openstack_command)] + args, override_locale: false)
+        execute([command(:openstack_command)] + args, override_locale: false, failonfail: true, combine: true)
       end
     rescue Timeout::Error
       raise Puppet::ExecutionFailure, "Command: 'openstack #{args.inspect}' has been running for more than #{command_timeout(action)} seconds"
