@@ -197,6 +197,53 @@ describe 'openstacklib::wsgi::apache' do
 
       it { should contain_apache__vhost('keystone_wsgi').with_port(params[:bind_port]) }
     end
+
+    context 'with set_wsgi_import_script enabled' do
+      let :params do
+        {
+          :bind_port              => 5000,
+          :group                  => 'keystone',
+          :ssl                    => true,
+          :user                   => 'keystone',
+          :wsgi_script_dir        => '/var/www/cgi-bin/keystone',
+          :wsgi_script_file       => 'main',
+          :wsgi_script_source     => '/usr/share/keystone/keystone.wsgi',
+          :set_wsgi_import_script => true,
+        }
+      end
+      it { should contain_apache__vhost('keystone_wsgi').with(
+          :wsgi_import_script_options => {
+            'process-group'     => 'keystone_wsgi',
+            'application-group' => '%{GLOBAL}',
+          }
+      )}
+    end
+    context 'with custom wsgi_import_script and options' do
+      let :params do
+        {
+          :bind_port              => 5000,
+          :group                  => 'keystone',
+          :ssl                    => true,
+          :user                   => 'keystone',
+          :wsgi_script_dir        => '/var/www/cgi-bin/keystone',
+          :wsgi_script_file       => 'main',
+          :wsgi_script_source     => '/usr/share/keystone/keystone.wsgi',
+          :set_wsgi_import_script => true,
+          :wsgi_import_script     => '/foo/bar',
+          :wsgi_import_script_options => {
+            'process-group'     => 'foo',
+            'application-group' => 'bar',
+          },
+        }
+      end
+      it { should contain_apache__vhost('keystone_wsgi').with(
+          :wsgi_import_script         => '/foo/bar',
+          :wsgi_import_script_options => {
+            'process-group'     => 'foo',
+            'application-group' => 'bar',
+          }
+      )}
+    end
   end
 
   on_supported_os({

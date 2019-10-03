@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add new WSGI related options that should allow faster application startup
+    and loading.
