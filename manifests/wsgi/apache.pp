@@ -134,6 +134,25 @@
 #   WSGIChunkedRequest option in the vhost.
 #   Defaults to undef
 #
+# [*set_wsgi_import_script*]
+#   (Optional) Enable WSGIImportScript.
+#   Defaults to false
+#
+# [*wsgi_import_script*]
+#   (Optional) WSGIImportScript path.
+#   Defaults to undef
+#   If not set and set_wsgi_import_script is true, defaults to the WSGI
+#   application module path
+#
+# [*wsgi_import_script_options*]
+#   (Optional) Sets WSGIImportScript options.
+#   Defaults to undef
+#   If not set and set_wsgi_import_script is true, push a dict as follow:
+#   {
+#     process-group     => $wsgi_daemon_process,
+#     application-group => $wsgi_application_group,
+#   }
+#
 # [*headers*]
 #   (Optional) Headers for the vhost.
 #   Defaults to undef
@@ -224,6 +243,9 @@ define openstacklib::wsgi::apache (
   $wsgi_application_group      = '%{GLOBAL}',
   $wsgi_pass_authorization     = undef,
   $wsgi_chunked_request        = undef,
+  $set_wsgi_import_script      = false,
+  $wsgi_import_script          = undef,
+  $wsgi_import_script_options  = undef,
   $headers                     = undef,
   $custom_wsgi_process_options = {},
   $custom_wsgi_script_aliases  = undef,
@@ -285,6 +307,27 @@ define openstacklib::wsgi::apache (
     $wsgi_script_aliases_real = $wsgi_script_aliases_default
   }
 
+  # Sets WSGIImportScript related options
+  if $set_wsgi_import_script {
+    if $wsgi_import_script {
+      $wsgi_import_script_real = $wsgi_import_script
+    } else {
+      $wsgi_import_script_real = $wsgi_script_aliases_real[$path_real]
+    }
+    if $wsgi_import_script_options {
+      $wsgi_import_script_options_real = $wsgi_import_script_options
+    } else {
+      $wsgi_import_script_options_real = {
+          process-group     => $wsgi_daemon_process,
+          application-group => $wsgi_application_group,
+        }
+    }
+  } else {
+    $wsgi_import_script_real = undef
+    $wsgi_import_script_options_real = undef
+  }
+  # End of WSGIImportScript related options
+
   ::apache::vhost { $service_name:
     ensure                      => 'present',
     servername                  => $servername,
@@ -310,6 +353,8 @@ define openstacklib::wsgi::apache (
     wsgi_application_group      => $wsgi_application_group,
     wsgi_pass_authorization     => $wsgi_pass_authorization,
     wsgi_chunked_request        => $wsgi_chunked_request,
+    wsgi_import_script          => $wsgi_import_script_real,
+    wsgi_import_script_options  => $wsgi_import_script_options_real,
     headers                     => $headers,
     custom_fragment             => $vhost_custom_fragment,
     allow_encoded_slashes       => $allow_encoded_slashes,
