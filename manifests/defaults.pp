@@ -6,6 +6,13 @@
 #
 class openstacklib::defaults {
 
+  # TODO(tobias-urdin): Remove this in the V release when
+  # we officially remove the support.
+  if versioncmp($::puppetversion, '6.0.0') < 0 {
+    warning('OpenStack modules support for Puppet 5 is deprecated \
+and will be officially unsupported in the V release')
+  }
+
   if ($::os['family'] == 'Debian') {
     $pyvers = '3'
     $pyver3 = '3'

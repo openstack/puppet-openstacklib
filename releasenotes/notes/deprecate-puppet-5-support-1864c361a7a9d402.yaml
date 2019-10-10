@@ -1,0 +1,6 @@
+---
+prelude: >
+    Puppet OpenStack has in this release deprecated Puppet 5 support.
+    This version of Puppet will be EOL as of May 2020 which means that
+    you can still use it during this release but in the V release using
+    Puppet 6 will be a requirement.
