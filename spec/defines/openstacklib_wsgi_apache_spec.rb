@@ -89,6 +89,7 @@ describe 'openstacklib::wsgi::apache' do
         'setenvif'                    => ['X-Forwarded-Proto https HTTPS=1'],
         'access_log_file'             => false,
         'access_log_format'           => false,
+        'options'                     => ['-Indexes', '+FollowSymLinks','+MultiViews'],
       )}
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
     end
