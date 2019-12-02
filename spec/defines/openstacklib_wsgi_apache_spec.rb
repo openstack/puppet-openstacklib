@@ -94,7 +94,8 @@ describe 'openstacklib::wsgi::apache' do
         'access_log_format'           => false,
         'error_log_file'              => nil,
         'error_log_pipe'              => nil,
-        'error_log_syslog'            => nil
+        'error_log_syslog'            => nil,
+        'options'                     => ['-Indexes', '+FollowSymLinks','+MultiViews'],
       )}
       it { is_expected.to contain_concat("#{platform_params[:httpd_ports_file]}") }
     end

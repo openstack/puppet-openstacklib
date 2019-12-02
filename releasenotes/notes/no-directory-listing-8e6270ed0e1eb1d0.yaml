@@ -1,0 +1,6 @@
+---
+security:
+  - Do not authorize directory listing
+fixes:
+  - rhbz#1778052
+  - LP#1854442
