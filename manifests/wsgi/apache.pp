@@ -320,6 +320,7 @@ define openstacklib::wsgi::apache (
     error_log_file              => $error_log_file,
     error_log_pipe              => $error_log_pipe,
     error_log_syslog            => $error_log_syslog,
+    options                     => ['-Indexes', '+FollowSymLinks','+MultiViews'],
   }
 
   Package<| title == 'httpd' |>
