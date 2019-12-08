@@ -1,6 +1,6 @@
 Exec { logoutput => 'on_failure' }
 
-include ::openstacklib::defaults
+include openstacklib::defaults
 
 if $::osfamily == 'RedHat' {
   # Virtual package name, present in @base.

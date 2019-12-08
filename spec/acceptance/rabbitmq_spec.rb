@@ -6,12 +6,12 @@ describe 'openstacklib class' do
 
     it 'should work with no errors' do
       pp= <<-EOS
-      include ::openstack_integration
-      include ::openstack_integration::repos
-      include ::openstack_integration::rabbitmq
+      include openstack_integration
+      include openstack_integration::repos
+      include openstack_integration::rabbitmq
 
       # openstacklib resources
-      include ::openstacklib::openstackclient
+      include openstacklib::openstackclient
 
       ::openstacklib::messaging::rabbitmq { 'beaker':
         userid   => 'beaker',

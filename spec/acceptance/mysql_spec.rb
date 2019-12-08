@@ -8,7 +8,7 @@ describe 'openstacklib mysql' do
       pp= <<-EOS
       Exec { logoutput => 'on_failure' }
 
-      class { '::mysql::server': }
+      class { 'mysql::server': }
 
       ::openstacklib::db::mysql { 'beaker':
         password_hash => mysql::password('keystone'),

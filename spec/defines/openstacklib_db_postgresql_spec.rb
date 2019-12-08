@@ -10,7 +10,7 @@ describe 'openstacklib::db::postgresql' do
   end
 
   let (:pre_condition) do
-    "include ::postgresql::server"
+    "include postgresql::server"
   end
 
   shared_examples 'openstacklib::db::postgresql examples' do
@@ -43,7 +43,7 @@ describe 'openstacklib::db::postgresql' do
 
     context 'when notifying other resources' do
       let :pre_condition do
-        "include ::postgresql::server
+        "include postgresql::server
          exec { 'nova-db-sync': }"
       end
 
@@ -56,7 +56,7 @@ describe 'openstacklib::db::postgresql' do
 
     context 'when required for other openstack services' do
       let :pre_condition do
-        "include ::postgresql::server
+        "include postgresql::server
         service {'keystone':}"
       end
 

@@ -64,8 +64,8 @@ define openstacklib::db::mysql (
   $tls_options    = ['NONE'],
 ) {
 
-  include ::mysql::server
-  include ::mysql::client
+  include mysql::server
+  include mysql::client
 
   mysql_database { $dbname:
     ensure  => present,

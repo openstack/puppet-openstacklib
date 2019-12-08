@@ -5,7 +5,7 @@
 #
 class openstacklib::params {
 
-  include ::openstacklib::defaults
+  include openstacklib::defaults
   $pyvers = $::openstacklib::defaults::pyvers
 
   $openstackclient_package_name = "python${pyvers}-openstackclient"
