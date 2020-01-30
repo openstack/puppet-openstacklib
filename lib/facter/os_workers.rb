@@ -61,3 +61,16 @@ Facter.add(:os_workers_heat_engine) do
     [ [ (processors.to_i / 2), 4 ].max, 24 ].min
   end
 end
+
+#
+# Since we have merged keystone admin and keystone public into a single
+# keystone instance, we need doubled workers to have the same number
+# of workers in total to avoid performance degradation.
+#
+Facter.add(:os_workers_keystone) do
+  has_weight 100
+  setcode do
+    processors = Facter.value('processorcount')
+    [ [ processors.to_i, 4 ].max, 24 ].min
+  end
+end
