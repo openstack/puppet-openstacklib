@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Puppet OpenStack now supports the 10.x release of the PuppetLabs MySQL module.
