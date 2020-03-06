@@ -8,6 +8,10 @@
 #    Password hash to use for the database user for this service;
 #    string; required
 #
+#  [*plugin*]
+#    Authentication plugin to use when connecting to the MySQL server;
+#    string; optional; default to 'undef'
+#
 #  [*dbname*]
 #    The name of the database
 #    string; optional; default to the $title of the resource, i.e. 'nova'
@@ -52,6 +56,7 @@
 #
 define openstacklib::db::mysql (
   $password_hash,
+  $plugin         = undef,
   $dbname         = $title,
   $user           = $title,
   $host           = '127.0.0.1',
@@ -82,6 +87,7 @@ define openstacklib::db::mysql (
 
     openstacklib::db::mysql::host_access { $real_allowed_hosts:
       user          => $user,
+      plugin        => $plugin,
       password_hash => $password_hash,
       database      => $dbname,
       privileges    => $privileges,
