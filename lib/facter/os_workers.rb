@@ -1,5 +1,5 @@
 #
-# We've found that using $::processorcount for workers/threads can lead to
+# We've found that using $facts['processors']['count] for workers/threads can lead to
 # unexpected memory or process counts for people deploying on baremetal or
 # if they have large number of cpus. This fact allows us to tweak the formula
 # used to determine number of workers in a single place but use it across all
@@ -11,17 +11,26 @@
 # This fact can be overloaded by an external fact from /etc/factor/facts.d if
 # a user would like to provide their own default value.
 #
+#
+def get_proc_count
+  procs = Facter.value('processors')
+  if procs.key?('count') then
+    procs['count'].to_i
+  else
+    1
+  end
+end
+
 Facter.add(:os_workers_small) do
   has_weight 100
   setcode do
-    processors = Facter.value('processorcount')
-    [ [ (processors.to_i / 4), 2 ].max, 8 ].min
+    [ [ (get_proc_count / 4), 2 ].max, 8 ].min
   end
 end
 
 #
 # The value above for os_workers performs 3x worse in many cases compared to
-# the prevuous default of $::processorcount.
+# the previous default of $facts['processors']['count'].
 #
 # Based on performance data [1], the following calculation is within 1-2%.
 #
@@ -33,8 +42,7 @@ end
 Facter.add(:os_workers) do
   has_weight 100
   setcode do
-    processors = Facter.value('processorcount')
-    [ [ (processors.to_i / 2), 2 ].max, 12 ].min
+    [ [ (get_proc_count / 2), 2 ].max, 12 ].min
   end
 end
 
@@ -44,8 +52,7 @@ end
 Facter.add(:os_workers_large) do
   has_weight 100
   setcode do
-    processors = Facter.value('processorcount')
-    [ (processors.to_i / 2), 1 ].max
+    [ (get_proc_count / 2), 1 ].max
   end
 end
 
@@ -57,8 +64,7 @@ end
 Facter.add(:os_workers_heat_engine) do
   has_weight 100
   setcode do
-    processors = Facter.value('processorcount')
-    [ [ (processors.to_i / 2), 4 ].max, 24 ].min
+    [ [ (get_proc_count / 2), 4 ].max, 24 ].min
   end
 end
 
@@ -70,7 +76,6 @@ end
 Facter.add(:os_workers_keystone) do
   has_weight 100
   setcode do
-    processors = Facter.value('processorcount')
-    [ [ processors.to_i, 4 ].max, 24 ].min
+    [ [ get_proc_count, 4 ].max, 24 ].min
   end
 end

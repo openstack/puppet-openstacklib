@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe 'os_workers_keystone' do
 
-  before { Facter.flush }
+  before { Facter.clear }
 
   context 'with processorcount=1' do
     before do
-      Facter.fact(:processorcount).stubs(:value).returns(1)
+      Facter.fact(:processors).stubs(:value).returns({'count' => 1})
     end
 
     it 'returns a minimum of 4' do
@@ -16,7 +16,7 @@ describe 'os_workers_keystone' do
 
   context 'with processorcount=8' do
     before do
-      Facter.fact(:processorcount).stubs(:value).returns(8)
+      Facter.fact(:processors).stubs(:value).returns({'count' => 8})
     end
 
     it 'returns processorcount' do
@@ -26,7 +26,7 @@ describe 'os_workers_keystone' do
 
   context 'with processorcount=32' do
     before do
-      Facter.fact(:processorcount).stubs(:value).returns(32)
+      Facter.fact(:processors).stubs(:value).returns({'count' => 32})
     end
 
     it 'returns a maximum of 24' do
