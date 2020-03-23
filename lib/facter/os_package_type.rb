@@ -12,17 +12,18 @@
 #
 # In all other cases, we can consider that we're using vanilia (ie: unmodified)
 # distribution packages, and we can set $::os_package_type depending on the
-# value of $::operatingsystem.
+# value of $::os['name']
 #
 # Having the below snipets helps simplifying checks within individual project
 # manifests, so that we can just reuse $::os_package_type directly without
 # having to also check if it contains a value, then check for the content of
-# $::operatingsystem (ie: what's below factors the check once and for all).
+# $::os['family'] (ie: what's below factors the check once and for all).
 Facter.add('os_package_type') do
   setcode do
-    case Facter.value(:osfamily)
+    os = Facter.value(:os)
+    case os['family']
     when 'Debian'
-      if Facter.value(:operatingsystem) == 'Debian' then
+      if os['name'] == 'Debian' then
         'debian'
       else
         'ubuntu'
