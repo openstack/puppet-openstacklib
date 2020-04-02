@@ -17,6 +17,10 @@
 #  [*privileges*]
 #    the privileges to grant to this user
 #
+#  [*plugin*]
+#    Authentication plugin to use when connecting to the MySQL server;
+#    Defaults to undef
+#
 #  [*create_user*]
 #    Flag to allow for the skipping of the user as part of the database setup.
 #    Set to false to skip the user creation.
@@ -36,6 +40,7 @@ define openstacklib::db::mysql::host_access (
   $password_hash,
   $database,
   $privileges,
+  $plugin = undef,
   $create_user  = true,
   $create_grant = true,
   $tls_options = ['NONE'],
@@ -48,6 +53,7 @@ define openstacklib::db::mysql::host_access (
 
   if $create_user {
     mysql_user { "${user}@${host}":
+      plugin        => $plugin,
       password_hash => $password_hash,
       tls_options   => $tls_options,
     }

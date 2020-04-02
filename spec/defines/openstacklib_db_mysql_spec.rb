@@ -26,6 +26,7 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user        => title,
+        :plugin      => nil,
         :database    => title,
         :privileges  => 'ALL',
         :tls_options => ['NONE'],
@@ -44,6 +45,7 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{params[:dbname]}_127.0.0.1").with(
         :user         => title,
+        :plugin       => nil,
         :database     => params[:dbname],
         :privileges   => 'ALL',
         :create_user  => true,
@@ -64,11 +66,36 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user         => params[:user],
+        :plugin       => nil,
         :database     => title,
         :privileges   => 'ALL',
         :create_user  => true,
         :create_grant => true,
         :tls_options  => ['NONE'],
+      )}
+    end
+
+    context 'with overriding authentication plugin' do
+      let :params do
+        required_params.merge!(
+          :plugin => 'mysql_native_password',
+        )
+      end
+
+      it { should contain_mysql_database(title).with(
+        :charset => 'utf8',
+        :collate => 'utf8_general_ci'
+      )}
+
+      it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+        :user          => title,
+        :plugin        => params[:plugin],
+        :password_hash => params[:password_hash],
+        :database      => title,
+        :privileges    => 'ALL',
+        :create_user   => true,
+        :create_grant  => true,
+        :tls_options   => ['NONE'],
       )}
     end
 
@@ -123,12 +150,14 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
+        :plugin        => nil,
         :password_hash => params[:password_hash],
         :database      => title
       )}
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_%").with(
         :user          => title,
+        :plugin        => nil,
         :password_hash => params[:password_hash],
         :database      => title
       )}
@@ -141,6 +170,7 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_192.168.1.1").with(
         :user          => title,
+        :plugin        => nil,
         :password_hash => params[:password_hash],
         :database      => title
       )}
@@ -153,6 +183,7 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
+        :plugin        => nil,
         :password_hash => params[:password_hash],
         :database      => title
       )}
@@ -170,6 +201,7 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user         => title,
+        :plugin       => nil,
         :database     => title,
         :privileges   => 'ALL',
         :create_user  => false,
@@ -189,6 +221,7 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user         => title,
+        :plugin       => nil,
         :database     => title,
         :privileges   => 'ALL',
         :create_user  => true,
@@ -217,6 +250,7 @@ describe 'openstacklib::db::mysql' do
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
+        :plugin        => nil,
         :password_hash => params[:password_hash],
         :database      => title,
         :tls_options   => ['SSL'],

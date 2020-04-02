@@ -21,6 +21,33 @@ describe 'openstacklib::db::mysql::host_access' do
       end
 
       it { should contain_mysql_user("#{params[:user]}@10.0.0.1").with(
+        :plugin        => nil,
+        :password_hash => params[:password_hash],
+        :tls_options   => ['NONE']
+      )}
+
+      it { should contain_mysql_grant("#{params[:user]}@10.0.0.1/#{params[:database]}.*").with(
+        :user       => "#{params[:user]}@10.0.0.1",
+        :privileges => 'ALL',
+        :table      => "#{params[:database]}.*"
+      )}
+    end
+
+    context 'with overriding authentication plugin' do
+      let (:title) { 'nova_10.0.0.1' }
+
+      let :params do
+        {
+          :user          => 'foobar',
+          :plugin        => 'mysql_native_password',
+          :password_hash => 'AA1420F182E88B9E5F874F6FBE7459291E8F4601',
+          :database      => 'nova',
+          :privileges    => 'ALL'
+        }
+      end
+
+      it { should contain_mysql_user("#{params[:user]}@10.0.0.1").with(
+        :plugin        => params[:plugin],
         :password_hash => params[:password_hash],
         :tls_options   => ['NONE']
       )}
@@ -68,6 +95,7 @@ describe 'openstacklib::db::mysql::host_access' do
       end
 
       it { should contain_mysql_user("#{params[:user]}@10.0.0.1").with(
+        :plugin        => nil,
         :password_hash => params[:password_hash]
       )}
 
