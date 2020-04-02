@@ -8,6 +8,15 @@ Puppet::Functions.create_function(:inet6_prefix) do
   def inet6_prefix(*args)
     require 'ipaddr'
 
+    # NOTE(tobias-urdin): Add support for older version of the ipaddr
+    # lib where ArgumentError hasn't been replaced yet.
+    if IPAddr.const_defined?('InvalidAddressError')
+      exp = [IPAddr::AddressFamilyError, IPAddr::Error, IPAddr::InvalidAddressError,
+             IPAddr::InvalidPrefixError, ArgumentError, NoMethodError]
+    else
+      exp = [ArgumentError, NoMethodError]
+    end
+
     result = []
     args = args[0] if args[0].kind_of?(Array)
     args = [args] unless args.kind_of?(Array)
@@ -20,7 +29,7 @@ Puppet::Functions.create_function(:inet6_prefix) do
             ip = "inet6:[#{ip_parts.shift}]#{ip_parts.join}"
           end
         end
-      rescue IPAddr::AddressFamilyError, IPAddr::Error, IPAddr::InvalidAddressError, IPAddr::InvalidPrefixError, ArgumentError, NoMethodError => e
+      rescue *exp
         # ignore it
       end
       result << ip
