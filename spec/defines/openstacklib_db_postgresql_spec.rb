@@ -5,7 +5,7 @@ describe 'openstacklib::db::postgresql' do
 
   let :required_params do
     {
-      :password_hash => 'AA1420F182E88B9E5F874F6FBE7459291E8F4601'
+      :password => 'pw'
     }
   end
 
@@ -21,7 +21,7 @@ describe 'openstacklib::db::postgresql' do
 
       it { should contain_postgresql__server__db(title).with(
         :user     => title,
-        :password => params[:password_hash]
+        :password => 'md557ae0608fad632bf0155cb9502a6b454'
       )}
     end
 
@@ -69,6 +69,17 @@ describe 'openstacklib::db::postgresql' do
       end
 
       it { should contain_service('keystone').that_requires("Openstacklib::Db::Postgresql[keystone]") }
+    end
+
+    context 'when deprecated password_hash is used' do
+      let :params do
+        { :password_hash => 'md557ae0608fad632bf0155cb9502a6b454' }
+      end
+
+      it { should contain_postgresql__server__db(title).with(
+        :user     => title,
+        :password => 'md557ae0608fad632bf0155cb9502a6b454'
+      )}
     end
   end
 

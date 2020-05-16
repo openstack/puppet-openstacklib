@@ -4,8 +4,8 @@
 #
 # == Parameters:
 #
-#  [*password_hash*]
-#    Password hash to use for the database user for this service;
+#  [*password*]
+#    Password to use for the database user for this service;
 #    string; required
 #
 #  [*plugin*]
@@ -54,8 +54,14 @@
 #    The TLS options that the user will have
 #    Defaults to ['NONE']
 #
+# DEPRECATED PARAMETERS
+#
+#  [*password_hash*]
+#    Password hash to use for the database user for this service;
+#    string; optional; default to undef
+#
 define openstacklib::db::mysql (
-  $password_hash,
+  $password       = undef,
   $plugin         = undef,
   $dbname         = $title,
   $user           = $title,
@@ -67,10 +73,22 @@ define openstacklib::db::mysql (
   $create_user    = true,
   $create_grant   = true,
   $tls_options    = ['NONE'],
+  # DEPRECATED PARAMETER
+  $password_hash  = undef,
 ) {
 
   include mysql::server
   include mysql::client
+
+  if $password_hash != undef {
+    warning('The password_hash parameter was deprecated and will be removed
+in a future release. Use password instead')
+    $password_hash_real = $password_hash
+  } elsif $password != undef {
+    $password_hash_real = mysql::password($password)
+  } else {
+    fail('password should be set')
+  }
 
   mysql_database { $dbname:
     ensure  => present,
@@ -88,7 +106,7 @@ define openstacklib::db::mysql (
     openstacklib::db::mysql::host_access { $real_allowed_hosts:
       user          => $user,
       plugin        => $plugin,
-      password_hash => $password_hash,
+      password_hash => $password_hash_real,
       database      => $dbname,
       privileges    => $privileges,
       create_user   => $create_user,
