@@ -75,16 +75,16 @@ describe 'openstacklib::wsgi::apache' do
         :docroot_owner               => 'keystone',
         :docroot_group               => 'keystone',
         :ssl                         => 'true',
-        :wsgi_daemon_process         => 'keystone_wsgi',
+        :wsgi_daemon_process         => {
+          'keystone_wsgi' => {
+            'user'         => 'keystone',
+            'group'        => 'keystone',
+            'processes'    => global_facts[:os_workers],
+            'threads'      => 1,
+            'display-name' => 'keystone_wsgi',
+          }},
         :wsgi_process_group          => 'keystone_wsgi',
         :wsgi_script_aliases         => { '/' => "/var/www/cgi-bin/keystone/main" },
-        :wsgi_daemon_process_options => {
-          'user'         => 'keystone',
-          'group'        => 'keystone',
-          'processes'    => global_facts[:os_workers],
-          'threads'      => 1,
-          'display-name' => 'keystone_wsgi',
-        },
         :wsgi_application_group      => '%{GLOBAL}',
         :headers                     => nil,
         :setenvif                    => ['X-Forwarded-Proto https HTTPS=1'],
@@ -134,14 +134,14 @@ describe 'openstacklib::wsgi::apache' do
         :port                        => '4142',
         :docroot                     => "/var/www/cgi-bin/keystone",
         :ssl                         => 'false',
-        :wsgi_daemon_process         => 'keystone_wsgi',
-        :wsgi_daemon_process_options => {
-          'user'         => 'keystone',
-          'group'        => 'keystone',
-          'processes'    => '37',
-          'threads'      => '1',
-          'display-name' => 'keystone_wsgi',
-        },
+        :wsgi_daemon_process         => {
+          'keystone_wsgi' => {
+            'user'         => 'keystone',
+            'group'        => 'keystone',
+            'processes'    => '37',
+            'threads'      => '1',
+            'display-name' => 'keystone_wsgi',
+          }},
         :wsgi_process_group          => 'keystone_wsgi',
         :wsgi_script_aliases         => {
           '/'      => '/var/www/cgi-bin/keystone/main',
@@ -180,14 +180,15 @@ describe 'openstacklib::wsgi::apache' do
       end
 
       it { should contain_apache__vhost('keystone_wsgi').with(
-        :wsgi_daemon_process_options => {
-          'user'         => 'someotheruser',
-          'group'        => 'someothergroup',
-          'processes'    => global_facts[:os_workers],
-          'threads'      => 1,
-          'display-name' => 'keystone_wsgi',
-          'python_path'  => '/my/python/admin/path',
-        },
+        :wsgi_daemon_process => {
+          'keystone_wsgi' => {
+            'user'         => 'someotheruser',
+            'group'        => 'someothergroup',
+            'processes'    => global_facts[:os_workers],
+            'threads'      => 1,
+            'display-name' => 'keystone_wsgi',
+            'python_path'  => '/my/python/admin/path',
+          }},
       )}
     end
 
