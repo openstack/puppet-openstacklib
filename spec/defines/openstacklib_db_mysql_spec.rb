@@ -9,7 +9,7 @@ describe 'openstacklib::db::mysql' do
 
   let :required_params do
     {
-      :password_hash => 'AA1420F182E88B9E5F874F6FBE7459291E8F4601'
+      :password => 'fooboozoo_default_password',
     }
   end
 
@@ -90,7 +90,7 @@ describe 'openstacklib::db::mysql' do
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :plugin        => params[:plugin],
-        :password_hash => params[:password_hash],
+        :password_hash => '*3DDF34A86854A312A8E2C65B506E21C91800D206',
         :database      => title,
         :privileges    => 'ALL',
         :create_user   => true,
@@ -107,12 +107,23 @@ describe 'openstacklib::db::mysql' do
       it { should contain_mysql_database(title).with_charset(params[:charset]) }
     end
 
-    context 'when omitting the required parameter password_hash' do
+    context 'when omitting the required parameter password' do
       let :params do
         {}
       end
 
       it { should raise_error(Puppet::Error) }
+    end
+
+    context 'when deprecated password_hash is used' do
+      let :params do
+        { :password_hash => '*3DDF34A86854A312A8E2C65B506E21C91800D206' }
+      end
+
+      it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
+        :user          => title,
+        :password_hash => '*3DDF34A86854A312A8E2C65B506E21C91800D206',
+      )}
     end
 
     context 'when notifying other resources' do
@@ -151,14 +162,14 @@ describe 'openstacklib::db::mysql' do
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :plugin        => nil,
-        :password_hash => params[:password_hash],
+        :password_hash => '*3DDF34A86854A312A8E2C65B506E21C91800D206',
         :database      => title
       )}
 
       it { should contain_openstacklib__db__mysql__host_access("#{title}_%").with(
         :user          => title,
         :plugin        => nil,
-        :password_hash => params[:password_hash],
+        :password_hash => '*3DDF34A86854A312A8E2C65B506E21C91800D206',
         :database      => title
       )}
     end
@@ -171,7 +182,7 @@ describe 'openstacklib::db::mysql' do
       it { should contain_openstacklib__db__mysql__host_access("#{title}_192.168.1.1").with(
         :user          => title,
         :plugin        => nil,
-        :password_hash => params[:password_hash],
+        :password_hash => '*3DDF34A86854A312A8E2C65B506E21C91800D206',
         :database      => title
       )}
     end
@@ -184,7 +195,7 @@ describe 'openstacklib::db::mysql' do
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :plugin        => nil,
-        :password_hash => params[:password_hash],
+        :password_hash => '*3DDF34A86854A312A8E2C65B506E21C91800D206',
         :database      => title
       )}
     end
@@ -251,7 +262,7 @@ describe 'openstacklib::db::mysql' do
       it { should contain_openstacklib__db__mysql__host_access("#{title}_127.0.0.1").with(
         :user          => title,
         :plugin        => nil,
-        :password_hash => params[:password_hash],
+        :password_hash => '*3DDF34A86854A312A8E2C65B506E21C91800D206',
         :database      => title,
         :tls_options   => ['SSL'],
       )}

@@ -4,8 +4,8 @@
 #
 # == Parameters:
 #
-#  [*password_hash*]
-#    Password hash to use for the database user for this service;
+#  [*password*]
+#    Password to use for the database user for this service;
 #    string; required
 #
 #  [*dbname*]
@@ -23,18 +23,36 @@
 #  [*privileges*]
 #    Privileges given to the database user;
 #    string or array of strings; optional; default to 'ALL'
-
+#
+# DEPRECATED PARAMETERS
+#
+#  [*password_hash*]
+#    Password hash to use for the database user for this service;
+#    string; required
+#
 define openstacklib::db::postgresql (
-  $password_hash,
-  $dbname     = $title,
-  $user       = $title,
-  $encoding   = undef,
-  $privileges = 'ALL',
+  $password      = undef,
+  $dbname        = $title,
+  $user          = $title,
+  $encoding      = undef,
+  $privileges    = 'ALL',
+  # DEPRECATED PARAMETERS
+  $password_hash = undef,
 ){
+
+  if $password_hash != undef {
+    warning('The password_hash parameter was deprecated and will be removed
+in a future release. Use password instead')
+    $password_hash_real = $password_hash
+  } elsif $password != undef {
+    $password_hash_real = postgresql::postgresql_password($user, $password)
+  } else {
+    fail('password should be set')
+  }
 
   postgresql::server::db { $dbname:
     user     => $user,
-    password => $password_hash,
+    password => $password_hash_real,
     encoding => $encoding,
     grant    => $privileges,
   }
