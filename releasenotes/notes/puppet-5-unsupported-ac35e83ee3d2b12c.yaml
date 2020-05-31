@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    Puppet 5 is now officially unsupported and support may be broken in any of
+    the Puppet modules in this cycle. We recommend all deployments to start
+    using Puppet 6 in this release.
