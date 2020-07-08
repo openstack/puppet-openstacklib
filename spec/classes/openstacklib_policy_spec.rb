@@ -21,6 +21,25 @@ describe 'openstacklib::policy' do
         :value     => 'foo:bar'
       )}
     end
+    context 'with yaml configuration' do
+      let :params do
+        {
+          :policies => {
+            'foo' => {
+              'file_path' => '/etc/octavia/policy.yaml',
+              'key'       => 'context_is_admin',
+              'value'     => 'foo:bar'
+            }
+          }
+        }
+      end
+
+      it { should contain_openstacklib__policy__base('foo').with(
+        :file_path => '/etc/octavia/policy.yaml',
+        :key       => 'context_is_admin',
+        :value     => 'foo:bar'
+      )}
+    end
   end
 
   on_supported_os({

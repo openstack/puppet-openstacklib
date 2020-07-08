@@ -28,13 +28,19 @@
 #    (optional) Group for the policy file
 #    Defaults to undef
 #
+#  [*file_format*]
+#    (optional) Format for file contents. Valid values
+#    are 'json' or 'yaml'.
+#    Defaults to 'json'.
+#
 define openstacklib::policy::base (
   $file_path,
   $key,
-  $value = '',
-  $file_mode  = '0640',
-  $file_user  = undef,
-  $file_group = undef,
+  $value       = '',
+  $file_mode   = '0640',
+  $file_user   = undef,
+  $file_group  = undef,
+  $file_format = 'json',
 ) {
 
   ensure_resource('file', $file_path, {
@@ -45,9 +51,22 @@ define openstacklib::policy::base (
     content => '{}'
   })
 
+  case $file_format {
+    'json': {
+      $file_lens = 'Json.lns'
+    }
+    'yaml': {
+      $file_lens = 'Yaml.lns'
+    }
+    default: {
+      fail("${file_format} is an unsupported policy file format. Choose 'json' or 'yaml'.")
+    }
+  }
+
+
   # Add entry if it doesn't exists
   augeas { "${file_path}-${key}-${value}-add":
-    lens    => 'Json.lns',
+    lens    => $file_lens,
     incl    => $file_path,
     changes => [
       "set dict/entry[last()+1] \"${key}\"",
@@ -58,7 +77,7 @@ define openstacklib::policy::base (
 
   # Requires that the entry is added before this call or it will fail.
   augeas { "${file_path}-${key}-${value}" :
-    lens    => 'Json.lns',
+    lens    => $file_lens,
     incl    => $file_path,
     changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
   }

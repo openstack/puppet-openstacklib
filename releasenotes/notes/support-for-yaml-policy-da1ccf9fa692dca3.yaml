@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Oslo policy is moving towards yaml as a policy file format and is
+    deprecating json.  Policy definitons now may contain a 'file_format'
+    field to specify 'yaml' or 'json' as a file format.
