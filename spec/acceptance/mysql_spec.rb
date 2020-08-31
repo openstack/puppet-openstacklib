@@ -10,7 +10,7 @@ describe 'openstacklib mysql' do
 
       class { 'mysql::server': }
 
-      ::openstacklib::db::mysql { 'beaker':
+      ::openstacklib::db::mysql { 'ci':
         password_hash => mysql::password('keystone'),
         allowed_hosts => '127.0.0.1',
       }
@@ -25,9 +25,9 @@ describe 'openstacklib mysql' do
       it { is_expected.to be_listening.with('tcp') }
     end
 
-    describe 'test database listing' do
-      it 'should list beaker database' do
-        expect(shell("mysql -e 'show databases;'|grep -q beaker").exit_code).to be_zero
+    it 'should have ci database' do
+      command("mysql -e 'show databases;' | grep -q ci") do |r|
+        expect(r.exit_code).to eq 0
       end
     end
 

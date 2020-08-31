@@ -13,8 +13,8 @@ describe 'openstacklib class' do
       # openstacklib resources
       include openstacklib::openstackclient
 
-      ::openstacklib::messaging::rabbitmq { 'beaker':
-        userid   => 'beaker',
+      ::openstacklib::messaging::rabbitmq { 'ci':
+        userid   => 'ci',
         is_admin => true,
       }
       EOS
@@ -25,15 +25,15 @@ describe 'openstacklib class' do
     end
 
     describe 'test rabbitmq resources' do
-      it 'should list rabbitmq beaker resources' do
-        shell('rabbitmqctl list_users') do |r|
-          expect(r.stdout).to match(/^beaker/)
+      it 'should list rabbitmq ci resources' do
+        command('rabbitmqctl list_users') do |r|
+          expect(r.stdout).to match(/^ci/)
           expect(r.stdout).not_to match(/^guest/)
           expect(r.exit_code).to eq(0)
         end
 
-        shell('rabbitmqctl list_permissions') do |r|
-          expect(r.stdout).to match(/^beaker\t\.\*\t\.\*\t\.\*$/)
+        command('rabbitmqctl list_permissions') do |r|
+          expect(r.stdout).to match(/^ci\t\.\*\t\.\*\t\.\*$/)
           expect(r.exit_code).to eq(0)
         end
       end
