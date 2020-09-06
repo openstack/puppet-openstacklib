@@ -51,6 +51,10 @@
 #   (Optional) The priority for the vhost.
 #   Defaults to '10'
 #
+# [*setenv*]
+#   (Optional) Set environment variables for the vhost.
+#   Defaults to []
+#
 # [*ssl*]
 #   (Optional) Use SSL.
 #   Defaults to false
@@ -217,12 +221,13 @@
 #
 define openstacklib::wsgi::apache (
   $service_name                = $name,
+  $servername                  = $::fqdn,
   $bind_host                   = undef,
   $bind_port                   = undef,
   $group                       = undef,
   $path                        = '/',
   $priority                    = '10',
-  $servername                  = $::fqdn,
+  $setenv                      = [],
   $ssl                         = false,
   $ssl_ca                      = undef,
   $ssl_cert                    = undef,
@@ -337,6 +342,7 @@ define openstacklib::wsgi::apache (
     docroot_owner              => $user,
     docroot_group              => $group,
     priority                   => $priority,
+    setenv                     => $setenv,
     setenvif                   => ['X-Forwarded-Proto https HTTPS=1'],
     ssl                        => $ssl,
     ssl_cert                   => $ssl_cert,

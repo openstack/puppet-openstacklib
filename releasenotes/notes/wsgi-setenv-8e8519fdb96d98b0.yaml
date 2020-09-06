@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The new ``openstacklib::wsgi::apache::setenv`` parameter has been added.
+    This paramaeter can be to define environment variables for vhost, passed
+    by httpd.

@@ -74,6 +74,7 @@ describe 'openstacklib::wsgi::apache' do
         :docroot                     => '/var/www/cgi-bin/keystone',
         :docroot_owner               => 'keystone',
         :docroot_group               => 'keystone',
+        :setenv                      => [],
         :ssl                         => 'true',
         :wsgi_daemon_process         => {
           'keystone_wsgi' => {
@@ -116,6 +117,7 @@ describe 'openstacklib::wsgi::apache' do
           :bind_port                  => 4142,
           :user                       => 'keystone',
           :group                      => 'keystone',
+          :setenv                     => ['MYENV foo'],
           :ssl                        => false,
           :workers                    => 37,
           :vhost_custom_fragment      => 'LimitRequestFieldSize 81900',
@@ -133,6 +135,7 @@ describe 'openstacklib::wsgi::apache' do
         :ip                          => '10.42.51.1',
         :port                        => '4142',
         :docroot                     => "/var/www/cgi-bin/keystone",
+        :setenv                      => ['MYENV foo'],
         :ssl                         => 'false',
         :wsgi_daemon_process         => {
           'keystone_wsgi' => {
