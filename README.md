@@ -16,12 +16,11 @@ openstacklib
 4. [Usage - The usage of the openstacklib module](#usage)
 5. [Implementation - An under-the-hood peek at what the module is doing](#implementation)
 6. [Limitations - OS compatibility, etc.](#limitations)
-7. [Beaker-Rspec - Beaker-rspec tests for the project](#beaker-rspec)
-8. [Development - Guide for contributing to the module](#development)
-9. [Contributors - Those with commits](#contributors)
-10. [Release Notes - Release notes for the project](#release-notes)
-11. [Repository - The project source code repository](#repository)
-12. [Versioning - Notes on the version numbering scheme](#versioning)
+6. [Development - Guide for contributing to the module](#development)
+7. [Contributors - Those with commits](#contributors)
+8. [Release Notes - Release notes for the project](#release-notes)
+9. [Repository - The project source code repository](#repository)
+10. [Versioning - Notes on the version numbering scheme](#versioning)
 
 Overview
 --------
@@ -296,18 +295,6 @@ fail to correctly migrate postgresql databases. While this module does not
 handle database migrations, it is common to set up refresh relationships
 between openstacklib::db::postgresql resource and the database sync exec
 resource. Relying on this behavior may cause errors.
-
-Beaker-Rspec
-------------
-
-This module has beaker-rspec tests
-
-To run:
-
-```shell
-bundle install
-bundle exec rspec spec/acceptance
-```
 
 Development
 -----------
