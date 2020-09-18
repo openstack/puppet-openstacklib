@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``openstacklib::wsgi::apache::aliases`` parameter has been added.
+    This parameter can be used to add alias definitions to the httpd vhost.
