@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    Added ssl_verify_client parameter to openstacklib::wsgi::apache.

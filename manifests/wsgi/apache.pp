@@ -67,6 +67,11 @@
 #   (Optional) Path to SSL key.
 #   Default to apache::vhost 'ssl_*' defaults
 #
+# [*ssl_verify_client*]
+#   (Optional) Sets the SSLVerifyClient directive which sets the
+#   certificate verification level for client authentication.
+#   Default to apache::vhost 'ssl_*' defaults
+#
 # [*ssl_chain*]
 #   (Optional) SSL chain.
 #   Default to apache::vhost 'ssl_*' defaults
@@ -240,6 +245,7 @@ define openstacklib::wsgi::apache (
   $ssl_crl                     = undef,
   $ssl_crl_path                = undef,
   $ssl_key                     = undef,
+  $ssl_verify_client           = undef,
   $threads                     = 1,
   $user                        = undef,
   $workers                     = $::os_workers,
@@ -352,6 +358,7 @@ define openstacklib::wsgi::apache (
     ssl                        => $ssl,
     ssl_cert                   => $ssl_cert,
     ssl_key                    => $ssl_key,
+    ssl_verify_client          => $ssl_verify_client,
     ssl_chain                  => $ssl_chain,
     ssl_ca                     => $ssl_ca,
     ssl_crl_path               => $ssl_crl_path,

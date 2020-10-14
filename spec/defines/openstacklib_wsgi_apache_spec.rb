@@ -33,6 +33,7 @@ describe 'openstacklib::wsgi::apache' do
       :bind_port          => 5000,
       :group              => 'keystone',
       :ssl                => true,
+      :ssl_verify_client  => 'optional',
       :user               => 'keystone',
       :wsgi_script_dir    => '/var/www/cgi-bin/keystone',
       :wsgi_script_file   => 'main',
@@ -76,6 +77,7 @@ describe 'openstacklib::wsgi::apache' do
         :docroot_group               => 'keystone',
         :setenv                      => [],
         :ssl                         => 'true',
+        :ssl_verify_client           => 'optional',
         :wsgi_daemon_process         => {
           'keystone_wsgi' => {
             'user'         => 'keystone',
