@@ -69,7 +69,7 @@
             "version_requirement": ">= 6.0.0 < 7.0.0"
         }
     ],
-    "source": "git://github.com/openstack/puppet-openstacklib.git",
+    "source": "https://opendev.org/openstack/puppet-openstacklib.git",
     "summary": "Puppet OpenStack Libraries",
     "version": "18.0.0"
 }
