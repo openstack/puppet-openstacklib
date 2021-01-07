@@ -43,48 +43,58 @@ define openstacklib::policy::base (
   $file_format = 'json',
 ) {
 
-  ensure_resource('file', $file_path, {
-    mode    => $file_mode,
-    owner   => $file_user,
-    group   => $file_group,
-    replace => false, # augeas will manage the content, we just need to make sure it exists
-    content => '{}'
-  })
-
   case $file_format {
     'json': {
-      $file_lens = 'Json.lns'
+      ensure_resource('file', $file_path, {
+        mode    => $file_mode,
+        owner   => $file_user,
+        group   => $file_group,
+        replace => false, # augeas will manage the content, we just need to make sure it exists
+        content => '{}'
+      })
+
+      # Add entry if it doesn't exists
+      augeas { "${file_path}-${key}-${value}-add":
+        lens    => 'Json.lns',
+        incl    => $file_path,
+        changes => [
+          "set dict/entry[last()+1] \"${key}\"",
+          "set dict/entry[last()]/string \"${value}\"",
+        ],
+        onlyif  => "match dict/entry[*][.=\"${key}\"] size == 0",
+      }
+
+      # Requires that the entry is added before this call or it will fail.
+      augeas { "${file_path}-${key}-${value}" :
+        lens    => 'Json.lns',
+        incl    => $file_path,
+        changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
+      }
+
+      File<| title == $file_path |>
+      -> Augeas<| title == "${file_path}-${key}-${value}-add" |>
+        ~> Augeas<| title == "${file_path}-${key}-${value}" |>
     }
     'yaml': {
-      $file_lens = 'Yaml.lns'
+      ensure_resource('file', $file_path, {
+        mode    => $file_mode,
+        owner   => $file_user,
+        group   => $file_group,
+        replace => false, # augeas will manage the content, we just need to make sure it exists
+        content => ''
+      })
+      file_line { "${file_path}-${key}" :
+        path  => $file_path,
+        line  => "'${key}': '${value}'",
+        match => "^['\"]?${key}['\"]?\\s*:.+"
+      }
+      File<| title == $file_path |>
+      -> File_line<| title == "${file_path}-${key}" |>
     }
     default: {
       fail("${file_format} is an unsupported policy file format. Choose 'json' or 'yaml'.")
     }
   }
-
-
-  # Add entry if it doesn't exists
-  augeas { "${file_path}-${key}-${value}-add":
-    lens    => $file_lens,
-    incl    => $file_path,
-    changes => [
-      "set dict/entry[last()+1] \"${key}\"",
-      "set dict/entry[last()]/string \"${value}\"",
-    ],
-    onlyif  => "match dict/entry[*][.=\"${key}\"] size == 0",
-  }
-
-  # Requires that the entry is added before this call or it will fail.
-  augeas { "${file_path}-${key}-${value}" :
-    lens    => $file_lens,
-    incl    => $file_path,
-    changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
-  }
-
-  File<| title == $file_path |>
-  -> Augeas<| title == "${file_path}-${key}-${value}-add" |>
-    ~> Augeas<| title == "${file_path}-${key}-${value}" |>
 
 }
 
