@@ -2,19 +2,20 @@ require 'spec_helper'
 
 describe 'openstacklib::policy::base' do
   shared_examples 'openstacklib::policy::base' do
-    context 'with some basic parameters' do
+    context 'with policy.json' do
       let :title do
         'nova-contest_is_admin'
       end
 
       let :params do
         {
-          :file_path  => '/etc/nova/policy.json',
-          :key        => 'context_is_admin or owner',
-          :value      => 'foo:bar',
-          :file_mode  => '0644',
-          :file_user  => 'foo',
-          :file_group => 'bar'
+          :file_path   => '/etc/nova/policy.json',
+          :key         => 'context_is_admin or owner',
+          :value       => 'foo:bar',
+          :file_mode   => '0644',
+          :file_user   => 'foo',
+          :file_group  => 'bar',
+          :file_format => 'json',
         }
       end
 
@@ -39,6 +40,37 @@ describe 'openstacklib::policy::base' do
         ],
         :onlyif  => 'match dict/entry[*][.="context_is_admin or owner"] size == 0'
       )}
+    end
+
+    context 'with policy.yaml' do
+      let :title do
+        'nova-contest_is_admin'
+      end
+
+      let :params do
+        {
+          :file_path   => '/etc/nova/policy.yaml',
+          :key         => 'context_is_admin or owner',
+          :value       => 'foo:bar',
+          :file_mode   => '0644',
+          :file_user   => 'foo',
+          :file_group  => 'bar',
+          :file_format => 'yaml',
+        }
+      end
+
+      it { should contain_file('/etc/nova/policy.yaml').with(
+        :mode  => '0644',
+        :owner => 'foo',
+        :group => 'bar'
+      )}
+
+      it { should contain_file_line('/etc/nova/policy.yaml-context_is_admin or owner').with(
+        :path  => '/etc/nova/policy.yaml',
+        :line  => '\'context_is_admin or owner\': \'foo:bar\'',
+        :match => '^[\'"]?context_is_admin or owner[\'"]?\s*:.+'
+      ) }
+
     end
   end
 
