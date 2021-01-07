@@ -45,6 +45,8 @@ define openstacklib::policy::base (
 
   case $file_format {
     'json': {
+      warning('Json format is deprecated and will be removed in a future release')
+
       ensure_resource('file', $file_path, {
         mode    => $file_mode,
         owner   => $file_user,
