@@ -71,5 +71,5 @@
     ],
     "source": "https://opendev.org/openstack/puppet-openstacklib.git",
     "summary": "Puppet OpenStack Libraries",
-    "version": "18.1.0"
+    "version": "18.2.0"
 }
