@@ -52,15 +52,15 @@ Puppet::Functions.create_function(:os_database_connection) do
 
     # support previous charset option on the function. Setting charset will
     # override charset if passed in via the extra parameters
+    extra = {}
+    if v.include?('extra')
+      extra.merge!(v['extra'])
+    end
     if v.include?('charset')
-      if v.include?('extra')
-        v['extra'].merge!({ 'charset' => v['charset'] })
-      else
-        v['extra'] = { 'charset' => v['charset'] }
-      end
+      extra.merge!({ 'charset' => v['charset'] })
     end
 
-    parts[:query] = v['extra'].map{ |k,v| "#{k}=#{v}" }.join('&') if v.include?('extra')
+    parts[:query] = extra.map{ |k,v| "#{k}=#{v}" }.join('&') if ! extra.empty?
 
     parts[:scheme] = v['dialect']
 
