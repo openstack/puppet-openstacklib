@@ -86,16 +86,21 @@ Puppet::Functions.create_function(:os_transport_url) do
       raise(ArgumentError, 'os_transport_url(): Wrong number of arguments')
     end
 
-    v = args[0]
-    klass = v.class
+    v_raw = args[0]
+    klass = v_raw.class
 
     unless klass == Hash
       raise(Puppet::ParseError, "os_transport_url(): Requires an hash, got #{klass}")
     end
 
+    v = {}
     # type checking for the parameter hash
-    v.keys.each do |key|
-      v[key] = v[key].to_s if key == 'port'
+    v_raw.keys.each do |key|
+      if key == 'port'
+        v[key] = v_raw[key].to_s
+      else
+        v[key] = v_raw[key]
+      end
       klass = (key == 'hosts') ? Array : String
       klass = (key == 'query') ? Hash : klass
       unless (v[key].class == klass) or (v[key] == :undef)
@@ -156,6 +161,11 @@ Puppet::Functions.create_function(:os_transport_url) do
 
     parts[:path] = "/#{v['virtual_host']}" if v.include?('virtual_host')
 
+    query = {}
+    if v.include?('query')
+      query.merge!(v['query'])
+    end
+
     # support previous ssl option on the function. Setting ssl will
     # override ssl if passed in via the query parameters
     if v.include?('ssl')
@@ -169,14 +179,11 @@ Puppet::Functions.create_function(:os_transport_url) do
       # str2bool or bool2num legacy functions using call_function.
       ssl_str = _str2bool(v['ssl'])
       ssl_val = _bool2num(v['ssl'])
-      if v.include?('query')
-        v['query'].merge!({ 'ssl' => ssl_val })
-      else
-        v['query'] = { 'ssl' => ssl_val }
-      end
+
+      query.merge!({ 'ssl' => ssl_val })
     end
 
-    parts[:query] = v['query'].map{ |k,val| "#{k}=#{val}" }.join('&') if v.include?('query')
+    parts[:query] = query.map{ |k,val| "#{k}=#{val}" }.join('&') if ! query.empty?
 
     url_parts = []
     url_parts << parts[:transport]
