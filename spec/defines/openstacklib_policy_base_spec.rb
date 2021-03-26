@@ -72,6 +72,26 @@ describe 'openstacklib::policy::base' do
       ) }
 
     end
+
+    context 'with json file_path and yaml file format' do
+      let :title do
+        'nova-contest_is_admin'
+      end
+
+      let :params do
+        {
+          :file_path   => '/etc/nova/policy.json',
+          :key         => 'context_is_admin or owner',
+          :value       => 'foo:bar',
+          :file_mode   => '0644',
+          :file_user   => 'foo',
+          :file_group  => 'bar',
+          :file_format => 'yaml',
+        }
+      end
+
+      it { should raise_error(Puppet::Error) }
+    end
   end
 
   on_supported_os({

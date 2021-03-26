@@ -78,6 +78,12 @@ define openstacklib::policy::base (
         ~> Augeas<| title == "${file_path}-${key}-${value}" |>
     }
     'yaml': {
+      if stdlib::extname($file_path) == '.json' {
+        # NOTE(tkajinam): It is likely that user is not aware of migration from
+        #                 policy.json to policy.yaml
+        fail("file_path: ${file_path} should be a yaml file instead of a json file")
+      }
+
       ensure_resource('file', $file_path, {
         mode    => $file_mode,
         owner   => $file_user,
