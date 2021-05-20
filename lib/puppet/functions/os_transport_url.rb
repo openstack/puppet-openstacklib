@@ -80,7 +80,7 @@ Puppet::Functions.create_function(:os_transport_url) do
   end
 
   def os_transport_url(*args)
-    require 'uri'
+    require 'erb'
 
     unless args.size == 1
       raise(ArgumentError, 'os_transport_url(): Wrong number of arguments')
@@ -130,9 +130,9 @@ Puppet::Functions.create_function(:os_transport_url) do
     parts[:transport] = v['transport']
 
     if v.include?('username') and (v['username'] != :undef) and (v['username'].to_s != '')
-      parts[:userinfo] = URI.escape(v['username'])
+      parts[:userinfo] = ERB::Util.url_encode(v['username'])
       if v.include?('password') and (v['password'] != :undef) and (v['password'].to_s != '')
-        parts[:userinfo] += ":#{URI.escape(v['password'])}"
+        parts[:userinfo] += ":#{ERB::Util.url_encode(v['password'])}"
       end
     end
 

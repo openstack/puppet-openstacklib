@@ -1,6 +1,6 @@
 Puppet::Functions.create_function(:os_database_connection) do
   def os_database_connection(*args)
-    require 'uri'
+    require 'erb'
 
     if (args.size != 1) then
       raise(Puppet::ParseError, "os_database_connection(): Wrong number of arguments " +
@@ -44,9 +44,9 @@ Puppet::Functions.create_function(:os_database_connection) do
     end
 
     if v.include?('username') and (v['username'] != :undef) and (v['username'].to_s != '')
-      parts[:userinfo] = URI.escape(v['username'])
+      parts[:userinfo] = ERB::Util.url_encode(v['username'])
       if v.include?('password') and (v['password'] != :undef) and (v['password'].to_s != '')
-        parts[:userinfo] += ":#{URI.escape(v['password'])}"
+        parts[:userinfo] += ":#{ERB::Util.url_encode(v['password'])}"
       end
     end
 
