@@ -9,11 +9,6 @@ class openstacklib::defaults {
   if ($::os['family'] == 'Debian') {
     $pyvers = '3'
     $pyver3 = '3'
-  } elsif ($::os['name'] == 'Fedora') {
-    # TODO(tkajinam): This is very outdated and doesn't work with the latest
-    #                 Fedora. We should fix or drop this.
-    $pyvers = '3'
-    $pyver3 = '3.6'
   } elsif $::os['family'] == 'RedHat' {
     if Integer.new($::os['release']['major']) > 8 {
       $pyvers = '3'

@@ -36,14 +36,10 @@ describe 'openstacklib::openstackclient' do
         when 'Debian'
           { :openstackclient_package_name => 'python3-openstackclient' }
         when 'RedHat'
-          if facts[:operatingsystem] == 'Fedora'
+          if facts[:operatingsystemmajrelease] > '7'
             { :openstackclient_package_name => 'python3-openstackclient' }
           else
-            if facts[:operatingsystemmajrelease] > '7'
-              { :openstackclient_package_name => 'python3-openstackclient' }
-            else
-              { :openstackclient_package_name => 'python-openstackclient' }
-            end
+            { :openstackclient_package_name => 'python-openstackclient' }
           end
         end
       end
