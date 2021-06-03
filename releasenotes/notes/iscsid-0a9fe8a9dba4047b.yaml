@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``openstacklib::iscsid`` class has been added. This class can be
+    used to set up basic configurations for the iscsid service.
