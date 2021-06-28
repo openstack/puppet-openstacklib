@@ -9,4 +9,17 @@ class openstacklib::params {
   $pyvers = $::openstacklib::defaults::pyvers
 
   $openstackclient_package_name = "python${pyvers}-openstackclient"
+
+  case $::osfamily {
+    'RedHat': {
+      $open_iscsi_package_name = 'iscsi-initiator-utils'
+    }
+    'Debian': {
+      $open_iscsi_package_name = 'open-iscsi'
+    }
+    default:{
+      fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, \
+module ${module_name} only support osfamily RedHat and Debian")
+    }
+  }
 }
