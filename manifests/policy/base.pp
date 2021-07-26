@@ -5,16 +5,14 @@
 # == Parameters:
 #
 #  [*file_path*]
-#    Path to the policy.json file
-#    string; required
+#    (required) Path to the policy.json file
 #
 #  [*key*]
-#    The key to replace the value for
-#    string; required; the key to replace the value for
+#    (required) The key to replace the value for
 #
 #  [*value*]
-#    The value to set
-#    string; optional; the value to set
+#    (optional) The value to set
+#    Defaults to ''
 #
 #  [*file_mode*]
 #    (optional) Permission mode for the policy file
@@ -33,27 +31,34 @@
 #    are 'json' or 'yaml'.
 #    Defaults to 'json'.
 #
+#  [*purge_config*]
+#    (optional) Whether to set only the specified policy rules in the policy
+#    file.
+#    Defaults to false.
+#
 define openstacklib::policy::base (
   $file_path,
   $key,
-  $value       = '',
-  $file_mode   = '0640',
-  $file_user   = undef,
-  $file_group  = undef,
-  $file_format = 'json',
+  $value        = '',
+  $file_mode    = '0640',
+  $file_user    = undef,
+  $file_group   = undef,
+  $file_format  = 'json',
+  $purge_config = false,
 ) {
+
+  ensure_resource('openstacklib::policy::default', $file_path, {
+    file_path    => $file_path,
+    file_mode    => $file_mode,
+    file_user    => $file_user,
+    file_group   => $file_group,
+    file_format  => $file_format,
+    purge_config => $purge_config
+  })
 
   case $file_format {
     'json': {
       warning('Json format is deprecated and will be removed in a future release')
-
-      ensure_resource('file', $file_path, {
-        mode    => $file_mode,
-        owner   => $file_user,
-        group   => $file_group,
-        replace => false, # augeas will manage the content, we just need to make sure it exists
-        content => '{}'
-      })
 
       # Add entry if it doesn't exists
       augeas { "${file_path}-${key}-${value}-add":
@@ -73,30 +78,17 @@ define openstacklib::policy::base (
         changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
       }
 
-      File<| title == $file_path |>
+      Openstacklib::Policy::Default<| title == $file_path |>
       -> Augeas<| title == "${file_path}-${key}-${value}-add" |>
         ~> Augeas<| title == "${file_path}-${key}-${value}" |>
     }
     'yaml': {
-      if stdlib::extname($file_path) == '.json' {
-        # NOTE(tkajinam): It is likely that user is not aware of migration from
-        #                 policy.json to policy.yaml
-        fail("file_path: ${file_path} should be a yaml file instead of a json file")
-      }
-
-      ensure_resource('file', $file_path, {
-        mode    => $file_mode,
-        owner   => $file_user,
-        group   => $file_group,
-        replace => false, # augeas will manage the content, we just need to make sure it exists
-        content => ''
-      })
       file_line { "${file_path}-${key}" :
         path  => $file_path,
         line  => "'${key}': '${value}'",
         match => "^['\"]?${key}['\"]?\\s*:.+"
       }
-      File<| title == $file_path |>
+      Openstacklib::Policy::Default<| title == $file_path |>
       -> File_line<| title == "${file_path}-${key}" |>
     }
     default: {
@@ -105,4 +97,3 @@ define openstacklib::policy::base (
   }
 
 }
-

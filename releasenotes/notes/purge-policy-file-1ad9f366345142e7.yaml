@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    Now the ``openstacklib::policies`` resource type provides the basic set
+    of configurations for policy settings. It provides the purge_config
+    parameter which ensures a policy file is purged.
+
+upgrade:
+  - |
+    The ``openstacklib::policies`` class has been re-implemented as a defined
+    resource type.
