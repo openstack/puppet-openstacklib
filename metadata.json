@@ -65,5 +65,5 @@
     ],
     "source": "https://opendev.org/openstack/puppet-openstacklib.git",
     "summary": "Puppet OpenStack Libraries",
-    "version": "19.1.0"
+    "version": "19.2.0"
 }
