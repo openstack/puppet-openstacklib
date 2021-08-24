@@ -19,10 +19,12 @@ describe 'openstacklib::policy::base' do
         }
       end
 
-      it { should contain_file('/etc/nova/policy.json').with(
-        :mode  => '0644',
-        :owner => 'foo',
-        :group => 'bar'
+      it { should contain_openstacklib__policy__default('/etc/nova/policy.json').with(
+        :file_mode    => '0644',
+        :file_user    => 'foo',
+        :file_group   => 'bar',
+        :file_format  => 'json',
+        :purge_config => false,
       )}
 
       it { should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar').with(
@@ -59,10 +61,12 @@ describe 'openstacklib::policy::base' do
         }
       end
 
-      it { should contain_file('/etc/nova/policy.yaml').with(
-        :mode  => '0644',
-        :owner => 'foo',
-        :group => 'bar'
+      it { should contain_openstacklib__policy__default('/etc/nova/policy.yaml').with(
+        :file_mode    => '0644',
+        :file_user    => 'foo',
+        :file_group   => 'bar',
+        :file_format  => 'yaml',
+        :purge_config => false,
       )}
 
       it { should contain_file_line('/etc/nova/policy.yaml-context_is_admin or owner').with(
@@ -70,7 +74,33 @@ describe 'openstacklib::policy::base' do
         :line  => '\'context_is_admin or owner\': \'foo:bar\'',
         :match => '^[\'"]?context_is_admin or owner[\'"]?\s*:.+'
       ) }
+    end
 
+    context 'with purge_config enabled' do
+      let :title do
+        'nova-contest_is_admin'
+      end
+
+      let :params do
+        {
+          :file_path    => '/etc/nova/policy.yaml',
+          :key          => 'context_is_admin or owner',
+          :value        => 'foo:bar',
+          :file_mode    => '0644',
+          :file_user    => 'foo',
+          :file_group   => 'bar',
+          :file_format  => 'yaml',
+          :purge_config => true,
+        }
+      end
+
+      it { should contain_openstacklib__policy__default('/etc/nova/policy.yaml').with(
+        :file_mode    => '0644',
+        :file_user    => 'foo',
+        :file_group   => 'bar',
+        :file_format  => 'yaml',
+        :purge_config => true,
+      )}
     end
 
     context 'with json file_path and yaml file format' do
