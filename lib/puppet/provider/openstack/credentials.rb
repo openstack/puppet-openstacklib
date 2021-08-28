@@ -40,6 +40,20 @@ class Puppet::Provider::Openstack::Credentials
     env
   end
 
+  def scope_set?
+    @project_name
+  end
+
+  def scope
+    if @project_name
+      return 'project'
+    else
+      # When only service token is used, there is not way to determine
+      # the scope unless we inspect the token using keystone API call.
+      return nil
+    end
+  end
+
   def user_password_set?
     return true if @username && @password && @project_name && @auth_url
   end
@@ -70,6 +84,7 @@ class Puppet::Provider::Openstack::CredentialsV3 < Puppet::Provider::Openstack::
     :project_domain_id,
     :project_domain_name,
     :project_id,
+    :system_scope,
     :trust_id,
     :user_domain_id,
     :user_domain_name,
@@ -82,8 +97,28 @@ class Puppet::Provider::Openstack::CredentialsV3 < Puppet::Provider::Openstack::
     KEYS.include?(name.to_sym) || super
   end
 
+  def user_set?
+    @username || @user_id
+  end
+
+  def scope_set?
+    @system_scope || @domain_name || @domain_id || @project_name || @project_id
+  end
+
+  def scope
+    if @project_name || @project_id
+      return 'project'
+    elsif @domain_name || @domain_id
+      return 'domain'
+    elsif @system_scope
+      return 'system'
+    else
+      return nil
+    end
+  end
+
   def user_password_set?
-    return true if (@username || @user_id) && @password && (@project_name || @project_id) && @auth_url
+    return true if user_set? && @password && scope_set? && @auth_url
   end
 
   def initialize
