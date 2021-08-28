@@ -32,14 +32,14 @@ module Puppet::Provider::Openstack::Auth
     RCFILENAME
   end
 
-  def request(service, action, properties=nil, options={})
+  def request(service, action, properties=nil, options={}, scope='project')
     properties ||= []
     set_credentials(@credentials, get_os_vars_from_env)
-    unless @credentials.set?
+    unless @credentials.set? and (!@credentials.scope_set? or @credentials.scope == scope)
       @credentials.unset
       set_credentials(@credentials, get_os_vars_from_rcfile(rc_filename))
     end
-    unless @credentials.set?
+    unless @credentials.set? and (!@credentials.scope_set? or @credentials.scope == scope)
       raise(Puppet::Error::OpenstackAuthInputError, 'Insufficient credentials to authenticate')
     end
     super(service, action, properties, @credentials, options)
