@@ -86,6 +86,7 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.auth_url = 'auth_url'
         creds.password = 'password'
         creds.project_name = 'project_name'
+        creds.domain_name = 'domain_name'
         creds.username = 'username'
         creds.token = 'token'
         creds.endpoint = 'endpoint'
@@ -94,6 +95,7 @@ describe Puppet::Provider::Openstack::Credentials do
         expect(creds.auth_url).to eq('')
         expect(creds.password).to eq('')
         expect(creds.project_name).to eq('')
+        expect(creds.domain_name).to eq('')
         expect(creds.username).to eq('')
         expect(creds.token).to eq('')
         expect(creds.endpoint).to eq('')

@@ -45,10 +45,10 @@ class Puppet::Provider::Openstack::Credentials
   end
 
   def unset
-    KEYS.each do |key|
-      if key != :identity_api_version &&
-        self.instance_variable_defined?("@#{key}")
-        set(key, '')
+    self.instance_variables.each do |var|
+      if var.to_s != '@identity_api_version' &&
+        self.instance_variable_defined?(var.to_s)
+        set(var.to_s.sub(/^@/,''), '')
       end
     end
   end
