@@ -84,6 +84,25 @@ name="test"
       Puppet::Provider::Openstack.request('project', 'list', ['--long'], credentials)
     end
 
+    it 'redacts sensitive data from an exception message' do
+      e1 = Puppet::ExecutionFailure.new "Execution of 'openstack user create --format shell hello --password world --enable --email foo@example.com --domain Default' returned 1: command failed"
+      expect do
+        Puppet::Provider::Openstack.redact_and_raise(e1)
+      end.to raise_error(Puppet::ExecutionFailure, /Execution of \'openstack user create --format shell hello --password \[redacted secret\] --enable --email foo@example.com --domain Default/)
+      e2 = Puppet::ExecutionFailure.new "Execution of 'openstack user create --format shell hello --password world' returned 1: command failed"
+      expect do
+        Puppet::Provider::Openstack.redact_and_raise(e2)
+      end.to raise_error(Puppet::ExecutionFailure, /Execution of \'openstack user create --format shell hello --password \[redacted secret\]\' returned/)
+    end
+
+    it 'redacts password in execution output on exception' do
+      provider.class.stubs(:execute)
+          .raises(Puppet::ExecutionFailure, "Execution of '/usr/bin/openstack user create --format shell hello --password world --enable --email foo@example.com --domain Default' returned 1: command failed")
+      expect do
+        Puppet::Provider::Openstack.request('user', 'create', ['hello', '--password', 'world', '--enable', '--email', 'foo@example.com', '--domain', 'Default'])
+      end.to raise_error Puppet::ExecutionFailure, "Execution of '/usr/bin/openstack user create --format shell hello --password [redacted secret] --enable --email foo@example.com --domain Default' returned 1: command failed"
+    end
+
     context 'on connection errors' do
       it 'retries the failed command' do
         provider.class.stubs(:openstack)
@@ -94,6 +113,18 @@ name="test"
         provider.class.expects(:sleep).with(3).returns(nil)
         response = Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         expect(response.first[:description]).to eq 'Test tenant'
+      end
+
+      it 'fails after the timeout and redacts' do
+        provider.class.expects(:execute)
+            .raises(Puppet::ExecutionFailure, "Execution of 'openstack user create foo --password secret' returned 1: command failed")
+            .times(3)
+        provider.class.stubs(:sleep)
+        provider.class.stubs(:current_time)
+            .returns(0, 10, 10, 20, 20, 200, 200)
+        expect do
+          Puppet::Provider::Openstack.request('project', 'list', ['--long'])
+        end.to raise_error Puppet::ExecutionFailure, /Execution of \'openstack user create foo --password \[redacted secret\]\' returned 1/
       end
 
       it 'fails after the timeout' do
