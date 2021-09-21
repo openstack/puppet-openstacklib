@@ -40,6 +40,12 @@ class Puppet::Provider::Openstack < Puppet::Provider
     self.class_variable_get("@@command_timeout")
   end
 
+  # redact sensitive information in exception and raise
+  def self.redact_and_raise(e)
+    new_message = e.message.gsub(/\-\-password\ [\w]+/, "--password [redacted secret]")
+    raise e.class, new_message
+  end
+
   # with command_timeout
   def self.openstack(*args)
     begin
@@ -48,7 +54,10 @@ class Puppet::Provider::Openstack < Puppet::Provider
         execute([command(:openstack_command)] + args, override_locale: false, failonfail: true, combine: true)
       end
     rescue Timeout::Error
-      raise Puppet::ExecutionFailure, "Command: 'openstack #{args.inspect}' has been running for more than #{command_timeout(action)} seconds"
+      e = Puppet::ExecutionFailure.new "Command: 'openstack #{args.inspect}' has been running for more than #{command_timeout(action)} seconds"
+      redact_and_raise(e)
+    rescue Puppet::ExecutionFailure => e
+      redact_and_raise(e)
     end
   end
 
