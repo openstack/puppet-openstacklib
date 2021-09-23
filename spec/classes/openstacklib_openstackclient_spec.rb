@@ -4,7 +4,7 @@ describe 'openstacklib::openstackclient' do
   shared_examples_for 'openstacklib::openstackclient' do
     context 'with default params' do
       it { should contain_package(platform_params[:openstackclient_package_name]).with(
-        :ensure => 'present',
+        :ensure => 'installed',
         :tag    => 'openstack'
       )}
     end
@@ -17,7 +17,7 @@ describe 'openstacklib::openstackclient' do
       end
 
       it { should contain_package('my-openstackclient').with(
-        :ensure => 'present',
+        :ensure => 'installed',
         :tag    => 'openstack'
       )}
     end
