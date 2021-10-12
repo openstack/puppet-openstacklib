@@ -60,7 +60,11 @@ Puppet::Type.type(:openstack_config).provide(
   end
 
   def separator
-    '='
+    if resource.class.validattr?(:key_val_separator)
+      resource[:key_val_separator] || '='
+    else
+      '='
+    end
   end
 
   def file_path
