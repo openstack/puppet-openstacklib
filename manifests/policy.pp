@@ -5,7 +5,7 @@
 # == Parameters:
 #
 # [*policy_path*]
-#   (Optional) Path to the policy file
+#   (Optional) Path to the policy file. This should be an asbolute path.
 #   Defaults to $name
 #
 # [*policies*]
@@ -43,6 +43,7 @@ define openstacklib::policy (
   $purge_config = false,
 ) {
   validate_legacy(Hash, 'validate_hash', $policies)
+  validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $policy_path)
 
   if empty($policies) {
     create_resources('openstacklib::policy::default', { $policy_path => {
