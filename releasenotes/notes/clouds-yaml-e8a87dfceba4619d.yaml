@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The new ``openstacklib::clouds`` resource type has been added, which
+    manages the ``clouds.yaml`` file to store credentials for the ``openstack``
+    cli.
+
+  - |
+    Now ``Puppet::Provider::Openstack::CredentialsV3`` supports loading
+    credentials from the ``clouds.yaml`` file.

@@ -88,7 +88,9 @@ class Puppet::Provider::Openstack::CredentialsV3 < Puppet::Provider::Openstack::
     :trust_id,
     :user_domain_id,
     :user_domain_name,
-    :user_id
+    :user_id,
+    :cloud,
+    :client_config_file,
   ]
 
   KEYS.each { |var| attr_accessor var }
@@ -113,12 +115,14 @@ class Puppet::Provider::Openstack::CredentialsV3 < Puppet::Provider::Openstack::
     elsif @system_scope
       return 'system'
     else
+      # When clouds.yaml is used, parameters are not directly passed to puppet
+      # so the scope can't be detected.
       return nil
     end
   end
 
   def user_password_set?
-    return true if user_set? && @password && scope_set? && @auth_url
+    return true if (user_set? && @password && scope_set? && @auth_url) || @cloud
   end
 
   def initialize
