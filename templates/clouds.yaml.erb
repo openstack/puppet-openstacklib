@@ -1,0 +1,38 @@
+clouds:
+<% if @project_name -%>
+  project:
+    auth:
+      auth_url: <%= @auth_url %>
+      password: <%= @password %>
+      username: <%= @username %>
+      user_domain_name: <%= @user_domain_name %>
+      project_name: <%= @project_name %>
+      project_domain_name: <%= @project_domain_name %>
+  <%- @api_versions.sort.each do |opt_name,opt_val| -%>
+    <%= opt_name %>_api_version: <%= opt_val %>
+  <%- end -%>
+  <%- if !(@interface.nil?) -%>
+    interface: <%= @interface %>
+  <%- end -%>
+  <%- if !(@region_name.nil?) -%>
+    region_name: <%= @region_name %>
+  <%- end -%>
+<% end -%>
+<% if @system_scope -%>
+  system:
+    auth:
+      auth_url: <%= @auth_url %>
+      password: <%= @password %>
+      username: <%= @username %>
+      user_domain_name: <%= @user_domain_name %>
+      system_scope: <%= @system_scope %>
+  <%- @api_versions.sort.each do |opt_name,opt_val| -%>
+    <%= opt_name %>_api_version: <%= opt_val %>
+  <%- end -%>
+  <%- if !(@interface.nil?) -%>
+    interface: <%= @interface %>
+  <%- end -%>
+  <%- if !(@region_name.nil?) -%>
+    region_name: <%= @region_name %>
+  <%- end -%>
+<% end -%>
