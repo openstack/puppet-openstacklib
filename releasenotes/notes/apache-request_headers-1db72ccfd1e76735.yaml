@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    The new ``openstacklib::wsgi::apache::request_headers`` parameter has been
+    added.

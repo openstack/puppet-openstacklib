@@ -90,6 +90,7 @@ describe 'openstacklib::wsgi::apache' do
         :wsgi_script_aliases         => { '/' => "/var/www/cgi-bin/keystone/main" },
         :wsgi_application_group      => '%{GLOBAL}',
         :headers                     => nil,
+        :request_headers             => nil,
         :aliases                     => nil,
         :setenvif                    => ['X-Forwarded-Proto https HTTPS=1'],
         :access_log_file             => false,
@@ -115,6 +116,7 @@ describe 'openstacklib::wsgi::apache' do
           :wsgi_chunked_request       => 'On',
           :custom_wsgi_script_aliases => { '/admin' => '/var/www/cgi-bin/keystone/admin' },
           :headers                    => 'set X-Frame-Options "DENY"',
+          :request_headers            => 'set Content-Type "application/json"',
           :aliases                    => [
             { 'alias' => '/robots.txt', 'path' => '/etc/keystone/robots.txt', },
           ],
@@ -160,6 +162,7 @@ describe 'openstacklib::wsgi::apache' do
         :wsgi_pass_authorization     => 'On',
         :wsgi_chunked_request        => 'On',
         :headers                     => 'set X-Frame-Options "DENY"',
+        :request_headers             => 'set Content-Type "application/json"',
         :aliases                    => [
           { 'alias' => '/robots.txt', 'path' => '/etc/keystone/robots.txt', }
         ],
