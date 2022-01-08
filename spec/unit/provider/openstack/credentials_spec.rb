@@ -47,10 +47,28 @@ describe Puppet::Provider::Openstack::Credentials do
 
   describe '#password_set?' do
     context "with user credentials" do
-      it 'is successful' do
+      it 'is successful with project scope credential' do
         creds.auth_url = 'auth_url'
         creds.password = 'password'
         creds.project_name = 'project_name'
+        creds.username = 'username'
+        expect(creds.user_password_set?).to be_truthy
+        expect(creds.service_token_set?).to be_falsey
+      end
+
+      it 'is successful with project scope credential' do
+        creds.auth_url = 'auth_url'
+        creds.password = 'password'
+        creds.domain_name = 'domain_name'
+        creds.username = 'username'
+        expect(creds.user_password_set?).to be_truthy
+        expect(creds.service_token_set?).to be_falsey
+      end
+
+      it 'is successful with system scope credential' do
+        creds.auth_url = 'auth_url'
+        creds.password = 'password'
+        creds.system_scope = 'all'
         creds.username = 'username'
         expect(creds.user_password_set?).to be_truthy
         expect(creds.service_token_set?).to be_falsey
@@ -87,18 +105,22 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.password = 'password'
         creds.project_name = 'project_name'
         creds.domain_name = 'domain_name'
+        creds.system_scope = 'system_scope'
         creds.username = 'username'
         creds.token = 'token'
         creds.endpoint = 'endpoint'
+        creds.region_name = 'region_name'
         creds.identity_api_version = 'identity_api_version'
         creds.unset
         expect(creds.auth_url).to eq('')
         expect(creds.password).to eq('')
         expect(creds.project_name).to eq('')
         expect(creds.domain_name).to eq('')
+        expect(creds.system_scope).to eq('')
         expect(creds.username).to eq('')
         expect(creds.token).to eq('')
         expect(creds.endpoint).to eq('')
+        expect(creds.region_name).to eq('')
         expect(creds.identity_api_version).to eq('identity_api_version')
         newcreds = Puppet::Provider::Openstack::CredentialsV3.new
         expect(newcreds.identity_api_version).to eq('3')
@@ -112,20 +134,24 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.auth_url = 'auth_url'
         creds.password = 'password'
         creds.project_name = 'project_name'
+        creds.domain_name = 'domain_name'
+        creds.system_scope = 'all'
         creds.username = 'username'
         creds.token = 'token'
         creds.endpoint = 'endpoint'
-        creds.identity_api_version = 'identity_api_version'
         creds.region_name = 'Region1'
+        creds.identity_api_version = 'identity_api_version'
         expect(creds.to_env).to eq({
           'OS_USERNAME'             => 'username',
           'OS_PASSWORD'             => 'password',
           'OS_PROJECT_NAME'         => 'project_name',
+          'OS_DOMAIN_NAME'          => 'domain_name',
+          'OS_SYSTEM_SCOPE'         => 'all',
           'OS_AUTH_URL'             => 'auth_url',
           'OS_TOKEN'                => 'token',
           'OS_ENDPOINT'             => 'endpoint',
-          'OS_IDENTITY_API_VERSION' => 'identity_api_version',
           'OS_REGION_NAME'          => 'Region1',
+          'OS_IDENTITY_API_VERSION' => 'identity_api_version',
         })
       end
     end
@@ -149,11 +175,38 @@ describe Puppet::Provider::Openstack::Credentials do
         expect(creds.user_password_set?).to be_truthy
       end
     end
+    describe '#password_set? with username and domain_name' do
+      it 'is successful' do
+        creds.auth_url = 'auth_url'
+        creds.password = 'password'
+        creds.domain_name = 'domain_name'
+        creds.username = 'username'
+        expect(creds.user_password_set?).to be_truthy
+      end
+    end
+    describe '#password_set? with username and system_scope' do
+      it 'is successful' do
+        creds.auth_url = 'auth_url'
+        creds.password = 'password'
+        creds.system_scope = 'all'
+        creds.username = 'username'
+        expect(creds.user_password_set?).to be_truthy
+      end
+    end
     describe '#password_set? with user_id and project_id' do
       it 'is successful' do
         creds.auth_url = 'auth_url'
         creds.password = 'password'
         creds.project_id = 'projid'
+        creds.user_id = 'userid'
+        expect(creds.user_password_set?).to be_truthy
+      end
+    end
+    describe '#password_set? with user_id and domain_id' do
+      it 'is successful' do
+        creds.auth_url = 'auth_url'
+        creds.password = 'password'
+        creds.domain_id = 'domid'
         creds.user_id = 'userid'
         expect(creds.user_password_set?).to be_truthy
       end
