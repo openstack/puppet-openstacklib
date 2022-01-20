@@ -74,6 +74,12 @@ describe Puppet::Provider::Openstack::Credentials do
         expect(creds.service_token_set?).to be_falsey
       end
 
+      it 'is successful with cloud' do
+        creds.cloud = 'openstack'
+        expect(creds.user_password_set?).to be_truthy
+        expect(creds.service_token_set?).to be_falsey
+      end
+
       it 'fails' do
         creds.auth_url = 'auth_url'
         creds.password = 'password'
@@ -111,6 +117,8 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.endpoint = 'endpoint'
         creds.region_name = 'region_name'
         creds.identity_api_version = 'identity_api_version'
+        creds.cloud = 'openstack'
+        creds.client_config_file = '/etc/openstack/clouds.yaml'
         creds.unset
         expect(creds.auth_url).to eq('')
         expect(creds.password).to eq('')
@@ -122,6 +130,8 @@ describe Puppet::Provider::Openstack::Credentials do
         expect(creds.endpoint).to eq('')
         expect(creds.region_name).to eq('')
         expect(creds.identity_api_version).to eq('identity_api_version')
+        expect(creds.cloud).to eq('')
+        expect(creds.client_config_file).to eq('')
         newcreds = Puppet::Provider::Openstack::CredentialsV3.new
         expect(newcreds.identity_api_version).to eq('3')
       end
@@ -141,6 +151,8 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.endpoint = 'endpoint'
         creds.region_name = 'Region1'
         creds.identity_api_version = 'identity_api_version'
+        creds.cloud = 'openstack'
+        creds.client_config_file = '/etc/openstack/clouds.yaml'
         expect(creds.to_env).to eq({
           'OS_USERNAME'             => 'username',
           'OS_PASSWORD'             => 'password',
@@ -152,6 +164,8 @@ describe Puppet::Provider::Openstack::Credentials do
           'OS_ENDPOINT'             => 'endpoint',
           'OS_REGION_NAME'          => 'Region1',
           'OS_IDENTITY_API_VERSION' => 'identity_api_version',
+          'OS_CLOUD'                => 'openstack',
+          'OS_CLIENT_CONFIG_FILE'   => '/etc/openstack/clouds.yaml',
         })
       end
     end
@@ -173,6 +187,7 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.project_name = 'project_name'
         creds.username = 'username'
         expect(creds.user_password_set?).to be_truthy
+        expect(creds.scope).to eq('project')
       end
     end
     describe '#password_set? with username and domain_name' do
@@ -182,6 +197,7 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.domain_name = 'domain_name'
         creds.username = 'username'
         expect(creds.user_password_set?).to be_truthy
+        expect(creds.scope).to eq('domain')
       end
     end
     describe '#password_set? with username and system_scope' do
@@ -191,6 +207,14 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.system_scope = 'all'
         creds.username = 'username'
         expect(creds.user_password_set?).to be_truthy
+        expect(creds.scope).to eq('system')
+      end
+    end
+    describe '#password_set? with cloud' do
+      it 'is successful' do
+        creds.cloud = 'openstack'
+        expect(creds.user_password_set?).to be_truthy
+        expect(creds.scope).to eq(nil)
       end
     end
     describe '#password_set? with user_id and project_id' do
@@ -200,6 +224,7 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.project_id = 'projid'
         creds.user_id = 'userid'
         expect(creds.user_password_set?).to be_truthy
+        expect(creds.scope).to eq('project')
       end
     end
     describe '#password_set? with user_id and domain_id' do
@@ -209,6 +234,7 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.domain_id = 'domid'
         creds.user_id = 'userid'
         expect(creds.user_password_set?).to be_truthy
+        expect(creds.scope).to eq('domain')
       end
     end
   end
