@@ -61,7 +61,7 @@ define openstacklib::policy::base (
       warning('Json format is deprecated and will be removed in a future release')
 
       # Add entry if it doesn't exists
-      augeas { "${file_path}-${key}-${value}-add":
+      augeas { "${file_path}-${key}-add":
         lens    => 'Json.lns',
         incl    => $file_path,
         changes => [
@@ -72,15 +72,15 @@ define openstacklib::policy::base (
       }
 
       # Requires that the entry is added before this call or it will fail.
-      augeas { "${file_path}-${key}-${value}" :
+      augeas { "${file_path}-${key}" :
         lens    => 'Json.lns',
         incl    => $file_path,
         changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
       }
 
       Openstacklib::Policy::Default<| title == $file_path |>
-      -> Augeas<| title == "${file_path}-${key}-${value}-add" |>
-        ~> Augeas<| title == "${file_path}-${key}-${value}" |>
+      -> Augeas<| title == "${file_path}-${key}-add" |>
+        ~> Augeas<| title == "${file_path}-${key}" |>
     }
     'yaml': {
       # NOTE(tkajianm): Currently we use single quotes('') to quote the whole
