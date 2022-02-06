@@ -5,10 +5,29 @@ module Puppet::Provider::Openstack::Auth
 
   RCFILENAME = "#{ENV['HOME']}/openrc"
 
+  CLOUDSFILENAMES = [
+    # This allows overrides by users
+    "/etc/openstack/puppet/clouds.yaml",
+    # This is created by puppet-keystone
+    "/etc/openstack/puppet/admin-clouds.yaml",
+    ]
+
   def get_os_vars_from_env
     env = {}
     ENV.each { |k,v| env.merge!(k => v) if k =~ /^OS_/ }
     return env
+  end
+
+  def get_os_vars_from_cloudsfile(scope)
+    cloudsfile = clouds_filenames.detect { |f| File.exists? f}
+    unless cloudsfile.nil?
+      {
+        'OS_CLOUD'              => scope,
+        'OS_CLIENT_CONFIG_FILE' => cloudsfile
+      }
+    else
+      {}
+    end
   end
 
   def get_os_vars_from_rcfile(filename)
@@ -32,13 +51,30 @@ module Puppet::Provider::Openstack::Auth
     RCFILENAME
   end
 
+  def clouds_filenames
+    CLOUDSFILENAMES
+  end
+
   def request(service, action, properties=nil, options={}, scope='project')
     properties ||= []
+
+    # First, check environments
     set_credentials(@credentials, get_os_vars_from_env)
+
     unless @credentials.set? and (!@credentials.scope_set? or @credentials.scope == scope)
+      # Then look for clouds.yaml
       @credentials.unset
-      set_credentials(@credentials, get_os_vars_from_rcfile(rc_filename))
+      clouds_env = get_os_vars_from_cloudsfile(scope)
+      if ! clouds_env.empty?
+        set_credentials(@credentials, clouds_env)
+      else
+        # If it fails then check rc files, to keep backword compatibility.
+        warning('Usage of rc file is deprecated and will be removed in a future release.')
+        @credentials.unset
+        set_credentials(@credentials, get_os_vars_from_rcfile(rc_filename))
+      end
     end
+
     unless @credentials.set? and (!@credentials.scope_set? or @credentials.scope == scope)
       raise(Puppet::Error::OpenstackAuthInputError, 'Insufficient credentials to authenticate')
     end

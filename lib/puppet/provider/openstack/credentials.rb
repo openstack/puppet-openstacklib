@@ -35,7 +35,10 @@ class Puppet::Provider::Openstack::Credentials
     env = {}
     self.instance_variables.each do |var|
       name = var.to_s.sub(/^@/,'OS_').upcase
-      env.merge!(name => self.instance_variable_get(var))
+      value = self.instance_variable_get(var)
+      unless value.nil?
+        env.merge!(name => value)
+      end
     end
     env
   end
@@ -62,7 +65,7 @@ class Puppet::Provider::Openstack::Credentials
     self.instance_variables.each do |var|
       if var.to_s != '@identity_api_version' &&
         self.instance_variable_defined?(var.to_s)
-        set(var.to_s.sub(/^@/,''), '')
+        set(var.to_s.sub(/^@/,''), nil)
       end
     end
   end
