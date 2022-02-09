@@ -14,7 +14,7 @@
 
 - job:
     name: puppet-openstacklib-tripleo-standalone
-    parent: tripleo-puppet-ci-centos-8-standalone
+    parent: tripleo-puppet-ci-centos-9-standalone
     description: |
       TripleO standalone Job running basic tests
     vars:
