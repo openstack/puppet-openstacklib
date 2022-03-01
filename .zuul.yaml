@@ -8,6 +8,7 @@
     check:
       jobs:
         - puppet-openstacklib-tripleo-standalone
+        - puppet-openstacklib-tripleo-centos-9-standalone
     gate:
       jobs:
         - puppet-openstacklib-tripleo-standalone
@@ -17,10 +18,18 @@
     parent: tripleo-puppet-ci-centos-8-standalone
     description: |
       TripleO standalone Job running basic tests
-    vars:
+    vars: &standalone_vars
       build_container_images: true
       featureset_override:
         run_tempest: false
         tempest_test_whitelist:
           - 'tempest.scenario.test_server_basic_ops'
         use_os_tempest: true
+
+- job:
+    name: puppet-openstacklib-tripleo-centos-9-standalone
+    parent: tripleo-puppet-ci-centos-9-standalone
+    voting: false
+    description: |
+      TripleO standalone Job running basic tests
+    vars: *standalone_vars
