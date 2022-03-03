@@ -120,18 +120,18 @@ describe Puppet::Provider::Openstack::Credentials do
         creds.cloud = 'openstack'
         creds.client_config_file = '/etc/openstack/clouds.yaml'
         creds.unset
-        expect(creds.auth_url).to eq('')
-        expect(creds.password).to eq('')
-        expect(creds.project_name).to eq('')
-        expect(creds.domain_name).to eq('')
-        expect(creds.system_scope).to eq('')
-        expect(creds.username).to eq('')
-        expect(creds.token).to eq('')
-        expect(creds.endpoint).to eq('')
-        expect(creds.region_name).to eq('')
+        expect(creds.auth_url).to eq(nil)
+        expect(creds.password).to eq(nil)
+        expect(creds.project_name).to eq(nil)
+        expect(creds.domain_name).to eq(nil)
+        expect(creds.system_scope).to eq(nil)
+        expect(creds.username).to eq(nil)
+        expect(creds.token).to eq(nil)
+        expect(creds.endpoint).to eq(nil)
+        expect(creds.region_name).to eq(nil)
         expect(creds.identity_api_version).to eq('identity_api_version')
-        expect(creds.cloud).to eq('')
-        expect(creds.client_config_file).to eq('')
+        expect(creds.cloud).to eq(nil)
+        expect(creds.client_config_file).to eq(nil)
         newcreds = Puppet::Provider::Openstack::CredentialsV3.new
         expect(newcreds.identity_api_version).to eq('3')
       end

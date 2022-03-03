@@ -85,6 +85,43 @@ describe Puppet::Provider::Openstack::Auth do
     end
   end
 
+  describe '#get_os_vars_from_cloudsfile' do
+    context 'with a clouds.yaml present' do
+      it 'provides a hash' do
+        File.expects(:exists?).with('/etc/openstack/puppet/clouds.yaml').returns(true)
+
+        response = klass.get_os_vars_from_cloudsfile('project')
+        expect(response).to eq({
+          'OS_CLOUD'              => 'project',
+          'OS_CLIENT_CONFIG_FILE' => '/etc/openstack/puppet/clouds.yaml'
+        })
+      end
+    end
+
+    context 'with a admin-clouds.yaml present' do
+      it 'provides a hash' do
+        File.expects(:exists?).with('/etc/openstack/puppet/clouds.yaml').returns(false)
+        File.expects(:exists?).with('/etc/openstack/puppet/admin-clouds.yaml').returns(true)
+
+        response = klass.get_os_vars_from_cloudsfile('project')
+        expect(response).to eq({
+          'OS_CLOUD'              => 'project',
+          'OS_CLIENT_CONFIG_FILE' => '/etc/openstack/puppet/admin-clouds.yaml'
+        })
+      end
+    end
+
+    context 'with a clouds.yaml not present' do
+      it 'provides an empty hash' do
+        File.expects(:exists?).with('/etc/openstack/puppet/clouds.yaml').returns(false)
+        File.expects(:exists?).with('/etc/openstack/puppet/admin-clouds.yaml').returns(false)
+
+        response = klass.get_os_vars_from_cloudsfile('project')
+        expect(response).to eq({})
+      end
+    end
+  end
+
   describe '#get_os_vars_from_rcfile' do
     context 'with a valid RC file' do
       it 'provides a hash' do
@@ -209,6 +246,28 @@ describe Puppet::Provider::Openstack::Auth do
       end
     end
 
+    context 'with clouds.yaml file' do
+      it 'is successful' do
+        # return incomplete creds from env
+        klass.expects(:get_os_vars_from_env)
+             .returns({ 'OS_USERNAME' => 'incompleteusername',
+                        'OS_AUTH_URL' => 'incompleteauthurl' })
+        File.expects(:exists?).with('/etc/openstack/puppet/clouds.yaml').returns(true)
+        klass.expects(:openstack)
+             .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
+             .returns('"ID","Name","Description","Enabled"
+"1cb05cfed7c24279be884ba4f6520262","test","Test tenant",True
+')
+        response = provider.class.request('project', 'list', ['--long'])
+        expect(response.first[:description]).to eq("Test tenant")
+        expect(klass.instance_variable_get(:@credentials).to_env).to eq({
+          'OS_IDENTITY_API_VERSION' => '3',
+          'OS_CLOUD'                => 'project',
+          'OS_CLIENT_CONFIG_FILE'   => '/etc/openstack/puppet/clouds.yaml',
+        })
+      end
+    end
+
     context 'with a RC file containing user credentials' do
       it 'is successful' do
         # return incomplete creds from env
@@ -216,6 +275,8 @@ describe Puppet::Provider::Openstack::Auth do
              .returns({ 'OS_USERNAME' => 'incompleteusername',
                         'OS_AUTH_URL' => 'incompleteauthurl' })
         mock = "export OS_USERNAME='test'\nexport OS_PASSWORD='abc123'\nexport OS_PROJECT_NAME='test'\nexport OS_AUTH_URL='http://127.0.0.1:5000'\nexport OS_NOT_VALID='notvalid'"
+        File.expects(:exists?).with("/etc/openstack/puppet/clouds.yaml").returns(false)
+        File.expects(:exists?).with("/etc/openstack/puppet/admin-clouds.yaml").returns(false)
         File.expects(:exists?).with("#{ENV['HOME']}/openrc").returns(true)
         File.expects(:open).with("#{ENV['HOME']}/openrc").returns(StringIO.new(mock))
         klass.expects(:openstack)
@@ -241,6 +302,8 @@ describe Puppet::Provider::Openstack::Auth do
         klass.expects(:get_os_vars_from_env)
              .returns({ 'OS_TOKEN' => 'incomplete' })
         mock = "export OS_TOKEN='test'\nexport OS_ENDPOINT='abc123'\nexport OS_NOT_VALID='notvalid'\n"
+        File.expects(:exists?).with("/etc/openstack/puppet/clouds.yaml").returns(false)
+        File.expects(:exists?).with("/etc/openstack/puppet/admin-clouds.yaml").returns(false)
         File.expects(:exists?).with("#{ENV['HOME']}/openrc").returns(true)
         File.expects(:open).with("#{ENV['HOME']}/openrc").returns(StringIO.new(mock))
         klass.expects(:openstack)
