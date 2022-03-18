@@ -83,9 +83,15 @@ define openstacklib::policy::base (
         ~> Augeas<| title == "${file_path}-${key}-${value}" |>
     }
     'yaml': {
+      # NOTE(tkajianm): Currently we use single quotes('') to quote the whole
+      #                 value, thus a single quote in value should be escaped
+      #                 by another single quote (which results in '')
+      # NOTE(tkajinam): Replace '' by ' first in case ' is already escaped
+      $value_real = regsubst(regsubst($value, '\'\'', '\'', 'G'), '\'', '\'\'', 'G')
+
       file_line { "${file_path}-${key}" :
         path  => $file_path,
-        line  => "'${key}': '${value}'",
+        line  => "'${key}': '${value_real}'",
         match => "^['\"]?${key}['\"]?\\s*:.+"
       }
       Openstacklib::Policy::Default<| title == $file_path |>
