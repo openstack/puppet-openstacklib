@@ -91,9 +91,16 @@ define openstacklib::policy::base (
         replace => false, # augeas will manage the content, we just need to make sure it exists
         content => ''
       })
+
+      # NOTE(tkajianm): Currently we use single quotes('') to quote the whole
+      #                 value, thus a single quote in value should be escaped
+      #                 by another single quote (which results in '')
+      # NOTE(tkajinam): Replace '' by ' first in case ' is already escaped
+      $value_real = regsubst(regsubst($value, '\'\'', '\'', 'G'), '\'', '\'\'', 'G')
+
       file_line { "${file_path}-${key}" :
         path  => $file_path,
-        line  => "'${key}': '${value}'",
+        line  => "'${key}': '${value_real}'",
         match => "^['\"]?${key}['\"]?\\s*:.+"
       }
       File<| title == $file_path |>
