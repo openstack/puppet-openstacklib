@@ -74,6 +74,34 @@ describe 'openstacklib::policy::base' do
         :line  => '\'context_is_admin or owner\': \'foo:bar\'',
         :match => '^[\'"]?context_is_admin or owner[\'"]?\s*:.+'
       ) }
+
+      context 'with single-quotes in value' do
+        before do
+          params.merge!({
+            :value => 'foo:\'bar\''
+          })
+        end
+
+        it { should contain_file_line('/etc/nova/policy.yaml-context_is_admin or owner').with(
+          :path  => '/etc/nova/policy.yaml',
+          :line  => '\'context_is_admin or owner\': \'foo:\'\'bar\'\'\'',
+          :match => '^[\'"]?context_is_admin or owner[\'"]?\s*:.+'
+        ) }
+      end
+
+      context 'with pre-formatted single-quotes in value' do
+        before do
+          params.merge!({
+            :value => 'foo:\'\'bar\'\''
+          })
+        end
+
+        it { should contain_file_line('/etc/nova/policy.yaml-context_is_admin or owner').with(
+          :path  => '/etc/nova/policy.yaml',
+          :line  => '\'context_is_admin or owner\': \'foo:\'\'bar\'\'\'',
+          :match => '^[\'"]?context_is_admin or owner[\'"]?\s*:.+'
+        ) }
+      end
     end
 
     context 'with purge_config enabled' do
