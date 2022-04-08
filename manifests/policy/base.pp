@@ -92,7 +92,7 @@ define openstacklib::policy::base (
       file_line { "${file_path}-${key}" :
         path  => $file_path,
         line  => "'${key}': '${value_real}'",
-        match => "^['\"]?${key}['\"]?\\s*:.+"
+        match => "^['\"]?${key}(?!:)['\"]?\\s*:.+"
       }
       Openstacklib::Policy::Default<| title == $file_path |>
       -> File_line<| title == "${file_path}-${key}" |>
