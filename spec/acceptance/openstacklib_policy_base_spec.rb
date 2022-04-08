@@ -18,6 +18,18 @@ describe 'policy file management' do
         value       => 'role:member',
         file_format => 'yaml',
       }
+      openstacklib::policy::base { 'get_router':
+        file_path   => '/tmp/policy.yaml',
+        key         => 'get_router',
+        value       => 'rule:admin_or_owner',
+        file_format => 'yaml',
+      }
+      openstacklib::policy::base { 'get_router:distributed':
+        file_path   => '/tmp/policy.yaml',
+        key         => 'get_router:distributed',
+        value       => 'rule:admin_only',
+        file_format => 'yaml',
+      }
 
       EOS
 
@@ -30,6 +42,8 @@ describe 'policy file management' do
       it { should exist }
       it { should contain("'is_admin': 'role:admin'") }
       it { should contain("'is_member': 'role:member'") }
+      it { should contain("'get_router': 'rule:admin_or_owner'") }
+      it { should contain("'get_router:distributed': 'rule:admin_only'") }
     end
   end
 
