@@ -68,7 +68,7 @@ describe 'openstacklib::policy::base' do
       it { should contain_file_line('/etc/nova/policy.yaml-context_is_admin or owner').with(
         :path  => '/etc/nova/policy.yaml',
         :line  => '\'context_is_admin or owner\': \'foo:bar\'',
-        :match => '^[\'"]?context_is_admin or owner[\'"]?\s*:.+'
+        :match => '^[\'"]?context_is_admin or owner(?!:)[\'"]?\s*:.+'
       ) }
 
       context 'with single-quotes in value' do
@@ -81,7 +81,7 @@ describe 'openstacklib::policy::base' do
         it { should contain_file_line('/etc/nova/policy.yaml-context_is_admin or owner').with(
           :path  => '/etc/nova/policy.yaml',
           :line  => '\'context_is_admin or owner\': \'foo:\'\'bar\'\'\'',
-          :match => '^[\'"]?context_is_admin or owner[\'"]?\s*:.+'
+          :match => '^[\'"]?context_is_admin or owner(?!:)[\'"]?\s*:.+'
         ) }
       end
 
@@ -95,7 +95,7 @@ describe 'openstacklib::policy::base' do
         it { should contain_file_line('/etc/nova/policy.yaml-context_is_admin or owner').with(
           :path  => '/etc/nova/policy.yaml',
           :line  => '\'context_is_admin or owner\': \'foo:\'\'bar\'\'\'',
-          :match => '^[\'"]?context_is_admin or owner[\'"]?\s*:.+'
+          :match => '^[\'"]?context_is_admin or owner(?!:)[\'"]?\s*:.+'
         ) }
       end
     end
