@@ -100,6 +100,7 @@ describe 'openstacklib::wsgi::apache' do
         :error_log_file              => nil,
         :error_log_pipe              => nil,
         :error_log_syslog            => nil,
+        :log_level                   => nil,
         :options                     => ['-Indexes', '+FollowSymLinks','+MultiViews'],
       )}
 
@@ -114,11 +115,11 @@ describe 'openstacklib::wsgi::apache' do
           :wsgi_script_source         => '/usr/share/keystone/keystone.wsgi',
           :wsgi_pass_authorization    => 'On',
           :wsgi_chunked_request       => 'On',
-          :custom_wsgi_script_aliases => { '/admin' => '/var/www/cgi-bin/keystone/admin' },
+          :custom_wsgi_script_aliases => { '/admin'                             => '/var/www/cgi-bin/keystone/admin' },
           :headers                    => 'set X-Frame-Options "DENY"',
           :request_headers            => 'set Content-Type "application/json"',
           :aliases                    => [
-            { 'alias' => '/robots.txt', 'path' => '/etc/keystone/robots.txt', },
+            { 'alias'                 => '/robots.txt', 'path'                  => '/etc/keystone/robots.txt', },
           ],
           :servername                 => 'dummy.host',
           :bind_host                  => '10.42.51.1',
@@ -134,7 +135,8 @@ describe 'openstacklib::wsgi::apache' do
           :access_log_syslog          => 'syslog:local0',
           :access_log_format          => 'some format',
           :error_log_file             => '/var/log/httpd/error_log',
-          :error_log_syslog           => 'syslog:local0'
+          :error_log_syslog           => 'syslog:local0',
+          :log_level                  => 'reqtimeout:info',
         }
       end
 
@@ -172,7 +174,8 @@ describe 'openstacklib::wsgi::apache' do
         :access_log_syslog           => 'syslog:local0',
         :access_log_format           => 'some format',
         :error_log_file              => '/var/log/httpd/error_log',
-        :error_log_syslog            => 'syslog:local0'
+        :error_log_syslog            => 'syslog:local0',
+        :log_level                   => 'reqtimeout:info',
       )}
     end
 

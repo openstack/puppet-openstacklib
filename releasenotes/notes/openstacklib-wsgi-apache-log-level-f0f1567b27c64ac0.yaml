@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Add `log_level` parameter to control `LogLevel` for Apache vhost.
+    By default, Apache only logs warnings and errors in its errors logfile,
+    while request timeouts are logged by `mod_reqtimeout` at LogLevel info.
+    Default `log_level` value is not defined, which corresponds to
+    the default Apache `LogLevel warn`.

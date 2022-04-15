@@ -232,6 +232,10 @@
 #   (Optional) Sends the virtualhost error log messages to syslog.
 #   Defaults to undef
 #
+# [*log_level*]
+#   (Optional) Specifies LogLevel for Apache WSGI.
+#   Defaults to undef
+#
 define openstacklib::wsgi::apache (
   $service_name                = $name,
   $servername                  = $::fqdn,
@@ -279,6 +283,7 @@ define openstacklib::wsgi::apache (
   $error_log_file              = undef,
   $error_log_pipe              = undef,
   $error_log_syslog            = undef,
+  $log_level                   = undef,
 ) {
 
   include apache
@@ -389,6 +394,7 @@ define openstacklib::wsgi::apache (
     error_log_file             => $error_log_file,
     error_log_pipe             => $error_log_pipe,
     error_log_syslog           => $error_log_syslog,
+    log_level                  => $log_level,
     options                    => ['-Indexes', '+FollowSymLinks','+MultiViews'],
   }
 
