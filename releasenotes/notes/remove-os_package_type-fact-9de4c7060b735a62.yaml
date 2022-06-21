@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    The ``os_package_type`` fact has been removed.
