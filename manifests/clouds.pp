@@ -66,10 +66,11 @@ define openstacklib::clouds(
   }
 
   file { $path:
-    ensure  => 'present',
-    mode    => '0600',
-    owner   => 'root',
-    group   => 'root',
-    content => template('openstacklib/clouds.yaml.erb'),
+    ensure    => 'present',
+    mode      => '0600',
+    owner     => 'root',
+    group     => 'root',
+    content   => template('openstacklib/clouds.yaml.erb'),
+    show_diff => false,
   }
 }
