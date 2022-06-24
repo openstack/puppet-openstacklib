@@ -10,7 +10,13 @@ describe 'openstacklib mysql' do
 
       class { 'mysql::server': }
 
-      ::openstacklib::db::mysql { 'ci':
+      $charset = $::operatingsystem ? {
+        'Ubuntu' => 'utf8mb3',
+        default  => 'utf8',
+      }
+
+      openstacklib::db::mysql { 'ci':
+        charset       => $charset,
         password_hash => mysql::password('keystone'),
         allowed_hosts => '127.0.0.1',
       }
