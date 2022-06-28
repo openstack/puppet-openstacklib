@@ -37,7 +37,7 @@ then
   exit 101
 fi
 
-
+exit 0
 eof
       }
 
@@ -65,7 +65,7 @@ then
   exit 101
 fi
 
-
+exit 0
 eof
       }
 
