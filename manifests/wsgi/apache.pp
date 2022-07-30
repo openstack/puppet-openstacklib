@@ -49,7 +49,7 @@
 #
 # [*priority*]
 #   (Optional) The priority for the vhost.
-#   Defaults to '10'
+#   Defaults to 10
 #
 # [*setenv*]
 #   (Optional) Set environment variables for the vhost.
@@ -203,20 +203,20 @@
 # [*access_log_file*]
 #   (Optional) The log file name for the virtualhost.
 #   access_log_file and access_log_pipe is mutually exclusive.
-#   Defaults to false
+#   Defaults to undef
 #
 # [*access_log_pipe*]
 #   (Optional) Specifies a pipe where Apache sends access logs for the virtualhost.
 #   access_log_file and access_log_pipe is mutually exclusive.
-#   Defaults to false
+#   Defaults to undef
 #
 # [*access_log_syslog*]
 #   (Optional) Sends the virtualhost access log messages to syslog.
-#   Defaults to false
+#   Defaults to undef
 #
 # [*access_log_format*]
 #   (Optional) The log format for the virtualhost.
-#   Defaults to false
+#   Defaults to undef
 #
 # [*error_log_file*]
 #   (Optional) The error log file name for the virtualhost.
@@ -243,7 +243,7 @@ define openstacklib::wsgi::apache (
   $bind_port                   = undef,
   $group                       = undef,
   $path                        = '/',
-  $priority                    = '10',
+  $priority                    = 10,
   $setenv                      = [],
   $ssl                         = false,
   $ssl_ca                      = undef,
@@ -276,10 +276,10 @@ define openstacklib::wsgi::apache (
   $custom_wsgi_script_aliases  = undef,
   $vhost_custom_fragment       = undef,
   $allow_encoded_slashes       = undef,
-  $access_log_file             = false,
-  $access_log_pipe             = false,
-  $access_log_syslog           = false,
-  $access_log_format           = false,
+  $access_log_file             = undef,
+  $access_log_pipe             = undef,
+  $access_log_syslog           = undef,
+  $access_log_format           = undef,
   $error_log_file              = undef,
   $error_log_pipe              = undef,
   $error_log_syslog            = undef,
