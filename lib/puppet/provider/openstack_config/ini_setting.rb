@@ -20,7 +20,10 @@ Puppet::Type.type(:openstack_config).provide(
   end
 
   def create
-    resource[:value] = transform(:to, resource[:value])
+    new_value = transform(:to, resource[:value])
+    if resource[:value] != new_value
+      resource[:value] = new_value
+    end
     super
   end
 
