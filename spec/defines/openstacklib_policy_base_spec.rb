@@ -27,13 +27,13 @@ describe 'openstacklib::policy::base' do
         :purge_config => false,
       )}
 
-      it { should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar').with(
+      it { should contain_augeas('/etc/nova/policy.json-context_is_admin or owner').with(
         :lens    => 'Json.lns',
         :incl    => '/etc/nova/policy.json',
         :changes => 'set dict/entry[*][.="context_is_admin or owner"]/string "foo:bar"',
       )}
 
-      it { should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-foo:bar-add').with(
+      it { should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-add').with(
         :lens    => 'Json.lns',
         :incl    => '/etc/nova/policy.json',
         :changes => [
