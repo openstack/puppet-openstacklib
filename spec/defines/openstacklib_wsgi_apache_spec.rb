@@ -38,8 +38,6 @@ describe 'openstacklib::wsgi::apache' do
       :wsgi_script_dir    => '/var/www/cgi-bin/keystone',
       :wsgi_script_file   => 'main',
       :wsgi_script_source => '/usr/share/keystone/keystone.wsgi',
-      :access_log_file    => false,
-      :access_log_format  => false,
     }
   end
 
@@ -93,6 +91,9 @@ describe 'openstacklib::wsgi::apache' do
         :request_headers             => nil,
         :aliases                     => nil,
         :setenvif                    => ['X-Forwarded-Proto https HTTPS=1'],
+        # TODO(tkajinam): Replace false by undef once the new puppetlabs-apache
+        #                 is released.
+        # https://github.com/puppetlabs/puppetlabs-apache/commit/f41251e3
         :access_log_file             => false,
         :access_log_pipe             => false,
         :access_log_syslog           => false,
@@ -115,11 +116,13 @@ describe 'openstacklib::wsgi::apache' do
           :wsgi_script_source         => '/usr/share/keystone/keystone.wsgi',
           :wsgi_pass_authorization    => 'On',
           :wsgi_chunked_request       => 'On',
-          :custom_wsgi_script_aliases => { '/admin'                             => '/var/www/cgi-bin/keystone/admin' },
+          :custom_wsgi_script_aliases => {
+            '/admin' => '/var/www/cgi-bin/keystone/admin'
+          },
           :headers                    => 'set X-Frame-Options "DENY"',
           :request_headers            => 'set Content-Type "application/json"',
           :aliases                    => [
-            { 'alias'                 => '/robots.txt', 'path'                  => '/etc/keystone/robots.txt', },
+            { 'alias' => '/robots.txt', 'path'  => '/etc/keystone/robots.txt', }
           ],
           :servername                 => 'dummy.host',
           :bind_host                  => '10.42.51.1',
