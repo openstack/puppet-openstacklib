@@ -74,7 +74,7 @@ describe 'openstacklib::wsgi::apache' do
         :docroot_owner               => 'keystone',
         :docroot_group               => 'keystone',
         :setenv                      => [],
-        :ssl                         => 'true',
+        :ssl                         => true,
         :ssl_verify_client           => 'optional',
         :wsgi_daemon_process         => {
           'keystone_wsgi' => {
@@ -87,21 +87,7 @@ describe 'openstacklib::wsgi::apache' do
         :wsgi_process_group          => 'keystone_wsgi',
         :wsgi_script_aliases         => { '/' => "/var/www/cgi-bin/keystone/main" },
         :wsgi_application_group      => '%{GLOBAL}',
-        :headers                     => nil,
-        :request_headers             => nil,
-        :aliases                     => nil,
         :setenvif                    => ['X-Forwarded-Proto https HTTPS=1'],
-        # TODO(tkajinam): Replace false by undef once the new puppetlabs-apache
-        #                 is released.
-        # https://github.com/puppetlabs/puppetlabs-apache/commit/f41251e3
-        :access_log_file             => false,
-        :access_log_pipe             => false,
-        :access_log_syslog           => false,
-        :access_log_format           => false,
-        :error_log_file              => nil,
-        :error_log_pipe              => nil,
-        :error_log_syslog            => nil,
-        :log_level                   => nil,
         :options                     => ['-Indexes', '+FollowSymLinks','+MultiViews'],
       )}
 
