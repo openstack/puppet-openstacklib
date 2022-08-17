@@ -17,6 +17,7 @@ describe 'openstacklib mysql' do
 
       openstacklib::db::mysql { 'ci':
         charset       => $charset,
+        collate       => "${charset}_general_ci",
         password_hash => mysql::password('keystone'),
         allowed_hosts => '127.0.0.1',
       }
