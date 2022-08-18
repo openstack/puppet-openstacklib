@@ -287,10 +287,6 @@ define openstacklib::wsgi::apache (
 ) {
 
   include apache
-  include apache::mod::wsgi
-  if $ssl {
-    include apache::mod::ssl
-  }
 
   # Ensure there's no trailing '/' except if this is also the only character
   $path_real = regsubst($path, '(^/.*)/$', '\1')

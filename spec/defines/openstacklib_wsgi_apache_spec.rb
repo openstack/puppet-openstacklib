@@ -45,7 +45,6 @@ describe 'openstacklib::wsgi::apache' do
     it {
       should contain_service('httpd').with_name(platform_params[:httpd_service_name])
       should contain_class('apache')
-      should contain_class('apache::mod::wsgi')
     }
 
     context 'with default parameters' do
