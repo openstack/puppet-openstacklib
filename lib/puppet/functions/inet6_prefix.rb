@@ -20,7 +20,7 @@ Puppet::Functions.create_function(:inet6_prefix) do
             ip = "inet6:[#{ip_parts.shift}]#{ip_parts.join}"
           end
         end
-      rescue IPAddr::AddressFamilyError, IPAddr::Error, IPAddr::InvalidAddressError, IPAddr::InvalidPrefixError, ArgumentError, NoMethodError => e
+      rescue ArgumentError, NoMethodError => e
         # ignore it
       end
       result << ip
