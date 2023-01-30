@@ -18,13 +18,13 @@ describe Puppet::Provider::Openstack do
   end
 
   let(:credentials) do
-    credentials = mock('credentials')
-    credentials.stubs(:to_env).returns({
-                                           'OS_USERNAME' => 'user',
-                                           'OS_PASSWORD' => 'password',
-                                           'OS_PROJECT_NAME' => 'project',
-                                           'OS_AUTH_URL' => 'http://url',
-                                       })
+    credentials = double('credentials')
+    allow(credentials).to receive(:to_env).and_return({
+      'OS_USERNAME' => 'user',
+      'OS_PASSWORD' => 'password',
+      'OS_PROJECT_NAME' => 'project',
+      'OS_AUTH_URL' => 'http://url',
+    })
     credentials
   end
 
@@ -56,31 +56,31 @@ name="test"
     end
 
     it 'makes a successful list request' do
-      provider.class.expects(:openstack)
+      expect(provider.class).to receive(:openstack)
           .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
-          .returns list_data
+          .and_return list_data
       response = Puppet::Provider::Openstack.request('project', 'list', ['--long'])
       expect(response.first[:description]).to eq 'Test tenant'
     end
 
     it 'makes a successful show request' do
-      provider.class.expects(:openstack)
+      expect(provider.class).to receive(:openstack)
           .with('project', 'show', '--format', 'shell', ['1cb05cfed7c24279be884ba4f6520262'])
-          .returns show_data
+          .and_return show_data
       response = Puppet::Provider::Openstack.request('project', 'show', ['1cb05cfed7c24279be884ba4f6520262'])
       expect(response[:description]).to eq 'Test tenant'
     end
 
     it 'makes a successful set request' do
-      provider.class.expects(:openstack)
+      expect(provider.class).to receive(:openstack)
           .with('project', 'set', ['--name', 'new name', '1cb05cfed7c24279be884ba4f6520262'])
-          .returns ''
+          .and_return ''
       response = Puppet::Provider::Openstack.request('project', 'set', ['--name', 'new name', '1cb05cfed7c24279be884ba4f6520262'])
       expect(response).to eq ''
     end
 
     it 'uses provided credentials' do
-      Puppet::Util.expects(:withenv).with(credentials.to_env)
+      expect(Puppet::Util).to receive(:withenv).with(credentials.to_env)
       Puppet::Provider::Openstack.request('project', 'list', ['--long'], credentials)
     end
 
@@ -96,8 +96,8 @@ name="test"
     end
 
     it 'redacts password in execution output on exception' do
-      provider.class.stubs(:execute)
-          .raises(Puppet::ExecutionFailure, "Execution of '/usr/bin/openstack user create --format shell hello --password world --enable --email foo@example.com --domain Default' returned 1: command failed")
+      allow(provider.class).to receive(:execute)
+          .and_raise(Puppet::ExecutionFailure, "Execution of '/usr/bin/openstack user create --format shell hello --password world --enable --email foo@example.com --domain Default' returned 1: command failed")
       expect do
         Puppet::Provider::Openstack.request('user', 'create', ['hello', '--password', 'world', '--enable', '--email', 'foo@example.com', '--domain', 'Default'])
       end.to raise_error Puppet::ExecutionFailure, "Execution of '/usr/bin/openstack user create --format shell hello --password [redacted secret] --enable --email foo@example.com --domain Default' returned 1: command failed"
@@ -105,48 +105,48 @@ name="test"
 
     context 'on connection errors' do
       it 'retries the failed command' do
-        provider.class.stubs(:openstack)
+        allow(provider.class).to receive(:openstack)
             .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
-            .raises(Puppet::ExecutionFailure, 'Unable to establish connection')
-            .then
-            .returns list_data
-        provider.class.expects(:sleep).with(3).returns(nil)
+            .and_invoke(
+              lambda { |*args| raise Puppet::ExecutionFailure, 'Unable to establish connection' },
+              lambda { |*args| return list_data }
+            )
+        expect(provider.class).to receive(:sleep).with(3).and_return(nil)
         response = Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         expect(response.first[:description]).to eq 'Test tenant'
       end
 
       it 'fails after the timeout and redacts' do
-        provider.class.expects(:execute)
-            .raises(Puppet::ExecutionFailure, "Execution of 'openstack user create foo --password secret' returned 1: command failed")
-            .times(3)
-        provider.class.stubs(:sleep)
-        provider.class.stubs(:current_time)
-            .returns(0, 10, 10, 20, 20, 200, 200)
+        expect(provider.class).to receive(:execute)
+            .and_raise(Puppet::ExecutionFailure, "Execution of 'openstack user create foo --password secret' returned 1: command failed")
+            .exactly(3).times
+        allow(provider.class).to receive(:sleep)
+        allow(provider.class).to receive(:current_time)
+            .and_return(0, 10, 10, 20, 20, 200, 200)
         expect do
           Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         end.to raise_error Puppet::ExecutionFailure, /Execution of \'openstack user create foo --password \[redacted secret\]\' returned 1/
       end
 
       it 'fails after the timeout' do
-        provider.class.expects(:openstack)
+        expect(provider.class).to receive(:openstack)
             .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
-            .raises(Puppet::ExecutionFailure, 'Unable to establish connection')
-            .times(3)
-        provider.class.stubs(:sleep)
-        provider.class.stubs(:current_time)
-            .returns(0, 10, 10, 20, 20, 200, 200)
+            .and_raise(Puppet::ExecutionFailure, 'Unable to establish connection')
+            .exactly(3).times
+        allow(provider.class).to receive(:sleep)
+        allow(provider.class).to receive(:current_time)
+            .and_return(0, 10, 10, 20, 20, 200, 200)
         expect do
           Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         end.to raise_error Puppet::ExecutionFailure, /Unable to establish connection/
       end
 
       it 'does not retry non-idempotent commands' do
-        provider.class.expects(:openstack)
+        expect(provider.class).to receive(:openstack)
             .with('project', 'create', '--format', 'shell', ['--quiet'])
-            .raises(Puppet::ExecutionFailure, 'Unable to establish connection')
-            .then
-            .returns list_data
-        provider.class.expects(:sleep).never
+            .and_raise(Puppet::ExecutionFailure, 'Unable to establish connection')
+            .exactly(1).times
+        expect(provider.class).to receive(:sleep).never
         expect do
           Puppet::Provider::Openstack.request('project', 'create', ['--quiet'])
         end.to raise_error Puppet::ExecutionFailure, /Unable to establish connection/
@@ -160,18 +160,18 @@ name="test"
         ENV['OS_PASSWORD']     = 'abc123'
         ENV['OS_PROJECT_NAME'] = 'test'
         ENV['OS_AUTH_URL']     = 'http://127.0.0.1:5000'
-        provider.class.stubs(:openstack)
+        allow(provider.class).to receive(:openstack)
                       .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
-                      .raises(Puppet::ExecutionFailure, 'Could not find user: test (HTTP 401)')
+                      .and_raise(Puppet::ExecutionFailure, 'Could not find user: test (HTTP 401)')
         expect do
           Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         end.to raise_error(Puppet::Error::OpenstackUnauthorizedError, /Could not authenticate/)
       end
 
       it 'should raise an error with not authorized to perform' do
-        provider.class.stubs(:openstack)
+        allow(provider.class).to receive(:openstack)
                       .with('role', 'list', '--quiet', '--format', 'csv', ['--long'])
-                      .raises(Puppet::ExecutionFailure, 'You are not authorized to perform the requested action: identity:list_grants (HTTP 403)')
+                      .and_raise(Puppet::ExecutionFailure, 'You are not authorized to perform the requested action: identity:list_grants (HTTP 403)')
         expect do
           Puppet::Provider::Openstack.request('role', 'list', ['--long'])
         end.to raise_error(Puppet::Error::OpenstackUnauthorizedError, /Could not authenticate/)

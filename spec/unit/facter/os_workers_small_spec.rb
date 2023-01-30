@@ -6,7 +6,7 @@ describe 'os_workers_small' do
 
   context 'with processorcount=1' do
     before do
-      Facter.fact(:processors).stubs(:value).returns({'count' => 1})
+      allow(Facter.fact(:processors)).to receive(:value).and_return({'count' => 1})
     end
 
     it 'returns a minimum of 2' do
@@ -16,7 +16,7 @@ describe 'os_workers_small' do
 
   context 'with processorcount=16' do
     before do
-      Facter.fact(:processors).stubs(:value).returns({'count' => 16})
+      allow(Facter.fact(:processors)).to receive(:value).and_return({'count' => 16})
     end
 
     it 'returns processorcount/4' do
@@ -26,7 +26,7 @@ describe 'os_workers_small' do
 
   context 'with processorcount=32' do
     before do
-      Facter.fact(:processors).stubs(:value).returns({'count' => 32})
+      allow(Facter.fact(:processors)).to receive(:value).and_return({'count' => 32})
     end
 
     it 'returns a maximum of 8' do

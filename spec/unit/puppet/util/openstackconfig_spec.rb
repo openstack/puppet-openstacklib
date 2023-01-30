@@ -15,7 +15,7 @@ describe Puppet::Util::OpenStackConfig do
   end
 
   before :each do
-    Puppet::Util::OpenStackConfig.stubs(:readlines).returns(sample_content)
+    allow(Puppet::Util::OpenStackConfig).to receive(:readlines).and_return(sample_content)
   end
 
   context "when parsing a file" do
