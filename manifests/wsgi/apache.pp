@@ -29,7 +29,7 @@
 #
 # [*servername*]
 #   (Optional) The servername for the virtualhost
-#   Defaults to $::fqdn
+#   Defaults to $facts['networking']['fqdn']
 #
 # [*bind_host*]
 #   (Optional) The host/ip address Apache will listen on.
@@ -102,7 +102,7 @@
 #
 # [*workers*]
 #   (Optional) The number of workers for the vhost.
-#   Defaults to $::os_workers
+#   Defaults to $facts['os_workers']
 #
 # [*wsgi_daemon_process*]
 #   (Optional) Name of the WSGI daemon process.
@@ -238,7 +238,7 @@
 #
 define openstacklib::wsgi::apache (
   $service_name                = $name,
-  $servername                  = $::fqdn,
+  $servername                  = $facts['networking']['fqdn'],
   $bind_host                   = undef,
   $bind_port                   = undef,
   $group                       = undef,
@@ -256,7 +256,7 @@ define openstacklib::wsgi::apache (
   $ssl_verify_client           = undef,
   $threads                     = 1,
   $user                        = undef,
-  $workers                     = $::os_workers,
+  $workers                     = $facts['os_workers'],
   $wsgi_daemon_process         = $name,
   $wsgi_process_display_name   = $name,
   $wsgi_process_group          = $name,

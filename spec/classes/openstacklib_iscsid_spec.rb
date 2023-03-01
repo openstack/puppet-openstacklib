@@ -32,7 +32,7 @@ describe 'openstacklib::iscsid' do
       end
 
       let(:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           { :open_iscsi_package_name => 'open-iscsi' }
         when 'RedHat'

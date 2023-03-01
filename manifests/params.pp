@@ -9,7 +9,7 @@ class openstacklib::params {
 
   $openstackclient_package_name = 'python3-openstackclient'
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       $open_iscsi_package_name = 'iscsi-initiator-utils'
     }
@@ -17,8 +17,7 @@ class openstacklib::params {
       $open_iscsi_package_name = 'open-iscsi'
     }
     default:{
-      fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, \
-module ${module_name} only support osfamily RedHat and Debian")
+      fail("Unsupported osfamily: ${facts['os']['family']}")
     }
   }
 }

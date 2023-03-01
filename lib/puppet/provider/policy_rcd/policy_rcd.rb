@@ -5,7 +5,7 @@ Puppet::Type.type(:policy_rcd).provide(:policy_rcd) do
   mk_resource_methods
 
   def check_os
-    Facter.value(:osfamily) == 'Debian'
+    Facter.value(:os)['family'] == 'Debian'
   end
 
   def check_policy_rcd

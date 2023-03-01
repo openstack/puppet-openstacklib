@@ -93,7 +93,7 @@ eof
         facts.merge!(OSDefaults.get_facts())
       end
 
-      it_behaves_like "openstacklib::policyrcd on #{facts[:osfamily]} platforms"
+      it_behaves_like "openstacklib::policyrcd on #{facts[:os]['family']} platforms"
     end
   end
 end

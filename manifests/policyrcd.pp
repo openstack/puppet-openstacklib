@@ -27,7 +27,7 @@ class openstacklib::policyrcd(
 
   validate_legacy(Array, 'validate_array', $services)
 
-  if $::osfamily == 'Debian' {
+  if $facts['os']['family'] == 'Debian' {
     # We put this out there so openstack services wont auto start
     # when installed.
     file { '/usr/sbin/policy-rc.d':

@@ -5,7 +5,7 @@
 # This file is loaded in the params.pp of each class.
 #
 class openstacklib::defaults {
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       $pyver3 = '3.9'
     }
@@ -13,7 +13,7 @@ class openstacklib::defaults {
       $pyver3 = '3'
     }
     default:{
-      fail("Unsupported osfamily: ${::osfamily}")
+      fail("Unsupported osfamily: ${facts['os']['family']}")
     }
   }
 }

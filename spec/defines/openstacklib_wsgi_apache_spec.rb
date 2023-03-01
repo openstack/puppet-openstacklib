@@ -20,14 +20,6 @@ require 'spec_helper'
 describe 'openstacklib::wsgi::apache' do
   let (:title) { 'keystone_wsgi' }
 
-  let :global_facts do
-    {
-      :os_workers     => 8,
-      :concat_basedir => '/var/lib/puppet/concat',
-      :fqdn           => 'some.host.tld'
-    }
-  end
-
   let :params do
     {
       :bind_port          => 5000,
@@ -66,7 +58,7 @@ describe 'openstacklib::wsgi::apache' do
       )}
 
       it { should contain_apache__vhost('keystone_wsgi').with(
-        :servername                  => 'some.host.tld',
+        :servername                  => 'foo.example.com',
         :ip                          => nil,
         :port                        => '5000',
         :docroot                     => '/var/www/cgi-bin/keystone',
@@ -79,7 +71,7 @@ describe 'openstacklib::wsgi::apache' do
           'keystone_wsgi' => {
             'user'         => 'keystone',
             'group'        => 'keystone',
-            'processes'    => global_facts[:os_workers],
+            'processes'    => facts[:os_workers],
             'threads'      => 1,
             'display-name' => 'keystone_wsgi',
           }},
@@ -190,7 +182,7 @@ describe 'openstacklib::wsgi::apache' do
           'keystone_wsgi' => {
             'user'         => 'someotheruser',
             'group'        => 'someothergroup',
-            'processes'    => global_facts[:os_workers],
+            'processes'    => facts[:os_workers],
             'threads'      => 1,
             'display-name' => 'keystone_wsgi',
             'python_path'  => '/my/python/admin/path',
@@ -259,11 +251,13 @@ describe 'openstacklib::wsgi::apache' do
   }).each do |os,facts|
     context "on #{os}" do
       let (:facts) do
-        facts.merge!(OSDefaults.get_facts(global_facts))
+        facts.merge!(OSDefaults.get_facts({
+          :os_workers => 8,
+        }))
       end
 
       let(:platform_params) do
-        case facts[:osfamily]
+        case facts[:os]['family']
         when 'Debian'
           {
             :httpd_service_name => 'apache2',
