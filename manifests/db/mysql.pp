@@ -80,6 +80,9 @@ define openstacklib::db::mysql (
   include mysql::server
   include mysql::client
 
+  validate_legacy(Boolean, 'validate_bool', $create_user)
+  validate_legacy(Boolean, 'validate_bool', $create_grant)
+
   if $password_hash != undef {
     warning('The password_hash parameter was deprecated and will be removed
 in a future release. Use password instead')

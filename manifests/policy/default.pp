@@ -38,6 +38,7 @@ define openstacklib::policy::default (
   $file_format  = 'json',
   $purge_config = false,
 ) {
+  validate_legacy(Boolean, 'validate_bool', $purge_config)
 
   case $file_format {
     'json': {

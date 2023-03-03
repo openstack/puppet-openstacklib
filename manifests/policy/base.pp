@@ -47,6 +47,8 @@ define openstacklib::policy::base (
   $purge_config = false,
 ) {
 
+  validate_legacy(Boolean, 'validate_bool', $purge_config)
+
   ensure_resource('openstacklib::policy::default', $file_path, {
     file_path    => $file_path,
     file_mode    => $file_mode,

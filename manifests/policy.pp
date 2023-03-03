@@ -44,6 +44,7 @@ define openstacklib::policy (
 ) {
   validate_legacy(Hash, 'validate_hash', $policies)
   validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $policy_path)
+  validate_legacy(Boolean, 'validate_bool', $purge_config)
 
   if empty($policies) {
     create_resources('openstacklib::policy::default', { $policy_path => {

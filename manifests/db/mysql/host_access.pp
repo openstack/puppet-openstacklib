@@ -48,6 +48,8 @@ define openstacklib::db::mysql::host_access (
 
   validate_legacy(Pattern[/_/], 'validate_re', $title,
     ['_', 'Title must be $dbname_$host'])
+  validate_legacy(Boolean, 'validate_bool', $create_user)
+  validate_legacy(Boolean, 'validate_bool', $create_grant)
 
   $host = inline_template('<%= @title.split("_").last.downcase %>')
 

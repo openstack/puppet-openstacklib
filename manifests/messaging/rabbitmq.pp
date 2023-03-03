@@ -73,6 +73,10 @@ define openstacklib::messaging::rabbitmq(
   $manage_user_permissions = true,
   $manage_vhost            = true,
 ) {
+  validate_legacy(Boolean, 'validate_bool', $is_admin)
+  validate_legacy(Boolean, 'validate_bool', $manage_user)
+  validate_legacy(Boolean, 'validate_bool', $manage_user_permissions)
+  validate_legacy(Boolean, 'validate_bool', $manage_vhost)
 
   if $manage_user {
     if $userid == 'guest' {

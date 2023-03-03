@@ -23,6 +23,8 @@ class openstacklib::iscsid(
 ) {
 
   include openstacklib::params
+  validate_legacy(Boolean, 'validate_bool', $enabled)
+  validate_legacy(Boolean, 'validate_bool', $manage_service)
 
   package { 'open-iscsi':
     ensure => $package_ensure,
