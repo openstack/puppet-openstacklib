@@ -1,0 +1,4 @@
+---
+features:
+  - |
+    The new ``os_url`` function has been added.
