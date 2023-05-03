@@ -321,7 +321,7 @@ define openstacklib::wsgi::apache (
     $custom_wsgi_process_options,
   )
 
-  $wsgi_script_aliases_default = hash([$path_real,"${wsgi_script_dir}/${wsgi_script_file}"])
+  $wsgi_script_aliases_default = Hash([$path_real,"${wsgi_script_dir}/${wsgi_script_file}"])
 
   if $custom_wsgi_script_aliases {
     $wsgi_script_aliases_real = merge($wsgi_script_aliases_default, $custom_wsgi_script_aliases)
@@ -370,7 +370,7 @@ define openstacklib::wsgi::apache (
     ssl_crl_path               => $ssl_crl_path,
     ssl_crl                    => $ssl_crl,
     ssl_certs_dir              => $ssl_certs_dir,
-    wsgi_daemon_process        => hash([$wsgi_daemon_process, $wsgi_daemon_process_options]),
+    wsgi_daemon_process        => Hash([$wsgi_daemon_process, $wsgi_daemon_process_options]),
     wsgi_process_group         => $wsgi_process_group,
     wsgi_script_aliases        => $wsgi_script_aliases_real,
     wsgi_application_group     => $wsgi_application_group,
