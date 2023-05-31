@@ -43,7 +43,7 @@ define openstacklib::policy (
   $purge_config = false,
 ) {
   validate_legacy(Hash, 'validate_hash', $policies)
-  validate_legacy(Stdlib::Compat::Absolute_path, 'validate_absolute_path', $policy_path)
+  validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $policy_path)
   validate_legacy(Boolean, 'validate_bool', $purge_config)
 
   if empty($policies) {
