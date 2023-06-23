@@ -37,17 +37,15 @@
 #    Defaults to false.
 #
 define openstacklib::policy::base (
-  $file_path,
-  $key,
-  $value        = '',
-  $file_mode    = '0640',
-  $file_user    = undef,
-  $file_group   = undef,
-  $file_format  = 'json',
-  $purge_config = false,
+  Stdlib::Absolutepath $file_path,
+  String[1] $key,
+  String $value                     = '',
+  $file_mode                        = '0640',
+  $file_user                        = undef,
+  $file_group                       = undef,
+  Enum['json', 'yaml'] $file_format = 'json',
+  Boolean $purge_config             = false,
 ) {
-
-  validate_legacy(Boolean, 'validate_bool', $purge_config)
 
   ensure_resource('openstacklib::policy::default', $file_path, {
     file_path    => $file_path,

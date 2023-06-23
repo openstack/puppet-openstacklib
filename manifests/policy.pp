@@ -34,17 +34,14 @@
 #   Defaults to false.
 #
 define openstacklib::policy (
-  $policy_path  = $name,
-  $policies     = {},
-  $file_mode    = '0640',
-  $file_user    = undef,
-  $file_group   = undef,
-  $file_format  = 'json',
-  $purge_config = false,
+  Stdlib::Absolutepath $policy_path  = $name,
+  Hash $policies                     = {},
+  $file_mode                         = '0640',
+  $file_user                         = undef,
+  $file_group                        = undef,
+  Enum['json', 'yaml'] $file_format  = 'json',
+  Boolean $purge_config              = false,
 ) {
-  validate_legacy(Hash, 'validate_hash', $policies)
-  validate_legacy(Stdlib::Absolutepath, 'validate_absolute_path', $policy_path)
-  validate_legacy(Boolean, 'validate_bool', $purge_config)
 
   if empty($policies) {
     create_resources('openstacklib::policy::default', { $policy_path => {

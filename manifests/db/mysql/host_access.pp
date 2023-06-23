@@ -36,20 +36,19 @@
 #    Defaults to ['NONE']
 #
 define openstacklib::db::mysql::host_access (
-  $user,
-  $password_hash,
-  $database,
-  $privileges,
-  $plugin = undef,
-  $create_user  = true,
-  $create_grant = true,
-  $tls_options = ['NONE'],
+  String[1] $user,
+  String[1] $password_hash,
+  String[1] $database,
+  Variant[String[1], Array[String[1]]] $privileges,
+  Optional[String[1]] $plugin                       = undef,
+  Boolean $create_user                              = true,
+  Boolean $create_grant                             = true,
+  Variant[String[1], Array[String[1]]] $tls_options = ['NONE'],
 ) {
 
-  validate_legacy(Pattern[/_/], 'validate_re', $title,
-    ['_', 'Title must be $dbname_$host'])
-  validate_legacy(Boolean, 'validate_bool', $create_user)
-  validate_legacy(Boolean, 'validate_bool', $create_grant)
+  if ! ($title =~ /_/) {
+    fail('Title must be $dbname_$host')
+  }
 
   $host = inline_template('<%= @title.split("_").last.downcase %>')
 

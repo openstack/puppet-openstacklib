@@ -31,14 +31,13 @@
 #   Defaults to false.
 #
 define openstacklib::policy::default (
-  $file_path    = $name,
-  $file_mode    = '0640',
-  $file_user    = undef,
-  $file_group   = undef,
-  $file_format  = 'json',
-  $purge_config = false,
+  Stdlib::Absolutepath $file_path   = $name,
+  $file_mode                        = '0640',
+  $file_user                        = undef,
+  $file_group                       = undef,
+  Enum['json', 'yaml'] $file_format = 'json',
+  Boolean $purge_config             = false,
 ) {
-  validate_legacy(Boolean, 'validate_bool', $purge_config)
 
   case $file_format {
     'json': {

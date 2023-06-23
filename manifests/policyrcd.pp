@@ -22,10 +22,8 @@
 # that should not autostart on install.
 #
 class openstacklib::policyrcd(
-  $services
+  Array[String[1]] $services
 ) {
-
-  validate_legacy(Array, 'validate_array', $services)
 
   if $facts['os']['family'] == 'Debian' {
     # We put this out there so openstack services wont auto start
