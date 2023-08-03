@@ -79,7 +79,7 @@ describe 'openstacklib::wsgi::apache' do
         :wsgi_script_aliases         => { '/' => "/var/www/cgi-bin/keystone/main" },
         :wsgi_application_group      => '%{GLOBAL}',
         :setenvif                    => ['X-Forwarded-Proto https HTTPS=1'],
-        :options                     => ['-Indexes', '+FollowSymLinks','+MultiViews'],
+        :options                     => ['-Indexes', '+FollowSymLinks'],
       )}
 
       it { should contain_concat("#{platform_params[:httpd_ports_file]}") }

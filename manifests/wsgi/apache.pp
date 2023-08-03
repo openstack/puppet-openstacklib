@@ -391,7 +391,7 @@ define openstacklib::wsgi::apache (
     error_log_pipe             => $error_log_pipe,
     error_log_syslog           => $error_log_syslog,
     log_level                  => $log_level,
-    options                    => ['-Indexes', '+FollowSymLinks','+MultiViews'],
+    options                    => ['-Indexes', '+FollowSymLinks'],
   }
 
   Package<| title == 'httpd' |>
