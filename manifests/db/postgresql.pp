@@ -31,13 +31,13 @@
 #    string; required
 #
 define openstacklib::db::postgresql (
-  $password      = undef,
-  $dbname        = $title,
-  $user          = $title,
-  $encoding      = undef,
-  $privileges    = 'ALL',
+  Optional[String[1]] $password                    = undef,
+  String[1] $dbname                                = $title,
+  String[1] $user                                  = $title,
+  Optional[String[1]] $encoding                    = undef,
+  Variant[String[1], Array[String[1]]] $privileges = 'ALL',
   # DEPRECATED PARAMETERS
-  $password_hash = undef,
+  Optional[String[1]] $password_hash               = undef,
 ){
 
   if $password_hash != undef {

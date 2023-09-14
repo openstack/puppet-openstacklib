@@ -62,21 +62,17 @@
 #   Defaults to true
 #
 define openstacklib::messaging::rabbitmq(
-  $userid                  = 'guest',
-  $password                = 'guest',
-  $virtual_host            = '/',
-  $is_admin                = false,
-  $configure_permission    = '.*',
-  $write_permission        = '.*',
-  $read_permission         = '.*',
-  $manage_user             = true,
-  $manage_user_permissions = true,
-  $manage_vhost            = true,
+  $userid                          = 'guest',
+  $password                        = 'guest',
+  $virtual_host                    = '/',
+  Boolean $is_admin                = false,
+  $configure_permission            = '.*',
+  $write_permission                = '.*',
+  $read_permission                 = '.*',
+  Boolean $manage_user             = true,
+  Boolean $manage_user_permissions = true,
+  Boolean $manage_vhost            = true,
 ) {
-  validate_legacy(Boolean, 'validate_bool', $is_admin)
-  validate_legacy(Boolean, 'validate_bool', $manage_user)
-  validate_legacy(Boolean, 'validate_bool', $manage_user_permissions)
-  validate_legacy(Boolean, 'validate_bool', $manage_vhost)
 
   if $manage_user {
     if $userid == 'guest' {

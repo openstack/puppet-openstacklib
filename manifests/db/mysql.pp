@@ -61,31 +61,28 @@
 #    string; optional; default to undef
 #
 define openstacklib::db::mysql (
-  $password       = undef,
-  $plugin         = undef,
-  $dbname         = $title,
-  $user           = $title,
-  $host           = '127.0.0.1',
-  $charset        = 'utf8',
-  $collate        = 'utf8_general_ci',
-  $allowed_hosts  = [],
-  $privileges     = 'ALL',
-  $create_user    = true,
-  $create_grant   = true,
-  $tls_options    = ['NONE'],
+  Optional[String[1]] $password                       = undef,
+  Optional[String[1]] $plugin                         = undef,
+  String[1] $dbname                                   = $title,
+  String[1] $user                                     = $title,
+  String[1] $host                                     = '127.0.0.1',
+  String[1] $charset                                  = 'utf8',
+  String[1] $collate                                  = 'utf8_general_ci',
+  Variant[String[1], Array[String[1]]] $allowed_hosts = [],
+  Variant[String[1], Array[String[1]]] $privileges    = 'ALL',
+  Boolean $create_user                                = true,
+  Boolean $create_grant                               = true,
+  Variant[String[1], Array[String[1]]] $tls_options   = ['NONE'],
   # DEPRECATED PARAMETER
-  $password_hash  = undef,
+  Optional[String[1]] $password_hash                  = undef,
 ) {
 
   include mysql::server
   include mysql::client
 
-  validate_legacy(Boolean, 'validate_bool', $create_user)
-  validate_legacy(Boolean, 'validate_bool', $create_grant)
-
   if $password_hash != undef {
-    warning('The password_hash parameter was deprecated and will be removed
-in a future release. Use password instead')
+    warning("The password_hash parameter was deprecated and will be removed \
+in a future release. Use password instead")
     $password_hash_real = $password_hash
   } elsif $password != undef {
     $password_hash_real = mysql::password($password)
