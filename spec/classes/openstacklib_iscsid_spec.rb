@@ -6,7 +6,6 @@ describe 'openstacklib::iscsid' do
       it { is_expected.to contain_package('open-iscsi').with(
         :name   => platform_params[:open_iscsi_package_name],
         :ensure => 'present',
-        :tag    => 'openstack',
       )}
 
       it { is_expected.to contain_exec('create-initiatorname-file').with({

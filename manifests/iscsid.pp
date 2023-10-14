@@ -27,7 +27,6 @@ class openstacklib::iscsid(
   package { 'open-iscsi':
     ensure => $package_ensure,
     name   => $::openstacklib::params::open_iscsi_package_name,
-    tag    => 'openstack',
   }
 
   # In CentOS9/RHEL9 initiatorname.iscsi is not created automatically
