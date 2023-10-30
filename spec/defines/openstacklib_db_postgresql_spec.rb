@@ -19,9 +19,18 @@ describe 'openstacklib::db::postgresql' do
         required_params
       end
 
+      let :password_hash do
+        case platform_params[:password_encryption]
+        when 'scram-sha-256'
+          'SCRAM-SHA-256$4096:bm92YQ==$LiUdLrky9dt8Js3NPwLr3TrmmuQBa0NG/xmahcp98UM=:dVY0oEQewk/17+9zFMDkBTek1NRyTAt3iyyfLKHIR8M='
+        else
+          'md557ae0608fad632bf0155cb9502a6b454'
+        end
+      end
+
       it { should contain_postgresql__server__db(title).with(
         :user     => title,
-        :password => 'md557ae0608fad632bf0155cb9502a6b454'
+        :password => password_hash,
       )}
     end
 
@@ -93,6 +102,20 @@ describe 'openstacklib::db::postgresql' do
           # puppetlabs-postgresql.
           :service_provider => 'systemd'
         }))
+      end
+
+      let :platform_params do
+        case facts[:os]['family']
+        when 'Debian'
+          case facts[:os]['name']
+          when 'Debian'
+            { :password_encryption => 'md5' }
+          when 'Ubuntu'
+            { :password_encryption => 'scram-sha-256' }
+          end
+        when 'RedHat'
+          { :password_encryption => 'ms5' }
+        end
       end
 
       it_behaves_like 'openstacklib::db::postgresql examples'
