@@ -19,6 +19,6 @@ class openstacklib::openstackclient(
 
   ensure_packages($package_name, {
     'ensure' => $package_ensure,
-    'tag'    => 'openstack'
+    'tag'    => ['openstack', 'openstackclient']
   })
 }
