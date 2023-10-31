@@ -48,32 +48,32 @@ baz=bazvalue
 
     it "should parse the correct number of sections" do
       # there is always a "global" section, so our count should be 3.
-      subject.section_names.length.should == 4
+      expect(subject.section_names.length).to eq(4)
     end
 
     it "should parse the correct section_names" do
       # there should always be a "global" section named "" at the beginning of the list
-      subject.section_names.should == ["", "section1", "section2", "section3"]
+      expect(subject.section_names).to eq(["", "section1", "section2", "section3"])
     end
 
     it "should expose settings for sections" do
-      subject.get_settings("section1").should == {
+      expect(subject.get_settings("section1")).to eq({
         "bar" => "barvalue",
         "baz" => "",
         "foo" => "foovalue"
-      }
+      })
 
-      subject.get_settings("section2").should == {
+      expect(subject.get_settings("section2")).to eq({
         "baz" => "bazvalue",
         "foo" => "foovalue2",
         "l" => "git log",
         "xyzzy['thing1']['thing2']" => "xyzzyvalue",
         "zot" => "multi word value"
-      }
+      })
 
-      subject.get_settings("section3").should == {
+      expect(subject.get_settings("section3")).to eq({
         "multi_setting" => ["value1", "value2"]
-      }
+      })
     end
 
   end
@@ -90,16 +90,16 @@ foo=foovalue
 
     it "should parse the correct number of sections" do
       # there is always a "global" section, so our count should be 2.
-      subject.section_names.length.should == 2
+      expect(subject.section_names.length).to eq(2)
     end
 
     it "should parse the correct section_names" do
       # there should always be a "global" section named "" at the beginning of the list
-      subject.section_names.should == ["", "section1"]
+      expect(subject.section_names).to eq(["", "section1"])
     end
 
     it "should expose settings for sections" do
-      subject.get_value("section1", "foo").should == "foovalue"
+      expect(subject.get_value("section1", "foo")).to eq("foovalue")
     end
 
   end
@@ -117,17 +117,17 @@ foo=foovalue
 
     it "should parse the correct number of sections" do
       # there is always a "global" section, so our count should be 2.
-      subject.section_names.length.should == 2
+      expect(subject.section_names.length).to eq(2)
     end
 
     it "should parse the correct section_names" do
       # there should always be a "global" section named "" at the beginning of the list
-      subject.section_names.should == ["", "section1"]
+      expect(subject.section_names).to eq(["", "section1"])
     end
 
     it "should expose settings for sections" do
-      subject.get_value("", "foo").should == "bar"
-      subject.get_value("section1", "foo").should == "foovalue"
+      expect(subject.get_value("", "foo")).to eq("bar")
+      expect(subject.get_value("section1", "foo")).to eq("foovalue")
     end
   end
 
@@ -143,22 +143,22 @@ foo=
     }
 
     it "should properly update uncommented values" do
-      subject.get_value("section1", "far").should == nil
+      expect(subject.get_value("section1", "far")).to eq(nil)
       subject.set_value("section1", "foo", "foovalue")
-      subject.get_value("section1", "foo").should == "foovalue"
+      expect(subject.get_value("section1", "foo")).to eq("foovalue")
     end
 
     it "should properly update commented values" do
-      subject.get_value("section1", "bar").should == nil
+      expect(subject.get_value("section1", "bar")).to eq(nil)
       subject.set_value("section1", "bar", "barvalue")
-      subject.get_value("section1", "bar").should == "barvalue"
-      subject.get_value("section1", "xyzzy['thing1']['thing2']").should == nil
+      expect(subject.get_value("section1", "bar")).to eq("barvalue")
+      expect(subject.get_value("section1", "xyzzy['thing1']['thing2']")).to eq(nil)
       subject.set_value("section1", "xyzzy['thing1']['thing2']", "xyzzyvalue")
-      subject.get_value("section1", "xyzzy['thing1']['thing2']").should == "xyzzyvalue"
+      expect(subject.get_value("section1", "xyzzy['thing1']['thing2']")).to eq("xyzzyvalue")
     end
 
     it "should properly add new empty values" do
-      subject.get_value("section1", "baz").should == nil
+      expect(subject.get_value("section1", "baz")).to eq(nil)
     end
   end
 
@@ -179,11 +179,12 @@ to-deploy = log --merges --grep='pull request' --format='%s (%cN)' origin/produc
     end
 
     it 'should parse the sections' do
-      subject.section_names.should match_array ['',
-                                                'branch "master"',
-                                                'alias',
-                                                'branch "production"'
-      ]
+      expect(subject.section_names).to eq([
+        '',
+        'branch "master"',
+        'alias',
+        'branch "production"'
+      ])
     end
   end
 
@@ -213,13 +214,13 @@ to-deploy = log --merges --grep='pull request' --format='%s (%cN)' origin/produc
     end
 
     it "should parse the correct section_names" do
-      subject.section_names.should match_array [
+      expect(subject.section_names).to eq([
         '',
         'global',
         'printers',
         'print$',
         'Shares'
-      ]
+      ])
     end
   end
 
@@ -233,10 +234,10 @@ disabled = test_value
     end
 
     it "should parse the correct section_names" do
-      subject.section_names.should match_array [
+      expect(subject.section_names).to eq([
         '',
         'monitor:///var/log/*.log'
-      ]
+      ])
     end
   end
 
@@ -252,8 +253,8 @@ EOS
     end
 
     it "should expose settings for sections" do
-      subject.get_value("khotkeys", "{5465e8c7-d608-4493-a48f-b99d99fdb508}").should == "Print,none,PrintScreen"
-      subject.get_value("khotkeys", "{d03619b6-9b3c-48cc-9d9c-a2aadb485550}").should == "Search,none,Search"
+      expect(subject.get_value("khotkeys", "{5465e8c7-d608-4493-a48f-b99d99fdb508}")).to eq("Print,none,PrintScreen")
+      expect(subject.get_value("khotkeys", "{d03619b6-9b3c-48cc-9d9c-a2aadb485550}")).to eq("Search,none,Search")
     end
   end
 
@@ -269,9 +270,9 @@ EOS
     end
 
     it "should expose settings for sections" do
-      subject.get_value("Drive names", "A:").should eq '5.25" Floppy'
-      subject.get_value("Drive names", "B:").should eq '3.5" Floppy'
-      subject.get_value("Drive names", "C:").should eq 'Winchester'
+      expect(subject.get_value("Drive names", "A:")).to eq('5.25" Floppy')
+      expect(subject.get_value("Drive names", "B:")).to eq('3.5" Floppy')
+      expect(subject.get_value("Drive names", "C:")).to eq('Winchester')
     end
   end
 
@@ -290,10 +291,10 @@ EOS
     end
 
     it "should expose settings for sections" do
-      subject.get_value("global", "log file").should eq '/var/log/samba/log.%m'
-      subject.get_value("global", "kerberos method").should eq 'system keytab'
-      subject.get_value("global", "passdb backend").should eq 'tdbsam'
-      subject.get_value("global", "security").should eq 'ads'
+      expect(subject.get_value("global", "log file")).to eq('/var/log/samba/log.%m')
+      expect(subject.get_value("global", "kerberos method")).to eq('system keytab')
+      expect(subject.get_value("global", "passdb backend")).to eq('tdbsam')
+      expect(subject.get_value("global", "security")).to eq('ads')
     end
   end
 
@@ -311,12 +312,12 @@ EOS
     end
 
     it "should expose setting with array value" do
-      subject.get_value("test", "test").should eq ['value1', 'value2', 'value3']
+      expect(subject.get_value("test", "test")).to eq(['value1', 'value2', 'value3'])
     end
 
     it "should create setting with array value" do
       subject.set_value("test", "test2", ['valueA', 'valueB', 'valueC'])
-      subject.get_value("test", "test2").should eq ['valueA', 'valueB', 'valueC']
+      expect(subject.get_value("test", "test2")).to eq(['valueA', 'valueB', 'valueC'])
     end
   end
 end
