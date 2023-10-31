@@ -51,33 +51,6 @@
 # Generates:
 # rabbit://username:password@1.1.1.1:5672,username:password@2.2.2.2:5672/virtual_host?key=value
 Puppet::Functions.create_function(:os_transport_url) do
-  # TODO(tobias-urdin): Rework and remove this.
-  # Taken straight from stdlib v5.1.0 module.
-  def _str2bool(string)
-    if !!string == string
-      return string
-    end
-    unless string.is_a?(String)
-      raise(Puppet::ParseError, 'str2bool(): Requires string to work with')
-    end
-    result = case string
-             when %r{^$}, '' then false # Empty string will be false ...
-             when %r{^(1|t|y|true|yes)$}i  then true
-             when %r{^(0|f|n|false|no)$}i  then false
-             when %r{^(undef|undefined)$} then false # This is not likely to happen ...
-             else
-               raise(Puppet::ParseError, 'os_transport_url _str2bool(): Unknown type of boolean given')
-             end
-    return result
-  end
-
-  # TODO(tobias-urdin): Rework and remove this.
-  # Taken straight from stdlib v5.1.0 module.
-  def _bool2num(val)
-    value = _str2bool(val)
-    result = value ? 1 : 0
-    return result
-  end
 
   def os_transport_url(*args)
     require 'erb'
@@ -174,11 +147,9 @@ Puppet::Functions.create_function(:os_transport_url) do
       # so we rely on _str2bool and _bool2num to ensure it's in the
       # format
       # TODO(tobias-urdin): Rework this to using proper data types and not the
-      # legacy puppet functions that is copied into this function statement.
-      # We need to do this right now because it fails testing if we call the
-      # str2bool or bool2num legacy functions using call_function.
-      ssl_str = _str2bool(v['ssl'])
-      ssl_val = _bool2num(v['ssl'])
+      # legacy puppet functions.
+      ssl_str = call_function('str2bool', v['ssl'])
+      ssl_val = call_function('bool2num', v['ssl'])
 
       query.merge!({ 'ssl' => ssl_val })
     end
