@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Add access_log_env_var for apache vhost.
+    Allows that only requests with particular environment
+    variables set are logged.
+    Example: set a dontlog variable for healthchecks,
+    so healthchecks are not logged.
