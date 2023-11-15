@@ -107,12 +107,7 @@ describe 'openstacklib::db::postgresql' do
       let :platform_params do
         case facts[:os]['family']
         when 'Debian'
-          case facts[:os]['name']
-          when 'Debian'
-            { :password_encryption => 'md5' }
-          when 'Ubuntu'
-            { :password_encryption => 'scram-sha-256' }
-          end
+          { :password_encryption => 'scram-sha-256' }
         when 'RedHat'
           { :password_encryption => 'ms5' }
         end
