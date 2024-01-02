@@ -8,7 +8,8 @@
 #    (required) Path to the policy.json file
 #
 #  [*key*]
-#    (required) The key to replace the value for
+#    (optional) The key to replace the value for
+#    Defaults to $name
 #
 #  [*value*]
 #    (optional) The value to set
@@ -38,7 +39,7 @@
 #
 define openstacklib::policy::base (
   Stdlib::Absolutepath $file_path,
-  String[1] $key,
+  String[1] $key                    = $name,
   String $value                     = '',
   $file_mode                        = '0640',
   $file_user                        = undef,
