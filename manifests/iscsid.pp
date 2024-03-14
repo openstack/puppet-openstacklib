@@ -35,7 +35,7 @@ class openstacklib::iscsid(
   exec { 'create-initiatorname-file':
     command => 'echo "InitiatorName=`/usr/sbin/iscsi-iname`" > /etc/iscsi/initiatorname.iscsi',
     path    => ['/usr/bin','/usr/sbin','/bin','/usr/bin'],
-    unless  => 'test -e /etc/iscsi/initiatorname.iscsi',
+    creates => '/etc/iscsi/initiatorname.iscsi',
     require => Package['open-iscsi'],
   }
 
