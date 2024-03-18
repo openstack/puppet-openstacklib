@@ -12,7 +12,7 @@ describe 'openstacklib::iscsid' do
       it { is_expected.to contain_exec('create-initiatorname-file').with({
         :command => 'echo "InitiatorName=`/usr/sbin/iscsi-iname`" > /etc/iscsi/initiatorname.iscsi',
         :path    => ['/usr/bin','/usr/sbin','/bin','/usr/bin'],
-        :unless  => 'test -e /etc/iscsi/initiatorname.iscsi',
+        :creates => '/etc/iscsi/initiatorname.iscsi',
       }).that_requires('Package[open-iscsi]')}
 
       it { is_expected.to contain_service('iscsid').with(
