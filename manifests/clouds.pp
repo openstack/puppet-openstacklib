@@ -48,17 +48,17 @@
 #   Defaults to {}
 #
 define openstacklib::clouds(
-  $username,
-  $password,
-  $auth_url,
-  $path                     = $name,
-  $user_domain_name         = 'Default',
-  $project_name             = undef,
-  $project_domain_name      = 'Default',
-  $system_scope             = undef,
-  $interface                = undef,
-  $region_name              = undef,
-  $api_versions             = {},
+  String[1] $username,
+  String[1] $password,
+  Stdlib::HTTPUrl $auth_url,
+  Stdlib::Absolutepath $path                               = $name,
+  String[1] $user_domain_name                              = 'Default',
+  Optional[String[1]] $project_name                        = undef,
+  String[1] $project_domain_name                           = 'Default',
+  Optional[String[1]] $system_scope                        = undef,
+  Optional[Enum['public', 'internal', 'admin']] $interface = undef,
+  Optional[String[1]] $region_name                         = undef,
+  Hash $api_versions                                       = {},
 ) {
 
   if !$project_name and !$system_scope {
