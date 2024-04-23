@@ -9,7 +9,26 @@
 #   Defaults to $name
 #
 # [*policies*]
-#   (Optional) Set of policies to configure
+#   (Optional) Set of policies to configure. This parameter accepts a hash
+#   value and is used to define the openstacklib::policies::base defined-type
+#   resouces. For example
+#
+#     {
+#       'my-context_is_admin' => {
+#         'key' => 'context_is_admin',
+#         'value' => 'true'
+#       },
+#       'default' => {
+#         'value' => 'rule:admin_or_owner'
+#       }
+#     }
+#
+#   adds the following rules to the policy file.
+#
+#     context_is_admin: true
+#     default: rule:admin_or_owner
+#
+#   Defaults to {}
 #
 # [*file_mode*]
 #   (Optional) Permission mode for the policy file
