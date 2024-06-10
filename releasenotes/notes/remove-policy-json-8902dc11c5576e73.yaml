@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    Support for json format policy files has been removed. Now yaml is the only
+    supported format.
