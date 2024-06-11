@@ -2,29 +2,6 @@ require 'spec_helper'
 
 describe 'openstacklib::policy::default' do
   shared_examples 'openstacklib::policy::default' do
-    context 'with policy.json' do
-      let :title do
-        '/etc/nova/policy.json'
-      end
-
-      let :params do
-        {
-          :file_mode   => '0644',
-          :file_user   => 'foo',
-          :file_group  => 'bar',
-          :file_format => 'json',
-        }
-      end
-
-      it { should contain_file('/etc/nova/policy.json').with(
-        :mode    => '0644',
-        :owner   => 'foo',
-        :group   => 'bar',
-        :content => '{}',
-        :replace => false
-      )}
-    end
-
     context 'with policy.yaml' do
       let :title do
         '/etc/nova/policy.yaml'
@@ -32,10 +9,9 @@ describe 'openstacklib::policy::default' do
 
       let :params do
         {
-          :file_mode   => '0644',
-          :file_user   => 'foo',
-          :file_group  => 'bar',
-          :file_format => 'yaml',
+          :file_mode  => '0644',
+          :file_user  => 'foo',
+          :file_group => 'bar',
         }
       end
 
@@ -58,7 +34,6 @@ describe 'openstacklib::policy::default' do
           :file_mode    => '0644',
           :file_user    => 'foo',
           :file_group   => 'bar',
-          :file_format  => 'yaml',
           :purge_config => true,
         }
       end

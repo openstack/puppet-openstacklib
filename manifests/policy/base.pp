@@ -1,11 +1,11 @@
 # == Definition: openstacklib::policy::base
 #
-# This resource configures the policy.json file for an OpenStack service
+# This resource configures the policy file for an OpenStack service
 #
 # == Parameters:
 #
 #  [*file_path*]
-#    (required) Path to the policy.json file
+#    (required) Path to the policy file
 #
 #  [*key*]
 #    (optional) The key to replace the value for
@@ -28,9 +28,8 @@
 #    Defaults to undef
 #
 #  [*file_format*]
-#    (optional) Format for file contents. Valid values
-#    are 'json' or 'yaml'.
-#    Defaults to 'json'.
+#    (optional) Format for file contents. Valid value is 'yaml'
+#    Defaults to 'yaml'.
 #
 #  [*purge_config*]
 #    (optional) Whether to set only the specified policy rules in the policy
@@ -44,7 +43,7 @@ define openstacklib::policy::base (
   $file_mode                        = '0640',
   $file_user                        = undef,
   $file_group                       = undef,
-  Enum['json', 'yaml'] $file_format = 'json',
+  Enum['yaml'] $file_format         = 'yaml',
   Boolean $purge_config             = false,
 ) {
 
@@ -57,50 +56,17 @@ define openstacklib::policy::base (
     purge_config => $purge_config
   })
 
-  case $file_format {
-    'json': {
-      warning('Json format is deprecated and will be removed in a future release')
+  # NOTE(tkajianm): Currently we use single quotes('') to quote the whole
+  #                 value, thus a single quote in value should be escaped
+  #                 by another single quote (which results in '')
+  # NOTE(tkajinam): Replace '' by ' first in case ' is already escaped
+  $value_real = regsubst(regsubst($value, '\'\'', '\'', 'G'), '\'', '\'\'', 'G')
 
-      # Add entry if it doesn't exists
-      augeas { "${file_path}-${key}-add":
-        lens    => 'Json.lns',
-        incl    => $file_path,
-        changes => [
-          "set dict/entry[last()+1] \"${key}\"",
-          "set dict/entry[last()]/string \"${value}\"",
-        ],
-        onlyif  => "match dict/entry[*][.=\"${key}\"] size == 0",
-      }
-
-      # Requires that the entry is added before this call or it will fail.
-      augeas { "${file_path}-${key}" :
-        lens    => 'Json.lns',
-        incl    => $file_path,
-        changes => "set dict/entry[*][.=\"${key}\"]/string \"${value}\"",
-      }
-
-      Openstacklib::Policy::Default<| title == $file_path |>
-      -> Augeas<| title == "${file_path}-${key}-add" |>
-        ~> Augeas<| title == "${file_path}-${key}" |>
-    }
-    'yaml': {
-      # NOTE(tkajianm): Currently we use single quotes('') to quote the whole
-      #                 value, thus a single quote in value should be escaped
-      #                 by another single quote (which results in '')
-      # NOTE(tkajinam): Replace '' by ' first in case ' is already escaped
-      $value_real = regsubst(regsubst($value, '\'\'', '\'', 'G'), '\'', '\'\'', 'G')
-
-      file_line { "${file_path}-${key}" :
-        path  => $file_path,
-        line  => "'${key}': '${value_real}'",
-        match => "^['\"]?${key}(?!:)['\"]?\\s*:.+"
-      }
-      Openstacklib::Policy::Default<| title == $file_path |>
-      -> File_line<| title == "${file_path}-${key}" |>
-    }
-    default: {
-      fail("${file_format} is an unsupported policy file format. Choose 'json' or 'yaml'.")
-    }
+  file_line { "${file_path}-${key}" :
+    path  => $file_path,
+    line  => "'${key}': '${value_real}'",
+    match => "^['\"]?${key}(?!:)['\"]?\\s*:.+"
   }
-
+  Openstacklib::Policy::Default<| title == $file_path |>
+  -> File_line<| title == "${file_path}-${key}" |>
 }

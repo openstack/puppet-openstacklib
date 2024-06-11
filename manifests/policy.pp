@@ -43,9 +43,8 @@
 #   Defaults to undef
 #
 # [*file_format*]
-#   (Optional) Format for file contents. Valid values
-#   are 'json' or 'yaml'.
-#   Defaults to 'json'.
+#   (Optional) Format for file contents. Valid value is 'yaml'.
+#   Defaults to 'yaml'.
 #
 # [*purge_config*]
 #   (Optional) Whether to set only the specified policy rules in the policy
@@ -58,7 +57,7 @@ define openstacklib::policy (
   $file_mode                         = '0640',
   $file_user                         = undef,
   $file_group                        = undef,
-  Enum['json', 'yaml'] $file_format  = 'json',
+  Enum['yaml'] $file_format          = 'yaml',
   Boolean $purge_config              = false,
 ) {
 

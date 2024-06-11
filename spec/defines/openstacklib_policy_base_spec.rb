@@ -6,52 +6,14 @@ describe 'openstacklib::policy::base' do
       'context_is_admin or owner'
     end
 
-    context 'with policy.json' do
-      let :params do
-        {
-          :file_path   => '/etc/nova/policy.json',
-          :value       => 'foo:bar',
-          :file_mode   => '0644',
-          :file_user   => 'foo',
-          :file_group  => 'bar',
-          :file_format => 'json',
-        }
-      end
-
-      it { should contain_openstacklib__policy__default('/etc/nova/policy.json').with(
-        :file_mode    => '0644',
-        :file_user    => 'foo',
-        :file_group   => 'bar',
-        :file_format  => 'json',
-        :purge_config => false,
-      )}
-
-      it { should contain_augeas('/etc/nova/policy.json-context_is_admin or owner').with(
-        :lens    => 'Json.lns',
-        :incl    => '/etc/nova/policy.json',
-        :changes => 'set dict/entry[*][.="context_is_admin or owner"]/string "foo:bar"',
-      )}
-
-      it { should contain_augeas('/etc/nova/policy.json-context_is_admin or owner-add').with(
-        :lens    => 'Json.lns',
-        :incl    => '/etc/nova/policy.json',
-        :changes => [
-          'set dict/entry[last()+1] "context_is_admin or owner"',
-          'set dict/entry[last()]/string "foo:bar"'
-        ],
-        :onlyif  => 'match dict/entry[*][.="context_is_admin or owner"] size == 0'
-      )}
-    end
-
     context 'with policy.yaml' do
       let :params do
         {
-          :file_path   => '/etc/nova/policy.yaml',
-          :value       => 'foo:bar',
-          :file_mode   => '0644',
-          :file_user   => 'foo',
-          :file_group  => 'bar',
-          :file_format => 'yaml',
+          :file_path  => '/etc/nova/policy.yaml',
+          :value      => 'foo:bar',
+          :file_mode  => '0644',
+          :file_user  => 'foo',
+          :file_group => 'bar',
         }
       end
 
@@ -106,7 +68,6 @@ describe 'openstacklib::policy::base' do
           :file_mode    => '0644',
           :file_user    => 'foo',
           :file_group   => 'bar',
-          :file_format  => 'yaml',
           :purge_config => true,
         }
       end
@@ -118,21 +79,6 @@ describe 'openstacklib::policy::base' do
         :file_format  => 'yaml',
         :purge_config => true,
       )}
-    end
-
-    context 'with json file_path and yaml file format' do
-      let :params do
-        {
-          :file_path   => '/etc/nova/policy.json',
-          :value       => 'foo:bar',
-          :file_mode   => '0644',
-          :file_user   => 'foo',
-          :file_group  => 'bar',
-          :file_format => 'yaml',
-        }
-      end
-
-      it { should raise_error(Puppet::Error) }
     end
 
     context 'with key overridden' do
