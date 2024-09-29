@@ -53,7 +53,7 @@
 #
 define openstacklib::policy (
   Stdlib::Absolutepath $policy_path  = $name,
-  Hash $policies                     = {},
+  Openstacklib::Policies $policies   = {},
   $file_mode                         = '0640',
   $file_user                         = undef,
   $file_group                        = undef,
