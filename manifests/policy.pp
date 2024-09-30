@@ -54,7 +54,7 @@
 define openstacklib::policy (
   Stdlib::Absolutepath $policy_path  = $name,
   Openstacklib::Policies $policies   = {},
-  $file_mode                         = '0640',
+  Stdlib::Filemode $file_mode        = '0640',
   $file_user                         = undef,
   $file_group                        = undef,
   Enum['yaml'] $file_format          = 'yaml',

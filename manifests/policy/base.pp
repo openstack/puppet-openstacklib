@@ -40,7 +40,7 @@ define openstacklib::policy::base (
   Stdlib::Absolutepath $file_path,
   String[1] $key                    = $name,
   String $value                     = '',
-  $file_mode                        = '0640',
+  Stdlib::Filemode $file_mode       = '0640',
   $file_user                        = undef,
   $file_group                       = undef,
   Enum['yaml'] $file_format         = 'yaml',
