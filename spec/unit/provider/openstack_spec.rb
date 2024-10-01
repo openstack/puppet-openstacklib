@@ -111,7 +111,7 @@ name="test"
               lambda { |*args| raise Puppet::ExecutionFailure, 'Unable to establish connection' },
               lambda { |*args| return list_data }
             )
-        expect(provider.class).to receive(:sleep).with(3).and_return(nil)
+        expect(provider.class).to receive(:sleep).with(10).and_return(nil)
         response = Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         expect(response.first[:description]).to eq 'Test tenant'
       end
@@ -119,10 +119,10 @@ name="test"
       it 'fails after the timeout and redacts' do
         expect(provider.class).to receive(:execute)
             .and_raise(Puppet::ExecutionFailure, "Execution of 'openstack user create foo --password secret' returned 1: command failed")
-            .exactly(3).times
+            .exactly(6).times
         allow(provider.class).to receive(:sleep)
         allow(provider.class).to receive(:current_time)
-            .and_return(0, 10, 10, 20, 20, 200, 200)
+            .and_return(0, 10, 20, 100, 200, 300, 400)
         expect do
           Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         end.to raise_error Puppet::ExecutionFailure, /Execution of \'openstack user create foo --password \[redacted secret\]\' returned 1/
@@ -132,10 +132,10 @@ name="test"
         expect(provider.class).to receive(:openstack)
             .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
             .and_raise(Puppet::ExecutionFailure, 'Unable to establish connection')
-            .exactly(3).times
+            .exactly(6).times
         allow(provider.class).to receive(:sleep)
         allow(provider.class).to receive(:current_time)
-            .and_return(0, 10, 10, 20, 20, 200, 200)
+            .and_return(0, 10, 20, 100, 200, 300, 400)
         expect do
           Puppet::Provider::Openstack.request('project', 'list', ['--long'])
         end.to raise_error Puppet::ExecutionFailure, /Unable to establish connection/
