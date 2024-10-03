@@ -14,11 +14,9 @@ class Puppet::Provider::Openstack < Puppet::Provider
   commands :openstack_command => 'openstack'
 
   @@no_retry_actions = %w(create remove delete)
-  @@command_timeout  = 40
-  # Fails on the 5th retry for a max of 212s (~3.5min) before total
-  # failure.
-  @@request_timeout  = 170
-  @@retry_sleep      = 3
+  @@command_timeout  = 90
+  @@request_timeout  = 300
+  @@retry_sleep      = 10
   class << self
     [:no_retry_actions, :request_timeout, :retry_sleep].each do |m|
       define_method m do
@@ -89,8 +87,8 @@ class Puppet::Provider::Openstack < Puppet::Provider
 
     Puppet::Util.withenv(env) do
       rv = nil
-      end_time = current_time + request_timeout
       start_time = current_time
+      end_time = start_time + request_timeout
       retry_count = 0
       loop do
         begin
@@ -129,9 +127,10 @@ class Puppet::Provider::Openstack < Puppet::Provider
         rescue Puppet::ExecutionFailure => exception
           raise Puppet::Error::OpenstackUnauthorizedError, 'Could not authenticate' if exception.message =~ /HTTP 40[13]/
           raise Puppet::Error::OpenstackUnauthorizedError, 'Could not authenticate' if exception.message.match(/Missing value \S* required for auth plugin/)
-          if current_time > end_time
+          remaining_time = end_time - current_time
+          if remaining_time < 0
             error_message = exception.message
-            error_message += " (tried #{retry_count}, for a total of #{end_time - start_time } seconds)"
+            error_message += " (tried #{retry_count}, for a total of #{end_time - start_time} seconds)"
             raise(Puppet::ExecutionFailure, error_message)
           end
 
@@ -142,7 +141,7 @@ class Puppet::Provider::Openstack < Puppet::Provider
               raise exception if exception.message.match(nr)
             end
           end
-          debug "Non-fatal error: '#{exception.message}'. Retrying for #{end_time - current_time} more seconds"
+          debug "Non-fatal error: '#{exception.message}'. Retrying for #{remaining_time} more seconds"
           sleep retry_sleep
           retry_count += 1
           retry
