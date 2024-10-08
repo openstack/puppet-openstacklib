@@ -159,4 +159,8 @@ class Puppet::Provider::Openstack < Puppet::Provider
     text = text.split("\n").drop_while { |line| line !~ /^\".*\"/ }.join("\n")
     return CSV.parse(text + "\n")
   end
+
+  def self.parse_python_dict(text)
+    return JSON.parse(text.gsub(/'/, '"').gsub(/: False([,}])/,': false\1').gsub(/: True([,}])/,': true\1'))
+  end
 end

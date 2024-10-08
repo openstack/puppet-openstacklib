@@ -210,4 +210,23 @@ name="test"
       end
     end
   end
+
+  describe '#parse_python_dict' do
+    it 'should return a hash when provided with a python dict' do
+      s = "{'key': 'value', 'key2': 'value2'}"
+      expect(Puppet::Provider::Openstack.parse_python_dict(s)).to eq({'key'=>'value', 'key2'=>'value2'})
+
+      s = "{'key': True, 'key2': 'value2'}"
+      expect(Puppet::Provider::Openstack.parse_python_dict(s)).to eq({'key'=>true, 'key2'=>'value2'})
+
+      s = "{'key': 'value', 'key2': True}"
+      expect(Puppet::Provider::Openstack.parse_python_dict(s)).to eq({'key'=>'value', 'key2'=>true})
+
+      s = "{'key': False, 'key2': 'value2'}"
+      expect(Puppet::Provider::Openstack.parse_python_dict(s)).to eq({'key'=>false, 'key2'=>'value2'})
+
+      s = "{'key': 'value', 'key2': False}"
+      expect(Puppet::Provider::Openstack.parse_python_dict(s)).to eq({'key'=>'value', 'key2'=>false})
+    end
+  end
 end
