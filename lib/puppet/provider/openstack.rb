@@ -163,4 +163,8 @@ class Puppet::Provider::Openstack < Puppet::Provider
   def self.parse_python_dict(text)
     return JSON.parse(text.gsub(/'/, '"').gsub(/: False([,}])/,': false\1').gsub(/: True([,}])/,': true\1'))
   end
+
+  def self.parse_python_list(text)
+    return JSON.parse(text.gsub(/'/, '"'))
+  end
 end

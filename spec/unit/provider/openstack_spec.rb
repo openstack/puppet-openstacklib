@@ -229,4 +229,17 @@ name="test"
       expect(Puppet::Provider::Openstack.parse_python_dict(s)).to eq({'key'=>'value', 'key2'=>false})
     end
   end
+
+  describe '#parse_python_list' do
+    it 'should return an array when provided with a python list' do
+      s = "['foo', 'bar', 'baz']"
+      expect(Puppet::Provider::Openstack.parse_python_list(s)).to eq(['foo', 'bar', 'baz'])
+
+      s = '[]'
+      expect(Puppet::Provider::Openstack.parse_python_list(s)).to eq([])
+
+      s = '[1, 2, 3]'
+      expect(Puppet::Provider::Openstack.parse_python_list(s)).to eq([1, 2, 3])
+    end
+  end
 end
