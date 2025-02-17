@@ -356,7 +356,7 @@ define openstacklib::wsgi::apache (
   }
   # End of WSGIImportScript related options
 
-  ::apache::vhost { $service_name:
+  apache::vhost { $service_name:
     ensure                     => 'present',
     servername                 => $servername,
     ip                         => $bind_host,
