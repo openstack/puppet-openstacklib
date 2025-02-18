@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add ``file_user`` and ``file_group`` parameters to ``openstacklib::clouds``
+    resource to manage ``clouds.yaml`` file owner and group.

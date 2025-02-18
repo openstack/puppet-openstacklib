@@ -24,6 +24,27 @@ describe 'openstacklib::clouds' do
         )
       end
     end
+
+    context 'with file owner/group' do
+      let :params do
+        {
+          :username     => 'admin',
+          :password     => 'secrete',
+          :auth_url     => 'http://127.0.0.1:5000/',
+          :project_name => 'demo',
+          :file_user    => 'foo',
+          :file_group   => 'bar',
+        }
+      end
+
+      it 'creates a clouds.yaml file with correct ownership' do
+        should contain_file('/etc/openstack/clouds.yaml').with(
+          :mode  => '0600',
+          :owner => 'foo',
+          :group => 'bar',
+        )
+      end
+    end
   end
 
   on_supported_os({
