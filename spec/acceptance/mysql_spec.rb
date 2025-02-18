@@ -10,7 +10,7 @@ describe 'openstacklib mysql' do
 
       class { 'mysql::server': }
 
-      $charset = $::operatingsystem ? {
+      $charset = $facts['os']['name'] ? {
         'Ubuntu' => 'utf8mb3',
         default  => 'utf8',
       }
