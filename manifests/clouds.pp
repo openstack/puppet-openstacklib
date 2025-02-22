@@ -47,7 +47,15 @@
 #   Example: { 'identity' => '3', 'compute' => '2.latest' }
 #   Defaults to {}
 #
-define openstacklib::clouds(
+# [*file_user*]
+#   (Optional) User that owns the clouds.yaml file.
+#   Defaults to 'root'.
+#
+# [*file_group*]
+#   (Optional) Group that owns the clouds.yaml file.
+#   Defaults to 'root'.
+#
+define openstacklib::clouds (
   String[1] $username,
   String[1] $password,
   Stdlib::HTTPUrl $auth_url,
@@ -59,17 +67,17 @@ define openstacklib::clouds(
   Optional[Enum['public', 'internal', 'admin']] $interface = undef,
   Optional[String[1]] $region_name                         = undef,
   Hash $api_versions                                       = {},
+  String $file_user                                        = 'root',
+  String $file_group                                       = 'root',
 ) {
-
   if !$project_name and !$system_scope {
     fail('One of project_name and system_scope should be set')
   }
 
   file { $path:
-    ensure    => 'present',
     mode      => '0600',
-    owner     => 'root',
-    group     => 'root',
+    owner     => $file_user,
+    group     => $file_group,
     content   => template('openstacklib/clouds.yaml.erb'),
     show_diff => false,
   }
