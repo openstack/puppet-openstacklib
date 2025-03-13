@@ -62,13 +62,13 @@
 #   Defaults to true
 #
 define openstacklib::messaging::rabbitmq(
-  $userid                          = 'guest',
-  $password                        = 'guest',
-  $virtual_host                    = '/',
+  String[1] $userid                = 'guest',
+  String[1] $password              = 'guest',
+  String[1] $virtual_host          = '/',
   Boolean $is_admin                = false,
-  $configure_permission            = '.*',
-  $write_permission                = '.*',
-  $read_permission                 = '.*',
+  String $configure_permission     = '.*',
+  String $write_permission         = '.*',
+  String $read_permission          = '.*',
   Boolean $manage_user             = true,
   Boolean $manage_user_permissions = true,
   Boolean $manage_vhost            = true,
