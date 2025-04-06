@@ -88,7 +88,7 @@ describe Puppet::Provider::Openstack::Auth do
   describe '#get_os_vars_from_cloudsfile' do
     context 'with a clouds.yaml present' do
       it 'provides a hash' do
-        expect(File).to receive(:exists?).with('/etc/openstack/puppet/clouds.yaml').and_return(true)
+        expect(File).to receive(:exist?).with('/etc/openstack/puppet/clouds.yaml').and_return(true)
 
         response = klass.get_os_vars_from_cloudsfile('project')
         expect(response).to eq({
@@ -100,8 +100,8 @@ describe Puppet::Provider::Openstack::Auth do
 
     context 'with a admin-clouds.yaml present' do
       it 'provides a hash' do
-        expect(File).to receive(:exists?).with('/etc/openstack/puppet/clouds.yaml').and_return(false)
-        expect(File).to receive(:exists?).with('/etc/openstack/puppet/admin-clouds.yaml').and_return(true)
+        expect(File).to receive(:exist?).with('/etc/openstack/puppet/clouds.yaml').and_return(false)
+        expect(File).to receive(:exist?).with('/etc/openstack/puppet/admin-clouds.yaml').and_return(true)
 
         response = klass.get_os_vars_from_cloudsfile('project')
         expect(response).to eq({
@@ -113,8 +113,8 @@ describe Puppet::Provider::Openstack::Auth do
 
     context 'with a clouds.yaml not present' do
       it 'provides an empty hash' do
-        expect(File).to receive(:exists?).with('/etc/openstack/puppet/clouds.yaml').and_return(false)
-        expect(File).to receive(:exists?).with('/etc/openstack/puppet/admin-clouds.yaml').and_return(false)
+        expect(File).to receive(:exist?).with('/etc/openstack/puppet/clouds.yaml').and_return(false)
+        expect(File).to receive(:exist?).with('/etc/openstack/puppet/admin-clouds.yaml').and_return(false)
 
         response = klass.get_os_vars_from_cloudsfile('project')
         expect(response).to eq({})
@@ -127,7 +127,7 @@ describe Puppet::Provider::Openstack::Auth do
       it 'provides a hash' do
         content = "export OS_USERNAME='test'\nexport OS_PASSWORD='abc123'\nexport OS_PROJECT_NAME='test'\nexport OS_AUTH_URL='http://127.0.0.1:5000'"
         filename = 'file'
-        expect(File).to receive(:exists?).with('file').and_return(true)
+        expect(File).to receive(:exist?).with('file').and_return(true)
         expect(File).to receive(:open).with('file').and_return(StringIO.new(content))
 
         response = klass.get_os_vars_from_rcfile(filename)
@@ -143,7 +143,7 @@ describe Puppet::Provider::Openstack::Auth do
       it 'provides a hash' do
         content = "export OS_USERNAME='test'\nexport OS_PASSWORD='abc123'\nexport OS_PROJECT_NAME='test'\nexport OS_AUTH_URL='http://127.0.0.1:5000'\n_openstack() {\n foo\n} "
         filename = 'file'
-        expect(File).to receive(:exists?).with('file').and_return(true)
+        expect(File).to receive(:exist?).with('file').and_return(true)
         expect(File).to receive(:open).with('file').and_return(StringIO.new(content))
 
         response = klass.get_os_vars_from_rcfile(filename)
@@ -158,7 +158,7 @@ describe Puppet::Provider::Openstack::Auth do
     context 'with an empty file' do
       it 'provides an empty hash' do
         filename = 'file'
-        expect(File).to receive(:exists?).with(filename).and_return(true)
+        expect(File).to receive(:exist?).with(filename).and_return(true)
         expect(File).to receive(:open).with(filename).and_return(StringIO.new(""))
 
         response = klass.get_os_vars_from_rcfile(filename)
@@ -172,8 +172,8 @@ describe Puppet::Provider::Openstack::Auth do
         content = "export OS_USERNAME='user'\nexport OS_PASSWORD='secret'\nexport OS_PROJECT_NAME='project'\nexport OS_AUTH_URL='http://127.0.0.1:5000'"
         filename = '/root/openrc'
 
-        expect(File).to receive(:exists?).with("#{ENV['HOME']}/openrc").and_return(false)
-        expect(File).to receive(:exists?).with(filename).and_return(true)
+        expect(File).to receive(:exist?).with("#{ENV['HOME']}/openrc").and_return(false)
+        expect(File).to receive(:exist?).with(filename).and_return(true)
         expect(File).to receive(:open).with(filename).and_return(StringIO.new(content))
 
         expect(klass.get_os_vars_from_rcfile("#{ENV['HOME']}/openrc")).to eq({
@@ -252,7 +252,7 @@ describe Puppet::Provider::Openstack::Auth do
         expect(klass).to receive(:get_os_vars_from_env)
              .and_return({ 'OS_USERNAME' => 'incompleteusername',
                            'OS_AUTH_URL' => 'incompleteauthurl' })
-        expect(File).to receive(:exists?).with('/etc/openstack/puppet/clouds.yaml').and_return(true)
+        expect(File).to receive(:exist?).with('/etc/openstack/puppet/clouds.yaml').and_return(true)
         expect(klass).to receive(:openstack)
              .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
              .and_return('"ID","Name","Description","Enabled"
@@ -275,9 +275,9 @@ describe Puppet::Provider::Openstack::Auth do
              .and_return({ 'OS_USERNAME' => 'incompleteusername',
                            'OS_AUTH_URL' => 'incompleteauthurl' })
         content = "export OS_USERNAME='test'\nexport OS_PASSWORD='abc123'\nexport OS_PROJECT_NAME='test'\nexport OS_AUTH_URL='http://127.0.0.1:5000'\nexport OS_NOT_VALID='notvalid'"
-        expect(File).to receive(:exists?).with("/etc/openstack/puppet/clouds.yaml").and_return(false)
-        expect(File).to receive(:exists?).with("/etc/openstack/puppet/admin-clouds.yaml").and_return(false)
-        expect(File).to receive(:exists?).with("#{ENV['HOME']}/openrc").and_return(true)
+        expect(File).to receive(:exist?).with("/etc/openstack/puppet/clouds.yaml").and_return(false)
+        expect(File).to receive(:exist?).with("/etc/openstack/puppet/admin-clouds.yaml").and_return(false)
+        expect(File).to receive(:exist?).with("#{ENV['HOME']}/openrc").and_return(true)
         expect(File).to receive(:open).with("#{ENV['HOME']}/openrc").and_return(StringIO.new(content))
         expect(klass).to receive(:openstack)
              .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
@@ -302,9 +302,9 @@ describe Puppet::Provider::Openstack::Auth do
         expect(klass).to receive(:get_os_vars_from_env)
              .and_return({ 'OS_TOKEN' => 'incomplete' })
         content = "export OS_TOKEN='test'\nexport OS_ENDPOINT='abc123'\nexport OS_NOT_VALID='notvalid'\n"
-        expect(File).to receive(:exists?).with("/etc/openstack/puppet/clouds.yaml").and_return(false)
-        expect(File).to receive(:exists?).with("/etc/openstack/puppet/admin-clouds.yaml").and_return(false)
-        expect(File).to receive(:exists?).with("#{ENV['HOME']}/openrc").and_return(true)
+        expect(File).to receive(:exist?).with("/etc/openstack/puppet/clouds.yaml").and_return(false)
+        expect(File).to receive(:exist?).with("/etc/openstack/puppet/admin-clouds.yaml").and_return(false)
+        expect(File).to receive(:exist?).with("#{ENV['HOME']}/openrc").and_return(true)
         expect(File).to receive(:open).with("#{ENV['HOME']}/openrc").and_return(StringIO.new(content))
         expect(klass).to receive(:openstack)
              .with('project', 'list', '--quiet', '--format', 'csv', ['--long'])
