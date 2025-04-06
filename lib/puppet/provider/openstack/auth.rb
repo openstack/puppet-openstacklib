@@ -19,7 +19,7 @@ module Puppet::Provider::Openstack::Auth
   end
 
   def get_os_vars_from_cloudsfile(scope)
-    cloudsfile = clouds_filenames.detect { |f| File.exists? f}
+    cloudsfile = clouds_filenames.detect { |f| File.exist? f}
     unless cloudsfile.nil?
       {
         'OS_CLOUD'              => scope,
@@ -32,7 +32,7 @@ module Puppet::Provider::Openstack::Auth
 
   def get_os_vars_from_rcfile(filename)
     env = {}
-    rcfile = [filename, '/root/openrc'].detect { |f| File.exists? f }
+    rcfile = [filename, '/root/openrc'].detect { |f| File.exist? f }
     unless rcfile.nil?
       File.open(rcfile).readlines.delete_if{|l| l=~ /^#|^$/ }.each do |line|
         # we only care about the OS_ vars from the file LP#1699950
