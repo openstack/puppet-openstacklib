@@ -22,6 +22,15 @@
 #
 # == Parameters
 #
+# [*wsgi_script_dir*]
+#   (Required) The directory path of the WSGI script.
+#
+# [*wsgi_script_file*]
+#   (Required) The file path of the WSGI script.
+#
+# [*wsgi_script_source*]
+#   (Required) The source of the WSGI script.
+#
 # [*service_name*]
 #   (Optional) Name of the service to run.
 #   Example: nova-api
@@ -115,18 +124,6 @@
 # [*wsgi_process_group*]
 #   (Optional) Name of the WSGI process group.
 #   Defaults to $name
-#
-# [*wsgi_script_dir*]
-#   (Optional) The directory path of the WSGI script.
-#   Defaults to undef
-#
-# [*wsgi_script_file*]
-#   (Optional) The file path of the WSGI script.
-#   Defaults to undef
-#
-# [*wsgi_script_source*]
-#   (Optional) The source of the WSGI script.
-#   Defaults to undef
 #
 # [*wsgi_application_group*]
 #   (Optional) The application group of the WSGI script.
@@ -242,6 +239,9 @@
 #   Defaults to undef
 #
 define openstacklib::wsgi::apache (
+  Stdlib::Absolutepath $wsgi_script_dir,
+  String[1] $wsgi_script_file,
+  Stdlib::Absolutepath $wsgi_script_source,
   $service_name                = $name,
   $servername                  = $facts['networking']['fqdn'],
   $bind_host                   = undef,
@@ -265,9 +265,6 @@ define openstacklib::wsgi::apache (
   $wsgi_daemon_process         = $name,
   $wsgi_process_display_name   = $name,
   $wsgi_process_group          = $name,
-  $wsgi_script_dir             = undef,
-  $wsgi_script_file            = undef,
-  $wsgi_script_source          = undef,
   $wsgi_application_group      = '%{GLOBAL}',
   $wsgi_pass_authorization     = undef,
   $wsgi_chunked_request        = undef,
