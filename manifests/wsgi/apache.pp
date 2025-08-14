@@ -313,7 +313,7 @@ define openstacklib::wsgi::apache (
     mode   => '0644',
   }
 
-  $wsgi_daemon_process_options = merge (
+  $wsgi_daemon_process_options = stdlib::merge(
     {
       user         => $user,
       group        => $group,
@@ -327,7 +327,7 @@ define openstacklib::wsgi::apache (
   $wsgi_script_aliases_default = Hash([$path_real,"${wsgi_script_dir}/${wsgi_script_file}"])
 
   if $custom_wsgi_script_aliases {
-    $wsgi_script_aliases_real = merge($wsgi_script_aliases_default, $custom_wsgi_script_aliases)
+    $wsgi_script_aliases_real = stdlib::merge($wsgi_script_aliases_default, $custom_wsgi_script_aliases)
   } else {
     $wsgi_script_aliases_real = $wsgi_script_aliases_default
   }

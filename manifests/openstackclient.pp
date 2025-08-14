@@ -17,7 +17,7 @@ class openstacklib::openstackclient(
   $package_ensure = 'present',
 ) inherits openstacklib::params {
 
-  ensure_packages($package_name, {
+  stdlib::ensure_packages($package_name, {
     'ensure' => $package_ensure,
     'tag'    => ['openstack', 'openstackclient']
   })
