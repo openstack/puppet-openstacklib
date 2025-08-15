@@ -26,7 +26,7 @@ class openstacklib::iscsid(
 
   package { 'open-iscsi':
     ensure => $package_ensure,
-    name   => $::openstacklib::params::open_iscsi_package_name,
+    name   => $openstacklib::params::open_iscsi_package_name,
     tag    => 'openstack',
   }
 

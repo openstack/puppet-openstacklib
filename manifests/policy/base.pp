@@ -53,7 +53,7 @@ define openstacklib::policy::base (
     file_user    => $file_user,
     file_group   => $file_group,
     file_format  => $file_format,
-    purge_config => $purge_config
+    purge_config => $purge_config,
   })
 
   # NOTE(tkajianm): Currently we use single quotes('') to quote the whole
@@ -65,7 +65,7 @@ define openstacklib::policy::base (
   file_line { "${file_path}-${key}" :
     path  => $file_path,
     line  => "'${key}': '${value_real}'",
-    match => "^['\"]?${key}(?!:)['\"]?\\s*:.+"
+    match => "^['\"]?${key}(?!:)['\"]?\\s*:.+",
   }
   Openstacklib::Policy::Default<| title == $file_path |>
   -> File_line<| title == "${file_path}-${key}" |>

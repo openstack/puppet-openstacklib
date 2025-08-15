@@ -75,6 +75,7 @@ define openstacklib::clouds (
   }
 
   file { $path:
+    ensure    => file,
     mode      => '0600',
     owner     => $file_user,
     group     => $file_group,

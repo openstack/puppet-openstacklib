@@ -29,7 +29,7 @@ class openstacklib::policyrcd(
     # We put this out there so openstack services wont auto start
     # when installed.
     file { '/usr/sbin/policy-rc.d':
-      ensure  => present,
+      ensure  => file,
       content => template('openstacklib/policy-rc.d.erb'),
       mode    => '0755',
       owner   => root,

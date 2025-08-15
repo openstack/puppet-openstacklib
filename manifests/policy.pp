@@ -76,7 +76,7 @@ define openstacklib::policy (
       file_user    => $file_user,
       file_group   => $file_group,
       file_format  => $file_format,
-      purge_config => $purge_config
+      purge_config => $purge_config,
     }
 
     create_resources('openstacklib::policy::base', $policies, $policy_defaults)
