@@ -60,15 +60,16 @@ define openstacklib::policy (
   Enum['yaml'] $file_format          = 'yaml',
   Boolean $purge_config              = false,
 ) {
-
   if empty($policies) {
-    create_resources('openstacklib::policy::default', { $policy_path => {
-      file_mode    => $file_mode,
-      file_user    => $file_user,
-      file_group   => $file_group,
-      file_format  => $file_format,
-      purge_config => $purge_config,
-    }})
+    create_resources('openstacklib::policy::default', {
+      $policy_path => {
+        file_mode    => $file_mode,
+        file_user    => $file_user,
+        file_group   => $file_group,
+        file_format  => $file_format,
+        purge_config => $purge_config,
+      },
+    })
   } else {
     $policy_defaults = {
       file_path    => $policy_path,

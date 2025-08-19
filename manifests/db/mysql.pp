@@ -76,7 +76,6 @@ define openstacklib::db::mysql (
   # DEPRECATED PARAMETER
   Optional[String[1]] $password_hash                  = undef,
 ) {
-
   include mysql::server
   include mysql::client
 

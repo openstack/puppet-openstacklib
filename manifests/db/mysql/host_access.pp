@@ -45,7 +45,6 @@ define openstacklib::db::mysql::host_access (
   Boolean $create_grant                             = true,
   Variant[String[1], Array[String[1]]] $tls_options = ['NONE'],
 ) {
-
   if ! ($title =~ /_/) {
     fail('Title must be $dbname_$host')
   }

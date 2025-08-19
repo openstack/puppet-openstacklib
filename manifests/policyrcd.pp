@@ -21,10 +21,9 @@
 # (required) The services that should be in the policy-rc.d shell script
 # that should not autostart on install.
 #
-class openstacklib::policyrcd(
+class openstacklib::policyrcd (
   Array[String[1]] $services
 ) {
-
   if $facts['os']['family'] == 'Debian' {
     # We put this out there so openstack services wont auto start
     # when installed.

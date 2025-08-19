@@ -46,7 +46,6 @@ define openstacklib::policy::base (
   Enum['yaml'] $file_format         = 'yaml',
   Boolean $purge_config             = false,
 ) {
-
   ensure_resource('openstacklib::policy::default', $file_path, {
     file_path    => $file_path,
     file_mode    => $file_mode,

@@ -37,7 +37,6 @@ define openstacklib::policy::default (
   Enum['yaml'] $file_format         = 'yaml',
   Boolean $purge_config             = false,
 ) {
-
   ensure_resource('file', $file_path, {
     mode    => $file_mode,
     owner   => $file_user,

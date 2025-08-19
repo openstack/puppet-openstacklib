@@ -4,7 +4,6 @@
 # should be considered to be constant
 #
 class openstacklib::params {
-
   include openstacklib::defaults
 
   $openstackclient_package_name = 'python3-openstackclient'

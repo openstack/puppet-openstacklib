@@ -16,12 +16,11 @@
 #    (optional) ensure state for package.
 #    Defaults to 'present'
 #
-class openstacklib::iscsid(
+class openstacklib::iscsid (
   Boolean $enabled        = true,
   Boolean $manage_service = true,
   $package_ensure         = 'present'
 ) {
-
   include openstacklib::params
 
   package { 'open-iscsi':

@@ -38,8 +38,7 @@ define openstacklib::db::postgresql (
   Variant[String[1], Array[String[1]]] $privileges = 'ALL',
   # DEPRECATED PARAMETERS
   Optional[String[1]] $password_hash               = undef,
-){
-
+) {
   if $password_hash != undef {
     warning('The password_hash parameter was deprecated and will be removed
 in a future release. Use password instead')

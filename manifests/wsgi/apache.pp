@@ -288,7 +288,6 @@ define openstacklib::wsgi::apache (
   $error_log_syslog            = undef,
   $log_level                   = undef,
 ) {
-
   include apache
 
   # Ensure there's no trailing '/' except if this is also the only character

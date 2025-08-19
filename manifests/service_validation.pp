@@ -65,7 +65,7 @@
 # Environment to use
 # string; optional; default to empty array
 #
-define openstacklib::service_validation(
+define openstacklib::service_validation (
   $command,
   $service_name = $name,
   $path         = '/usr/bin:/bin:/usr/sbin:/sbin',
@@ -78,7 +78,6 @@ define openstacklib::service_validation(
   $unless       = undef,
   $environment  = [],
 ) {
-
   if $onlyif and $unless {
     fail ('Only one parameter should be declared: onlyif or unless')
   }
@@ -99,6 +98,4 @@ define openstacklib::service_validation(
 
   anchor { "create ${service_name} anchor": }
     -> Exec<| title == "execute ${service_name} validation" |>
-
 }
-

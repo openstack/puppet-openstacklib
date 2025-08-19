@@ -61,7 +61,7 @@
 #   (optional) Manage or not the vhost
 #   Defaults to true
 #
-define openstacklib::messaging::rabbitmq(
+define openstacklib::messaging::rabbitmq (
   String[1] $userid                = 'guest',
   String[1] $password              = 'guest',
   String[1] $virtual_host          = '/',
@@ -73,7 +73,6 @@ define openstacklib::messaging::rabbitmq(
   Boolean $manage_user_permissions = true,
   Boolean $manage_vhost            = true,
 ) {
-
   if $manage_user {
     if $userid == 'guest' {
       $is_admin_real = false
@@ -101,5 +100,4 @@ define openstacklib::messaging::rabbitmq(
       'provider' => 'rabbitmqctl',
     })
   }
-
 }
