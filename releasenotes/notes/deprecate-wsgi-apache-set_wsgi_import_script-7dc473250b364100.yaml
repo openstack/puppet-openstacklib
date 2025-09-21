@@ -1,0 +1,9 @@
+---
+deprecations:
+  - |
+    The following parameters of the ``openstacklib::wsgi::apache`` defined
+    resource type have been deprecated and will be removed in a future release.
+
+    - ``set_wsgi_import_script``
+    - ``wsgi_import_script``
+    - ``wsgi_import_script_options``

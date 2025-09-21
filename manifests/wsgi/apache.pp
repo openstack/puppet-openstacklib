@@ -140,25 +140,6 @@
 #   WSGIChunkedRequest option in the vhost.
 #   Defaults to undef
 #
-# [*set_wsgi_import_script*]
-#   (Optional) Enable WSGIImportScript.
-#   Defaults to false
-#
-# [*wsgi_import_script*]
-#   (Optional) WSGIImportScript path.
-#   Defaults to undef
-#   If not set and set_wsgi_import_script is true, defaults to the WSGI
-#   application module path
-#
-# [*wsgi_import_script_options*]
-#   (Optional) Sets WSGIImportScript options.
-#   Defaults to undef
-#   If not set and set_wsgi_import_script is true, push a dict as follow:
-#   {
-#     process-group     => $wsgi_daemon_process,
-#     application-group => $wsgi_application_group,
-#   }
-#
 # [*headers*]
 #   (Optional) Headers for the vhost.
 #   Defaults to undef
@@ -238,6 +219,27 @@
 #   (Optional) Specifies LogLevel for Apache WSGI.
 #   Defaults to undef
 #
+# DEPRECATED PARAMMETERS
+#
+# [*set_wsgi_import_script*]
+#   (Optional) Enable WSGIImportScript.
+#   Defaults to false
+#
+# [*wsgi_import_script*]
+#   (Optional) WSGIImportScript path.
+#   Defaults to undef
+#   If not set and set_wsgi_import_script is true, defaults to the WSGI
+#   application module path
+#
+# [*wsgi_import_script_options*]
+#   (Optional) Sets WSGIImportScript options.
+#   Defaults to undef
+#   If not set and set_wsgi_import_script is true, push a dict as follow:
+#   {
+#     process-group     => $wsgi_daemon_process,
+#     application-group => $wsgi_application_group,
+#   }
+#
 define openstacklib::wsgi::apache (
   Stdlib::Absolutepath $wsgi_script_dir,
   String[1] $wsgi_script_file,
@@ -268,9 +270,6 @@ define openstacklib::wsgi::apache (
   $wsgi_application_group      = '%{GLOBAL}',
   $wsgi_pass_authorization     = undef,
   $wsgi_chunked_request        = undef,
-  $set_wsgi_import_script      = false,
-  $wsgi_import_script          = undef,
-  $wsgi_import_script_options  = undef,
   $headers                     = undef,
   $request_headers             = undef,
   $aliases                     = undef,
@@ -287,6 +286,10 @@ define openstacklib::wsgi::apache (
   $error_log_pipe              = undef,
   $error_log_syslog            = undef,
   $log_level                   = undef,
+  # DEPRECATED PARAMETERS
+  $set_wsgi_import_script      = false,
+  $wsgi_import_script          = undef,
+  $wsgi_import_script_options  = undef,
 ) {
   include apache
 
@@ -333,6 +336,8 @@ define openstacklib::wsgi::apache (
 
   # Sets WSGIImportScript related options
   if $set_wsgi_import_script {
+    warning('The set_wsgi_import_script parameter is deprecated and will be removed in a future release')
+
     if $wsgi_import_script {
       $wsgi_import_script_real = $wsgi_import_script
     } else {
