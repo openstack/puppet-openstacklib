@@ -13,8 +13,8 @@
 #    Defaults to $openstacklib::params::openstackclient_package_name
 #
 class openstacklib::openstackclient (
-  $package_name   = $openstacklib::params::openstackclient_package_name,
-  $package_ensure = 'present',
+  String[1] $package_name                 = $openstacklib::params::openstackclient_package_name,
+  Stdlib::Ensure::Package $package_ensure = 'present'
 ) inherits openstacklib::params {
   stdlib::ensure_packages($package_name, {
     'ensure' => $package_ensure,

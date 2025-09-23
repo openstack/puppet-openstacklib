@@ -17,9 +17,9 @@
 #    Defaults to 'present'
 #
 class openstacklib::iscsid (
-  Boolean $enabled        = true,
-  Boolean $manage_service = true,
-  $package_ensure         = 'present'
+  Boolean $enabled                        = true,
+  Boolean $manage_service                 = true,
+  Stdlib::Ensure::Package $package_ensure = 'present'
 ) {
   include openstacklib::params
 
