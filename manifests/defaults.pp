@@ -8,7 +8,7 @@ class openstacklib::defaults {
   case $facts['os']['family'] {
     'RedHat': {
       $pyver3 = $facts['os']['release']['major'] ? {
-        '10'    => '3.11',
+        '10'    => '3.12',
         default => '3.9',
       }
     }
