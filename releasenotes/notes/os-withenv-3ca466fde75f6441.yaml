@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    The ``Puppet::Provider::Openstack.request`` now filters out all external
+    ``OS_*`` environment variables to prevent collisions with environment
+    variables in the shell where Puppet is running.
