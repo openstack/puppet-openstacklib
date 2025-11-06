@@ -80,7 +80,7 @@ name="test"
     end
 
     it 'uses provided credentials' do
-      expect(Puppet::Util).to receive(:withenv).with(credentials.to_env)
+      expect(provider.class).to receive(:os_withenv).with(credentials.to_env)
       Puppet::Provider::Openstack.request('project', 'list', ['--long'], credentials)
     end
 
@@ -207,6 +207,47 @@ name="test"
         expect(csv).to be_kind_of(Array)
         expect(csv[0]).to match_array(['field', "te\nst", '1', '2', '3'])
         expect(csv.size).to eq(1)
+      end
+    end
+  end
+
+  describe '#os_withenv' do
+    around do |example|
+      @original_env = ENV.to_hash
+      example.run
+      ENV.replace(@original_env)
+    end
+
+    it 'removes environment variables starting with OS_' do
+      ENV['OS_FOO'] = 'should be removed'
+      ENV['OTHER']  = 'should stay'
+
+      Puppet::Provider::Openstack.os_withenv({}) do
+        expect(ENV.key?('OS_FOO')).to be false
+        expect(ENV['OTHER']).to eq('should stay')
+      end
+    end
+
+    it 'merges the given environment variables' do
+      Puppet::Provider::Openstack.os_withenv({'MY_VAR' => '123'}) do
+        expect(ENV['MY_VAR']).to eq('123')
+      end
+    end
+
+    it 'restores the original environment after the block' do
+      original = ENV.to_hash
+      Puppet::Provider::Openstack.os_withenv({'TEMP_VAR' => 'test'}) do
+        ENV['INSIDE_BLOCK'] = 'yep'
+      end
+
+      expect(ENV.key?('TEMP_VAR')).to be false
+      expect(ENV.key?('INSIDE_BLOCK')).to be false
+      expect(ENV.to_hash).to eq(original)
+    end
+
+    it 'handles string and symbol keys in the input hash' do
+      Puppet::Provider::Openstack.os_withenv({:FOO => 'bar'}) do
+        expect(ENV['FOO']).to eq('bar')
       end
     end
   end
