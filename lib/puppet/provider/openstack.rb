@@ -78,6 +78,23 @@ class Puppet::Provider::Openstack < Puppet::Provider
     rc
   end
 
+  # Copy of Puppet::Util::withenv but that filters out
+  # env variables starting with OS_ from the existing
+  # environment.
+  #
+  # @param hash [Hash] Hash of environment variables
+  def self.os_withenv(hash)
+    saved = ENV.to_hash
+    begin
+      cleaned_env = ENV.to_hash.reject { |k, _| k.start_with?('OS_') }
+      ENV.replace(cleaned_env)
+      ENV.merge!(hash.transform_keys(&:to_s))
+      yield
+    ensure
+      ENV.replace(saved)
+    end
+  end
+
   # Returns an array of hashes, where the keys are the downcased CSV headers
   # with underscores instead of spaces
   #
@@ -87,7 +104,7 @@ class Puppet::Provider::Openstack < Puppet::Provider
     env = credentials ? credentials.to_env : {}
     no_retry = options[:no_retry_exception_msgs]
 
-    Puppet::Util.withenv(env) do
+    os_withenv(env) do
       rv = nil
       end_time = current_time + request_timeout
       start_time = current_time
