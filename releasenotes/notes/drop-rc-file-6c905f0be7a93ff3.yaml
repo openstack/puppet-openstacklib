@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The base provider class to manage OpenStack resources no longer attempts to
+    load credentials from ``openrc`` file in the user's home directory. Use
+    the ``clouds.yaml`` file instead.
