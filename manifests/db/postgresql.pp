@@ -1,5 +1,6 @@
 # == Definition: openstacklib::db::postgresql
 #
+# DPERECATED !!
 # This resource configures a postgresql database for an OpenStack service
 #
 # == Parameters:
@@ -39,6 +40,9 @@ define openstacklib::db::postgresql (
   # DEPRECATED PARAMETERS
   Optional[String[1]] $password_hash               = undef,
 ) {
+  warning("Support for PostgreSQL has been deprecated and will be removed in \
+a future release")
+
   if $password_hash != undef {
     warning('The password_hash parameter was deprecated and will be removed
 in a future release. Use password instead')
