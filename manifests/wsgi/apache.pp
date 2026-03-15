@@ -160,12 +160,6 @@
 #   { python-path => '/my/python/virtualenv' }
 #   Defaults to {}
 #
-# [*custom_wsgi_script_aliases*]
-#   (Optional) Pass a hash with any extra WSGI script aliases that you want
-#   to load for the same vhost, this is then combined with the default
-#   script alias built usin $path, $wsgi_script_dir and $wsgi_script_file.
-#   Defaults to undef
-#
 # [*vhost_custom_fragment*]
 #   (Optional) Passes a string of custom configuration
 #   directives to be placed at the end of the vhost configuration.
@@ -240,6 +234,12 @@
 #     application-group => $wsgi_application_group,
 #   }
 #
+# [*custom_wsgi_script_aliases*]
+#   (Optional) Pass a hash with any extra WSGI script aliases that you want
+#   to load for the same vhost, this is then combined with the default
+#   script alias built usin $path, $wsgi_script_dir and $wsgi_script_file.
+#   Defaults to undef
+#
 define openstacklib::wsgi::apache (
   Stdlib::Absolutepath $wsgi_script_dir,
   String[1] $wsgi_script_file,
@@ -274,7 +274,6 @@ define openstacklib::wsgi::apache (
   $request_headers             = undef,
   $aliases                     = undef,
   $custom_wsgi_process_options = {},
-  $custom_wsgi_script_aliases  = undef,
   $vhost_custom_fragment       = undef,
   $allow_encoded_slashes       = undef,
   $access_log_file             = undef,
@@ -290,6 +289,7 @@ define openstacklib::wsgi::apache (
   $set_wsgi_import_script      = false,
   $wsgi_import_script          = undef,
   $wsgi_import_script_options  = undef,
+  $custom_wsgi_script_aliases  = undef,
 ) {
   include apache
 

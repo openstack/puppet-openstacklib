@@ -1,0 +1,5 @@
+---
+deprecations:
+  - |
+    The ``openstacklib::wsgi::apache::custom_wsgi_script_aliases`` parameter
+    has been deprecated.
