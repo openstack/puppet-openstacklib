@@ -11,9 +11,11 @@ class openstacklib::defaults {
         '10'    => '3.12',
         default => '3.9',
       }
+      $pybasedir = "/usr/lib/python${pyver3}/site-packages"
     }
     'Debian': {
       $pyver3 = '3'
+      $pybasedir = "/usr/lib/python${pyver3}/dist-packages"
     }
     default:{
       fail("Unsupported osfamily: ${facts['os']['family']}")
