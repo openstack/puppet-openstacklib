@@ -49,7 +49,7 @@ describe 'openstacklib::wsgi::apache' do
 
       it { should contain_file('keystone_wsgi').with(
         :ensure => 'file',
-	:links  => 'follow',
+        :links  => 'follow',
         :path   => '/var/www/cgi-bin/keystone/main',
         :source => '/usr/share/keystone/keystone.wsgi',
         :owner  => 'keystone',
