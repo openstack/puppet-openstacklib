@@ -20,10 +20,6 @@
         {
             "name": "puppet/rabbitmq",
             "version_requirement": ">=2.0.2 <16.0.0"
-        },
-        {
-            "name": "puppetlabs/postgresql",
-            "version_requirement": ">=6.4.0 <11.0.0"
         }
     ],
     "description": "Puppet module library to expose common functionality between OpenStack modules.",
