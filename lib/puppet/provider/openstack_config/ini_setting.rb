@@ -44,6 +44,7 @@ Puppet::Type.type(:openstack_config).provide(
 
   def value
     value = ini_file.get_value(section, setting)
+    value = value.first if value.kind_of?(Array) && value.length == 1
     new_value = transform(:from, value)
     @property_hash[:value] = new_value
     new_value

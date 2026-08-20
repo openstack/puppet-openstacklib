@@ -97,6 +97,34 @@ describe provider_class do
     end
   end
 
+  context '#value' do
+    let(:child_conf) do
+      Class.new(provider_class) do
+        def self.file_path
+          '/some/file/path'
+        end
+      end
+    end
+
+    it 'leaves a plain (non-array) value untouched' do
+      provider = child_conf.new(resource)
+      allow(provider).to receive(:ini_file).and_return(double('ini_file', :get_value => 'bar'))
+      expect(provider.value).to eq 'bar'
+    end
+
+    it 'unwraps a single-element array to a plain value' do
+      provider = child_conf.new(resource)
+      allow(provider).to receive(:ini_file).and_return(double('ini_file', :get_value => ['bar']))
+      expect(provider.value).to eq 'bar'
+    end
+
+    it 'does not truncate a duplicated key' do
+      provider = child_conf.new(resource)
+      allow(provider).to receive(:ini_file).and_return(double('ini_file', :get_value => ['bar', 'baz']))
+      expect(provider.value).to eq ['bar', 'baz']
+    end
+  end
+
   context 'transform_to' do
     it 'transforms a property' do
       child_conf = Class.new(provider_class) do
